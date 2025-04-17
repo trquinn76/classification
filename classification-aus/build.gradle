@@ -1,0 +1,33 @@
+plugins {
+    id 'java-library'
+    id 'jacoco'
+}
+
+version '1.0.0'
+
+java {
+    toolchain {
+    	languageVersion = JavaLanguageVersion.of(23)
+	}
+	withSourcesJar()
+	withJavadocJar()
+}
+
+testing {
+    suites {
+        test {
+            useJUnitJupiter()
+        }
+    }
+}
+
+test {
+    finalizedBy jacocoTestReport // report is always generated after tests run
+}
+jacocoTestReport {
+    dependsOn test // tests are required to run before generating the report
+}
+
+javadoc {
+    failOnError = false
+}
