@@ -12,7 +12,7 @@ model may be found in [Documents](./documents/README.md). These documents are:
 
 ### Purpose
 
-This model exists to deal with the issue that data stored in computer systems frequently needs to associate the
+This model exists to deal with the issue that data stored in computer systems frequently needs to maintain the
 classification of the data. This is typically done in ad hoc ways, so that every data structure and library stores it's
 classification data in different formats. Which then need to be mapped from one format to another, whenever the
 different data sets are merged. Also each ad hoc format tends to support only a limited part of protective marking
@@ -27,23 +27,23 @@ for use in threaded environments.
 
 ### Creating new ProtectiveMarking's
 
-To create new `ProtectiveMarking`'s, first create an instance of `ProteciveMarkerBuilder`. Populate the fields of the
-builder, and then use the `build()` function to create a new `ProtectiveMarking`. Use of the builder ensures that the
-resulting `ProtectiveMarking` is valid.
+To create new `ProtectiveMarker`'s, first create an instance of `ProteciveMarkerBuilder`. Populate the fields of the
+builder, and then use the `build()` function to create a new `ProtectiveMarker`. Use of the builder ensures that the
+resulting `ProtectiveMarker` is valid.
 
 ### Handling Invalid States (particularly in UI's)
 
-In the course of working with Classified data, it is not unusual to need to hold Classification information in invalid,
-intermediate states, while the User edits them via the UI. One of the `ProtectiveMarkerBuilder`'s purposes is to be
-able to hold Classification information in an invalid state, while a User is actively editing it via a UI.
+In the course of working with Classified data, it is not unusual to need to hold representations of Classification
+in invalid, intermediate states, while the User edits them via the UI. One of the `ProtectiveMarkerBuilder`'s purposes
+is to be able to hold Classification information in an invalid state, while a User is actively editing it via a UI.
 
 ## ProtectiveMarking structure
 
-The `ProtectiveMarking` `record` consists of the following fields:
+The `ProtectiveMarker` `record` consists of the following fields:
 
 ### Classification
 
-The `Classification` for this `ProtectiveMarking`. The list of Classifications is derived from the
+The `Classification` for this `ProtectiveMarker`. The list of Classifications is derived from the
 [PSPF Annual Release](./documents/pspf-release/README.md) **Section 9.2**.
 
 The `Classification` is required.
@@ -56,12 +56,14 @@ The Classifications are:
 - SECRET
 - TOP SECRET
 
+##### Default Classifications
+
 By default the library is configured to use a set of `DevelopmentClassification`'s. These are deliberately distinct
-from the real set of Classification's. Configuring `ProductionMode` to be true will cause the library to start using
-the real set of Classification's.
+from the real set of `Classification`'s (`PSPFClassification`). Configuring `ProductionMode` to be true will cause the
+library to start using the real set of `Classification`'s.
 
 `DevelopmentClassification`'s exist to allow development and testing of Classification related logic and data storage
-to be done in less secure environments than the final target production environment.
+in less secure environments than the final target production environment.
 
 ### Information Management Markers
 
@@ -73,18 +75,18 @@ Information Management Markers supported in this library listed in
 As specified in [Email Protective Marking Standard](./documents/email-protective-marking-standard/README.md)
 **Section 7.1** Table 1, there may be any number of Information Management Markers starting from zero.
 
-If there are no Information Management Markers in the `ProtectiveMarking` then the `informationManagementMarkers`
+If there are no Information Management Markers in the `ProtectiveMarker` then the `informationManagementMarkers`
 List will be empty.
 
-Handled Information Management Markers are:
+Supported Information Management Markers are:
 - Legal Privilege
 - Legislative Secrecy
 - Personal Privacy
 
 ### SecurityCaveats
 
-`SecurityCaveats` encapsulates a number of other markings. If none of these markings are presents, then the
-`securityCaveats` field in the `ProtectiveMarking` will be null.
+`SecurityCaveats` encapsulates a number of other markings. If none of these markings are present, then the
+`securityCaveats` field in the `ProtectiveMarker` will be null.
 
 #### Codewords
 
@@ -102,7 +104,7 @@ As defined in [PSPF Annual Release](./documents/pspf-release/README.md) **Sectio
 [PSPF Release Guidelines](./documents/pspf-release-guidelines/README.md) **Section 9.5.1** Table 24.
 
 It is not clear from the documentation if it makes sense for there to be multiple Foreign Government Markings on
-a single `ProtectiveMarking`. This library is supporting multiple markings, which will be sorted in alphabetical
+a single `ProtectiveMarker`. This library is supporting multiple markings, which will be sorted in alphabetical
 order.
 
 If there are no foreign government markings, then this list will be empty.
@@ -118,11 +120,11 @@ of Special Handling Instructions supported by this library are defined in the
 [Email Protective Marking Standard](./documents/email-protective-marking-standard/README.md) **Section 7.1** Table 1.
 
 The [Email Protective Marking Standard](./documents/email-protective-marking-standard/README.md) strongly implies that
-each `ProtectiveMarking` can only have one Special Handling Instruction.
+each `ProtectiveMarker` can only have one Special Handling Instruction.
 
 If there is no Special Handling Instruction, then the `specialHandlingCaveat` field will be null.
 
-Special Handling Instructions handled by this library are:
+Special Handling Instructions supported by this library are:
 - DELICATE-SOURCE
 - ORCON
 - EXCLUSIVE-FOR
@@ -137,33 +139,50 @@ comprehensive. However, it does list all instructions listed in the source docum
 
 #### Releasability
 
-A `ReleasabilityCaveat` is made up of a `ReleasabilityType` and a releasable to list.
+A `ReleasabilityCaveat` is made up of a `ReleasabilityType` and a `releasable to` list.
 
-Releasability has three types, as defined in 
+`Releasability` has three types, as defined in 
 [PSPF Release Guidelines](./documents/pspf-release-guidelines/README.md) **Section 9.5.1** Table 24. The
 releasabilities are:
 - AUSTEO
 - AGAO
 - REL
 
-The releasable to list of the `ReleasabilityCaveat` is only to be populated if the releasable type is REL.
+The `releasable to` list of the `ReleasabilityCaveat` is only to be populated if the `releasable type` is REL.
 
-When the Releasable type is REL, then the releasable to list should be populated with a minimum of 2 values, one
-of which must be `AUS`. Releasable to lists are order alphabetically, and by default is configured to sort the
-list with the Five Eyes Countries first.
+When the Releasable type is REL, then the `releasable to` list should be populated with a minimum of 2 values, one
+of which must be `AUS`. `Releasable to` lists are ordered with the Five Eyes countries first, and then in alphabetical
+oder.
 
-Releasable to lists are expected to be populated with country trigraphs, as defined in the 
+`Releasable to` lists are expected to be populated with country trigraphs, as defined in the 
 `International Standard ISO 3166-1:2013 alpha3 Codes`. This is not enforced, except for requiring that `AUS` be present.
 
 If there is no Releasability, then the `releasabilityCaveat` field will be null.
 
 ## Configuration
 
-| Cmd Line Property | Environment Variable | Config file Property Key | Description | Default |
-| --- | --- | --- | --- |
-| `trquinnClassificationAusReltoOrder` | `TRQUINN_CLASSIFICATION_AUS_RELTO_ORDER` | `trquinn.classification.aus.relto.order` | Determines which `Comparator` to use for sorting Releasable To lists | `fiveeyesfirst` |
-| `trquinnClassificationAusProductionMode` | `TRQUINN_CLASSIFICATION_AUS_PRODUCTION_MODE` | `trquinn.classification.aus.production.mode` | Determines if the library is operating in Production Mode. When true causes the library to use Real Classifications, other `DevelopmentClassification`'s are used. | `false` |
-| `trquinnClassificationConfigFile` ||| Specifies a User defined config file. ||
+##### Releasable To Oder
+
+Determines which `Comparator` to use for sorting Releasable To lists. Default is `fiveeyesfirst`.
+- Cmd Line Property: `trquinnClassificationAusReltoOrder`
+- Environment Variable: `TRQUINN_CLASSIFICATION_AUS_RELTO_ORDER`
+- Config File Property: `trquinn.classification.aus.relto.order`
+
+##### Production Mode
+
+Determines if the library is operating in Production Mode. When true causes the library to use `PSPFClassification`'s,
+otherwise `DevelopmentClassification`'s are used. Defaults to `false`.
+- Cmd Line Property: `trquinnClassificationAusProductionMode`
+- Environment Variable: `TRQUINN_CLASSIFICATION_AUS_PRODUCTION_MODE`
+- Config File Property: `trquinn.classification.aus.production.mode`
+
+##### Config File Location
+
+Specifies a User defined Config File.
+- Cmd Line Property: `trquinnClassificationConfigFile`
+- Environment Variable:
+
+#### Config precedence
 
 The order of precedence for configuration values are:
 - Cmd Line Property
@@ -172,7 +191,7 @@ The order of precedence for configuration values are:
 - Default value
 
 When searching configuration files, the library will search for files in the following order:
-- file defined via the `trquinnClassificationConfigFile` command line parameter. eg: `java -DtrquinnClassificationConfigFile=myconfig.properties MyApp`
+- file defined via the `trquinnClassificationConfigFile` command line property. eg: `java -DtrquinnClassificationConfigFile=myconfig.properties MyApp`
 - `application.properties`: this config file name is used by both **SpringBoot** and **Quarkus**.
 - `classification-config.properties`: the developer can create this file anywhere on the classpath and it should be
 successfully read in.
