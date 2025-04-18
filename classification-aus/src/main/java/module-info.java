@@ -3,4 +3,5 @@
  */
 module trquinn.classification.aus {
 	requires java.logging;
+	requires com.fasterxml.jackson.databind;
 }

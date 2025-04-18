@@ -164,23 +164,23 @@ If there is no Releasability, then the `releasabilityCaveat` field will be null.
 ##### Releasable To Oder
 
 Determines which `Comparator` to use for sorting Releasable To lists. Default is `fiveeyesfirst`.
-- Cmd Line Property: `trquinnClassificationAusReltoOrder`
-- Environment Variable: `TRQUINN_CLASSIFICATION_AUS_RELTO_ORDER`
-- Config File Property: `trquinn.classification.aus.relto.order`
+- Cmd Line Property: `classificationAusReltoOrder`
+- Environment Variable: `CLASSIFICATION_AUS_RELTO_ORDER`
+- Config File Property: `io.github.trquinn76.classification.aus.relto.order`
 
 ##### Production Mode
 
 Determines if the library is operating in Production Mode. When true causes the library to use `PSPFClassification`'s,
 otherwise `DevelopmentClassification`'s are used. Defaults to `false`.
-- Cmd Line Property: `trquinnClassificationAusProductionMode`
-- Environment Variable: `TRQUINN_CLASSIFICATION_AUS_PRODUCTION_MODE`
-- Config File Property: `trquinn.classification.aus.production.mode`
+- Cmd Line Property: `classificationAusProductionMode`
+- Environment Variable: `CLASSIFICATION_AUS_PRODUCTION_MODE`
+- Config File Property: `io.github.trquinn76.classification.aus.production.mode`
 
 ##### Config File Location
 
 Specifies a User defined Config File.
-- Cmd Line Property: `trquinnClassificationConfigFile`
-- Environment Variable:
+- Cmd Line Property: `classificationConfigFile`
+- Environment Variable: `CLASSIFICATION_CONFIG_FILE`
 
 #### Config precedence
 
@@ -191,7 +191,8 @@ The order of precedence for configuration values are:
 - Default value
 
 When searching configuration files, the library will search for files in the following order:
-- file defined via the `trquinnClassificationConfigFile` command line property. eg: `java -DtrquinnClassificationConfigFile=myconfig.properties MyApp`
+- file defined via the `classificationConfigFile` command line property. eg:
+`java -DclassificationConfigFile=myconfig.properties MyApp`. Or the `CLASSIFICATION_CONFIG_FILE` environment variable.
 - `application.properties`: this config file name is used by both **SpringBoot** and **Quarkus**.
 - `classification-config.properties`: the developer can create this file anywhere on the classpath and it should be
 successfully read in.
@@ -205,16 +206,16 @@ By default the library will use the `DevelopmentClassification`'s, rather than t
 value. This can be done via runtime command line property, environment variable or configuration.
 
 eg:
-- `java -DtrquinnClassificationAusProductionMode=true MyApp`
-- `setenv TRQUINN_CLASSIFICATION_AUS_PRODUCTION_MODE = true`
-- in config file `application.properties` set: `trquinn.classification.aus.production.mode = true`
+- `java -DclassificationAusProductionMode=true MyApp`
+- `CLASSIFICATION_AUS_PRODUCTION_MODE=true`
+- in config file `application.properties` set: `io.github.trquinn76.classification.aus.production.mode = true`
 
 ## Implementation considerations
 
 ### Sets for Lists
 
 There are a number of `List`'s in the `ProtectiveMarkerBuilder` which are implemented as `TreeSet`'s. These `Set`'s are
-converted to true `List`'s when the `ProtectiveMarking` is built. Their use ensures that duplicate values are handled
+converted to true `List`'s when the `ProtectiveMarker` is built. Their use ensures that duplicate values are handled
 and that the generated `List`'s are in alphabetical order.
 
 ### Merging Protective Markings
@@ -223,8 +224,6 @@ When using the `merge()` functions in the `Utils` class, it is important to reme
 - Special Handling Instructions are NOT merged. It is not clear from the source documentation how these values could be
 merged. Especially for cases such a Exclusive For instructions for different addressees, it is not clear how that
 should be handled, or if that would represent a Breach.
-- Information Management Markers are NOT merged. Accumulating Information Management Markers would be easy enough, but
-it is not clear how to handle multiple Legislative Secrecy Warning Strings.
 - The returned `ProtectiveMarkerBuilder` returned by each of the `merge()` functions is NOT guaranteed to be in a valid
-state, and it may require additional work to be able to build a new `ProtectiveMarking`. In particular Releasable To
+state, and it may require additional work to be able to build a new `ProtectiveMarker`. In particular Releasable To
 lists may be reduced to a single entry of `AUS`.

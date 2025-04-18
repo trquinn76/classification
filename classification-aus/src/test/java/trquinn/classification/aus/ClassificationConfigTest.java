@@ -48,7 +48,7 @@ class ClassificationConfigTest {
 	 * @param propertyName
 	 * @param value
 	 */
-	private void setAndWaitForSystemProperty(String propertyName, String value) {
+	protected static void setAndWaitForSystemProperty(String propertyName, String value) {
 		System.setProperty(propertyName, value);
 		while (System.getProperty(propertyName) == null) {
 			try {

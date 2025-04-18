@@ -2,7 +2,10 @@ package trquinn.classification.aus.model;
 
 import java.util.Objects;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+
 import trquinn.classification.aus.ClassificationConfig;
+import trquinn.classification.aus.model.deserializer.ClassificationDeserializer;
 
 /**
  * An interface to represent a specific Classification, such as OFFICIAL or SECRET.
@@ -14,10 +17,10 @@ import trquinn.classification.aus.ClassificationConfig;
  * Security Policy Framework.
  * <p>
  * {@link DevelopmentClassification} represents parallel Classifications, which should obviously map to the
- * real Classifications, which should be used in environments where data, and test data, should not be marked
- * with real Classifications. 
- * 
+ * real Classifications, and should be used in environments where data, and test data, should not be marked
+ * with real Classifications.
  */
+@JsonDeserialize(using = ClassificationDeserializer.class)
 public interface Classification {
 
 	/**
@@ -44,7 +47,7 @@ public interface Classification {
 	int hashCode();
 	
 	/**
-	 * Ensures the implementing ensumerations {@code equals()} function is exposed.
+	 * Ensures the implementing enumerations {@code equals()} function is exposed.
 	 * 
 	 * @param obj the object to compare for equality.
 	 * @return true if the objects are deeply equal, false otherwise.
@@ -54,76 +57,76 @@ public interface Classification {
 	/**
 	 * Returns the {@link Classification} which represents UNOFFICIAL based on current configuration.
 	 * 
-	 * @return UNOFFICIAL or FAKE_UNOFFICIAL depending on configuration.
+	 * @return UNOFFICIAL or DEVELOPMENT_UNOFFICIAL depending on configuration.
 	 */
 	public static Classification unofficial() {
 		if (ClassificationConfig.productionMode()) {
 			return PSPFClassification.UNOFFICIAL;
 		}
-		return DevelopmentClassification.FAKE_UNOFFICIAL;
+		return DevelopmentClassification.DEVELOPMENT_UNOFFICIAL;
 	}
 	
 	/**
 	 * Returns the {@link Classification} which represents OFFICIAL based on current configuration.
 	 * 
-	 * @return OFFICIAL or FAKE_OFFICIAL depending on configuration.
+	 * @return OFFICIAL or DEVELOPMENT_OFFICIAL depending on configuration.
 	 */
 	public static Classification official() {
 		if (ClassificationConfig.productionMode()) {
 			return PSPFClassification.OFFICIAL;
 		}
-		return DevelopmentClassification.FAKE_OFFICIAL;
+		return DevelopmentClassification.DEVELOPMENT_OFFICIAL;
 	}
 	
 	/**
 	 * Returns the {@link Classification} which represents OFFICIAL: Sensitive based on current configuration.
 	 * 
-	 * @return OFFICIAL_SENSITIVE or FAKE_OFFICIAL_SENSITIVE depending on configuration.
+	 * @return OFFICIAL_SENSITIVE or DEVELOPMENT_OFFICIAL_SENSITIVE depending on configuration.
 	 */
 	public static Classification officialSensitive() {
 		if (ClassificationConfig.productionMode()) {
 			return PSPFClassification.OFFICIAL_SENSITIVE;
 		}
-		return DevelopmentClassification.FAKE_OFFICIAL_SENSITIVE;
+		return DevelopmentClassification.DEVELOPMENT_OFFICIAL_SENSITIVE;
 	}
 	
 	/**
 	 * Returns the {@link Classification} which represents PROTECTED based on current configuration.
 	 * <p>
-	 * Unfortunately, {@code protected} is a reserved work in {@code Java}, so it is not possible to used to obvious
+	 * Unfortunately, {@code protected} is a reserved work in {@code Java}, so it is not possible to use the obvious
 	 * function name here.
 	 * 
-	 * @return PROTECTED or FAKE_PRTECTED depending on configuration.
+	 * @return PROTECTED or DEVELOPMENT_PROTECTED depending on configuration.
 	 */
 	public static Classification protect() {
 		if (ClassificationConfig.productionMode()) {
 			return PSPFClassification.PROTECTED;
 		}
-		return DevelopmentClassification.FAKE_PROTECTED;
+		return DevelopmentClassification.DEVELOPMENT_PROTECTED;
 	}
 	
 	/**
 	 * Returns the {@link Classification} which represents SECRET based on current configuration.
 	 * 
-	 * @return SECRET or FAKE_SECRET depending on configuration.
+	 * @return SECRET or DEVELOPMENT_SECRET depending on configuration.
 	 */
 	public static Classification secret() {
 		if (ClassificationConfig.productionMode()) {
 			return PSPFClassification.SECRET;
 		}
-		return DevelopmentClassification.FAKE_SECRET;
+		return DevelopmentClassification.DEVELOPMENT_SECRET;
 	}
 	
 	/**
 	 * Returns the {@link Classification} which represents TOP SECRET based on current configuration.
 	 * 
-	 * @return TOP_SECRET or FAKE_TOP_SECRET depending no configuration.
+	 * @return TOP_SECRET or DEVELOPMENT_TOP_SECRET depending no configuration.
 	 */
 	public static Classification topSecret() {
 		if (ClassificationConfig.productionMode()) {
 			return PSPFClassification.TOP_SECRET;
 		}
-		return DevelopmentClassification.FAKE_TOP_SECRET;
+		return DevelopmentClassification.DEVELOPMENT_TOP_SECRET;
 	}
 	
 	/**

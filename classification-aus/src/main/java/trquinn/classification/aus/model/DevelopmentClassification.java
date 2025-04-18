@@ -1,5 +1,7 @@
 package trquinn.classification.aus.model;
 
+import trquinn.classification.aus.ClassificationConfig;
+
 /**
  * A parallel list of {@link Classification}'s, which follow the same structure as {@link PSPFClassification}, but
  * which might be used in non-secure environments.
@@ -14,12 +16,12 @@ package trquinn.classification.aus.model;
  */
 public enum DevelopmentClassification implements Classification {
 
-	FAKE_UNOFFICIAL("Fake UNOFFICIAL"),
-	FAKE_OFFICIAL("Fake OFFICIAL"),
-	FAKE_OFFICIAL_SENSITIVE("Fake OFFICIAL: Sensitive"),
-	FAKE_PROTECTED("Fake PROTECTED"),
-	FAKE_SECRET("Fake SECRET"),
-	FAKE_TOP_SECRET("Fake TOP SECRET");
+	DEVELOPMENT_UNOFFICIAL(ClassificationConfig.developmentUnofficialName()),
+	DEVELOPMENT_OFFICIAL(ClassificationConfig.developmentOfficialName()),
+	DEVELOPMENT_OFFICIAL_SENSITIVE(ClassificationConfig.developmentOfficialSensitiveName()),
+	DEVELOPMENT_PROTECTED(ClassificationConfig.developmentProtectedName()),
+	DEVELOPMENT_SECRET(ClassificationConfig.developmentSecretName()),
+	DEVELOPMENT_TOP_SECRET(ClassificationConfig.developmentTopSecretName());
 	
 	private final String text;
 	
