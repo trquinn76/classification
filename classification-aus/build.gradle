@@ -3,10 +3,10 @@ plugins {
     id 'jacoco'
 }
 
-version '1.0.0-SNAPSHOT'
+version '1.0.0'
 
 dependencies {
-    api 'com.fasterxml.jackson.core:jackson-databind:2.18.3'
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.18.3'
 }
 
 java {

@@ -33,9 +33,10 @@ resulting `ProtectiveMarker` is valid.
 
 ### Handling Invalid States (particularly in UI's)
 
-In the course of working with Classified data, it is not unusual to need to hold representations of Classification
-in invalid, intermediate states, while the User edits them via the UI. One of the `ProtectiveMarkerBuilder`'s purposes
-is to be able to hold Classification information in an invalid state, while a User is actively editing it via a UI.
+In the course of working with Classified data, it is not unusual to need to hold representations of 
+`ProtectiveMarker`'s in invalid, intermediate states, while the User edits them via the UI. One of the
+`ProtectiveMarkerBuilder`'s purposes is to be able to hold `ProtectiveMarker` information in an invalid state, while a
+User is actively editing it via a UI.
 
 ## ProtectiveMarking structure
 
@@ -182,6 +183,48 @@ Specifies a User defined Config File.
 - Cmd Line Property: `classificationConfigFile`
 - Environment Variable: `CLASSIFICATION_CONFIG_FILE`
 
+##### Development UNOFFICIAL String
+
+Determines the String used when displaying the `DEVELOPMENT_UNOFFICIAL` Classification.
+- Cmd Line Property: `classificationAusDevelUnofficial`
+- Environment Variable: `CLASSIFICATION_AUS_DEVEL_UNOFFICIAL`
+- Config File Property: `io.github.trquinn76.classification.aus.development.unofficial.name`
+
+##### Development OFFICIAL String
+
+Determines the String used when displaying the `DEVELOPMENT_OFFICIAL` Classification.
+- Cmd Line Property: `classificationAusDevelOfficial`
+- Environment Variable: `CLASSIFICATION_AUS_DEVEL_OFFICIAL`
+- Config File Property: `io.github.trquinn76.classification.aus.development.official.name`
+
+##### Development OFFICIAL: Sensitive String
+
+Determines the String used when displaying the `DEVELOPMENT_OFFICIAL_SENSITIVE` Classification.
+- Cmd Line Property: `classificationAusDevelOfficialSensitive`
+- Environment Variable: `CLASSIFICATION_AUS_DEVEL_OFFICIAL_SENSITIVE`
+- Config File Property: `io.github.trquinn76.classification.aus.development.official.sensitive.name`
+
+##### Development PROTECTED String
+
+Determines the String used when displaying the `DEVELOPMENT_PROTECTED` Classification.
+- Cmd Line Property: `classificationAusDevelProtected`
+- Environment Variable: `CLASSIFICATION_AUS_DEVEL_PROTECTED`
+- Config File Property: `io.github.trquinn76.classification.aus.development.protected.name`
+
+##### Development SECRET String
+
+Determines the String used when displaying the `DEVELOPMENT_SECRET` Classification.
+- Cmd Line Property: `classificationAusDevelSecret`
+- Environment Variable: `CLASSIFICATION_AUS_DEVEL_SECRET`
+- Config File Property: `io.github.trquinn76.classification.aus.development.secret.name`
+
+##### Development TOP SECRET String
+
+Determines the String used when displaying the `DEVELOPMENT_TOP_SECRET` Classification.
+- Cmd Line Property: `classificationAusDevelTopSecret`
+- Environment Variable: `CLASSIFICATION_AUS_DEVEL_TOP_SECRET`
+- Config File Property: `io.github.trquinn76.classification.aus.development.top.secret.name`
+
 #### Config precedence
 
 The order of precedence for configuration values are:
@@ -199,7 +242,7 @@ successfully read in.
 - `default-classification-config.properties`: which already exists in the library `JAR` file, and holds the default
 values used in this library.
 
-#### Configuring to use real Classifications
+#### Configuring to use real/PSPF Classifications
 
 By default the library will use the `DevelopmentClassification`'s, rather than the real Classifications defined in
 `PSPFClassification`. In order to use the `PSPFClassification`'s, it is necessary to set the Production Mode config

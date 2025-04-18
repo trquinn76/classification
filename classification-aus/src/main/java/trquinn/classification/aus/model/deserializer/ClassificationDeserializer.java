@@ -16,7 +16,7 @@ import trquinn.classification.aus.model.PSPFClassification;
  * A specialised Jackson Databind Deserialiser for the {@link Classification}
  * interface.
  * 
- * Deserialisation will depend on current configuration.
+ * Deserialisation will depend on current Production Mode configuration.
  */
 @SuppressWarnings("serial")
 public class ClassificationDeserializer extends StdDeserializer<Classification> {
