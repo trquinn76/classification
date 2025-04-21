@@ -1,8 +1,8 @@
-package trquinn.classification.aus.model;
+package io.github.trquinn76.classification.aus.model;
 
 import java.util.Objects;
 
-import trquinn.classification.aus.ClassificationConfig;
+import io.github.trquinn76.classification.aus.ClassificationConfig;
 
 /**
  * An wrapper record for either a {@link PSPFClassification} or a {@link DevelopmentClassification} to represent a

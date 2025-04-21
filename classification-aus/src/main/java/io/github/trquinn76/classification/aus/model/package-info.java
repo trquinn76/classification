@@ -3,4 +3,4 @@
  * <p>
  * These records may be used for representing Classification within applications, and may be used as DTO's.
  */
-package trquinn.classification.aus.model;
+package io.github.trquinn76.classification.aus.model;

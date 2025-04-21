@@ -1,4 +1,4 @@
-package trquinn.classification.aus;
+package io.github.trquinn76.classification.aus;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -68,14 +68,14 @@ public class ClassificationConfig {
 	 * Returns if the Classifications are in production mode.
 	 * 
 	 * In production mode, the real
-	 * {@link trquinn.classification.aus.model.Classification}'s from
-	 * {@link trquinn.classification.aus.model.PSPFClassification} will be used,
-	 * while the {@link trquinn.classification.aus.model.Classification}'s from
-	 * {@link trquinn.classification.aus.model.DevelopmentClassification} will be
+	 * {@link io.github.trquinn76.classification.aus.model.Classification}'s from
+	 * {@link io.github.trquinn76.classification.aus.model.PSPFClassification} will be used,
+	 * while the {@link io.github.trquinn76.classification.aus.model.Classification}'s from
+	 * {@link io.github.trquinn76.classification.aus.model.DevelopmentClassification} will be
 	 * used otherwise.
 	 * <p>
 	 * Defaults to false. Needs to be set by a developer to use real
-	 * {@link trquinn.classification.aus.model.Classification}'s.
+	 * {@link io.github.trquinn76.classification.aus.model.Classification}'s.
 	 * 
 	 * @return true if in Production Mode, false otherwise.
 	 */

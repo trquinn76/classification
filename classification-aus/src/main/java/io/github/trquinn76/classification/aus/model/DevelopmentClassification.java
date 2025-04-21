@@ -1,6 +1,6 @@
-package trquinn.classification.aus.model;
+package io.github.trquinn76.classification.aus.model;
 
-import trquinn.classification.aus.ClassificationConfig;
+import io.github.trquinn76.classification.aus.ClassificationConfig;
 
 /**
  * A parallel list of {@link Classification}'s, which follow the same structure as {@link PSPFClassification}, but

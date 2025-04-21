@@ -1,4 +1,4 @@
-package trquinn.classification.aus.model;
+package io.github.trquinn76.classification.aus.model;
 
 /**
  * The set of Releasability types defined in the PSPF Guidelines, table 24.

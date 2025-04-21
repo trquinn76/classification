@@ -1,4 +1,4 @@
-package trquinn.classification.aus;
+package io.github.trquinn76.classification.aus;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -8,7 +8,9 @@ import org.junit.jupiter.api.Test;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import trquinn.classification.aus.model.ProtectiveMarker;
+import io.github.trquinn76.classification.aus.ClassificationConfig;
+import io.github.trquinn76.classification.aus.ProtectiveMarkerBuilder;
+import io.github.trquinn76.classification.aus.model.ProtectiveMarker;
 
 class ParsingTest {
 

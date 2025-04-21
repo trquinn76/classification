@@ -4,6 +4,6 @@
 open module trquinn.classification.aus {
 	requires java.logging;
 	
-	exports trquinn.classification.aus;
-	exports trquinn.classification.aus.model;
+	exports io.github.trquinn76.classification.aus;
+	exports io.github.trquinn76.classification.aus.model;
 }

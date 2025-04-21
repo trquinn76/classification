@@ -1,4 +1,4 @@
-package trquinn.classification.aus.model;
+package io.github.trquinn76.classification.aus.model;
 
 import java.util.Objects;
 import java.util.List;

@@ -1,4 +1,4 @@
-package trquinn.classification.aus;
+package io.github.trquinn76.classification.aus;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -9,8 +9,10 @@ import java.util.TreeSet;
 
 import org.junit.jupiter.api.Test;
 
-import trquinn.classification.aus.model.ProtectiveMarker;
-import trquinn.classification.aus.model.ReleasabilityType;
+import io.github.trquinn76.classification.aus.ProtectiveMarkerBuilder;
+import io.github.trquinn76.classification.aus.Utils;
+import io.github.trquinn76.classification.aus.model.ProtectiveMarker;
+import io.github.trquinn76.classification.aus.model.ReleasabilityType;
 
 class UtilsTest {
 

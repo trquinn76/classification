@@ -1,4 +1,4 @@
-package trquinn.classification.aus;
+package io.github.trquinn76.classification.aus;
 
 import java.util.Collection;
 import java.util.Comparator;
@@ -6,9 +6,9 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.TreeSet;
 
-import trquinn.classification.aus.model.ProtectiveMarker;
-import trquinn.classification.aus.model.ReleasabilityCaveat;
-import trquinn.classification.aus.model.ReleasabilityType;
+import io.github.trquinn76.classification.aus.model.ProtectiveMarker;
+import io.github.trquinn76.classification.aus.model.ReleasabilityCaveat;
+import io.github.trquinn76.classification.aus.model.ReleasabilityType;
 
 /**
  * Utility functions and constants for the Classification scheme.
@@ -63,7 +63,7 @@ public class Utils {
 	 * Will merge the two {@link ProtectiveMarker}'s together.
 	 * 
 	 * The returned {@link ProtectiveMarkerBuilder} will have the highest
-	 * {@link trquinn.classification.aus.model.Classification}, a combined list of Codewords, and Foreign Markings,
+	 * {@link io.github.trquinn76.classification.aus.model.Classification}, a combined list of Codewords, and Foreign Markings,
 	 * and the least restrictive Releasability, which still abides by all releasability markings.
 	 * <p>
 	 * Information Management Markings, and Special Handling Instructions are NOT merged, and are not included in
@@ -90,7 +90,7 @@ public class Utils {
 	 * Merges the {@code Collection} of {@link ProtectiveMarker}'s into a single {@link ProtectiveMarkerBuilder}.
 	 * 
 	 * The returned {@link ProtectiveMarkerBuilder} will have the highest
-	 * {@link trquinn.classification.aus.model.Classification}, a combined list of Codewords, and Foreign Markings,
+	 * {@link io.github.trquinn76.classification.aus.model.Classification}, a combined list of Codewords, and Foreign Markings,
 	 * and the least restrictive Releasability, which still abides by all releasability markings.
 	 * <p>
 	 * Information Management Markings, and Special Handling Instructions are NOT merged, and are not included in
@@ -123,7 +123,7 @@ public class Utils {
 	 * This function merges the given {@link ProtectiveMarker} into the existing {@link ProtectiveMarkerBuilder}.
 	 * 
 	 * The returned {@link ProtectiveMarkerBuilder} will have the highest
-	 * {@link trquinn.classification.aus.model.Classification}, a combined list of Codewords, and Foreign Markings,
+	 * {@link io.github.trquinn76.classification.aus.model.Classification}, a combined list of Codewords, and Foreign Markings,
 	 * and the least restrictive Releasability, which still abides by all releasability markings.
 	 * <p>
 	 * Information Management Markings, and Special Handling Instructions are NOT merged, and are not included in

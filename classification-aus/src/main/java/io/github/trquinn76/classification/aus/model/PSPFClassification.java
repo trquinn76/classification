@@ -1,4 +1,4 @@
-package trquinn.classification.aus.model;
+package io.github.trquinn76.classification.aus.model;
 
 /**
  * The {@link Classification}'s as defined in the Australian Government Protective Security Policy Framework.

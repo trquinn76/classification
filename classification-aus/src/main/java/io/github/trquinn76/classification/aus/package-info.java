@@ -1,4 +1,4 @@
 /**
  * Provides a Australian Classification/Protective Marking library.
  */
-package trquinn.classification.aus;
+package io.github.trquinn76.classification.aus;

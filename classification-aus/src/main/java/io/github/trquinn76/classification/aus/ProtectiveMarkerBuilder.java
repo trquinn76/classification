@@ -1,4 +1,4 @@
-package trquinn.classification.aus;
+package io.github.trquinn76.classification.aus;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -9,15 +9,15 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.logging.Logger;
 
-import trquinn.classification.aus.model.Classification;
-import trquinn.classification.aus.model.InformationManagementMarker;
-import trquinn.classification.aus.model.InformationManagementTypes;
-import trquinn.classification.aus.model.ProtectiveMarker;
-import trquinn.classification.aus.model.ReleasabilityCaveat;
-import trquinn.classification.aus.model.ReleasabilityType;
-import trquinn.classification.aus.model.SecurityCaveats;
-import trquinn.classification.aus.model.SpecialHandlingCaveat;
-import trquinn.classification.aus.model.SpecialHandlingInstruction;
+import io.github.trquinn76.classification.aus.model.Classification;
+import io.github.trquinn76.classification.aus.model.InformationManagementMarker;
+import io.github.trquinn76.classification.aus.model.InformationManagementTypes;
+import io.github.trquinn76.classification.aus.model.ProtectiveMarker;
+import io.github.trquinn76.classification.aus.model.ReleasabilityCaveat;
+import io.github.trquinn76.classification.aus.model.ReleasabilityType;
+import io.github.trquinn76.classification.aus.model.SecurityCaveats;
+import io.github.trquinn76.classification.aus.model.SpecialHandlingCaveat;
+import io.github.trquinn76.classification.aus.model.SpecialHandlingInstruction;
 
 /**
  * A builder for {@link ProtectiveMarker}'s.
