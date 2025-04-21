@@ -255,6 +255,35 @@ eg:
 
 ## Implementation considerations
 
+### Classification as a wrapper
+
+`Classification` was originally defined as an interface, with `PSPFClassification` and `DevelopmentClassification`
+both implementing it. This worked find until it came time to deserialise a `ProtectiveMarker`. Deserialising to an
+interface requires intervention in the deserialising framework, to select an appropriate implementation of the
+interface. This would create extra work for developers attempting to use this library in handling that case. This
+is not desired, as this library should be easy to use.
+
+One possible way to resolve this would be to have a single Classification enumeration which contains both real and
+development Classifications. The range of values to use from the enumeration would be determined by the current
+production mode configuration. However, this then makes it very easy to cause technical breaches by confusing which
+range of values are currently allowed.
+
+So the current approach, where the `Classification` record is a wrapper for either a `PSPFClassification` or a
+`DevelopmentClassification`, was adopted. This allows a strict division between Real and Development Classifications
+and allows straight forward serialisation and deserialisation.
+
+This does result in an extra information appearing in the serialised representation. For example, from the
+`jackson-databind`:
+
+    {"classification":{"pspfClassification":null,"developmentClassification":"DEVELOPMENT_SECRET"},"informationManagementMarkers":[],"securityCaveats":{"codeWords":[],"foreignGovernmentMarkings":[],"specialHandlingCaveat":null,"releasabilityCaveat":{"type":"REL","releasableToList":["AUS","CAN","NZL"]}}}
+
+Compared with the json for the original interface, or a single enumeration:
+
+    {"classification":"DEVELOPMENT_SECRET","informationManagementMarkers":[],"securityCaveats":{"codeWords":[],"foreignGovernmentMarkings":[],"specialHandlingCaveat":null,"releasabilityCaveat":{"type":"REL","releasableToList":["AUS","CAN","NZL"]}}}
+
+This extra information is considered acceptable as it maintains ease of use of the library, and ensures true separation
+of real and development Classifications.
+
 ### Sets for Lists
 
 There are a number of `List`'s in the `ProtectiveMarkerBuilder` which are implemented as `TreeSet`'s. These `Set`'s are

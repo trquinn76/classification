@@ -7,7 +7,7 @@ package trquinn.classification.aus.model;
  * {@link Classification}'s to be used, it is necessary to set the classification production mode configuration
  * value to true.
  */
-public enum PSPFClassification implements Classification {
+public enum PSPFClassification {
 
 	UNOFFICIAL("UNOFFICIAL"),
 	OFFICIAL("OFFICIAL"),

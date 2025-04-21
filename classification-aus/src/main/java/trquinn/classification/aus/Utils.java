@@ -139,7 +139,7 @@ public class Utils {
 	protected static ProtectiveMarkerBuilder merge(ProtectiveMarkerBuilder builder, ProtectiveMarker marking) {
 		Objects.requireNonNull(builder);
 		if (marking != null) {
-			if (builder.getClassificiation() == null || builder.getClassificiation().ordinal() < marking.classification().ordinal()) {
+			if (builder.getClassificiation() == null || builder.getClassificiation().compareTo(marking.classification()) < 0) {
 				builder.setClassification(marking.classification());
 			}
 			// no attempt is made to merge Information Management Markers.

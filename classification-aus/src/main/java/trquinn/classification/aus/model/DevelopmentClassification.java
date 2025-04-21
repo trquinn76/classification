@@ -14,7 +14,7 @@ import trquinn.classification.aus.ClassificationConfig;
  * {@link PSPFClassification}'s in production it is necessary to set the production mode configuration value to
  * {@code true}.  
  */
-public enum DevelopmentClassification implements Classification {
+public enum DevelopmentClassification {
 
 	DEVELOPMENT_UNOFFICIAL(ClassificationConfig.developmentUnofficialName()),
 	DEVELOPMENT_OFFICIAL(ClassificationConfig.developmentOfficialName()),
