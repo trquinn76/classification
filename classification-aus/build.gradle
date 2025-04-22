@@ -1,9 +1,11 @@
 plugins {
     id 'java-library'
     id 'jacoco'
+    id 'maven-publish'
+    id 'org.jreleaser' version '1.17.0'
 }
 
-version '1.0.0'
+version '1.0.1'
 
 dependencies {
     testImplementation 'com.fasterxml.jackson.core:jackson-databind:2.18.3'
@@ -35,3 +37,68 @@ jacocoTestReport {
 javadoc {
     failOnError = false
 }
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            groupId = 'io.github.trquinn76'
+            artifactId = 'classification-aus'
+
+            from components.java
+
+            pom {
+                name = 'Australian Classification'
+                description = "Provides data model for Australian Protective Markings, which are immutable and suitable for use as DTO's"
+                url = 'https://github.com/trquinn76/classification/tree/master/classification-aus'
+                inceptionYear = '2025'
+                licenses {
+                    license {
+                        name = 'MIT'
+                        url = 'https://github.com/trquinn76/classification/blob/master/LICENSE'
+                    }
+                }
+                developers {
+                    developer {
+                        id = 'trqinn76'
+                        name = 'Tim Quinn'
+                        url = 'https://github.com/trquinn76'
+                    }
+                }
+                scm {
+                    url = 'http://github.com/trquinn/classification'
+                    connection = 'scm:git:https://github.com/trquinn76/classification.git'
+                    developerConnection = 'scm:git:ssh://github.com/trquinn76/classification.git'
+                }
+            }
+        }
+    }
+
+    repositories {
+        maven {
+            url = layout.buildDirectory.dir('staging-deploy')
+        }
+    }
+}
+
+jreleaser {
+    signing {
+        active = 'ALWAYS'
+        armored = true
+        // need to have JRELEASER_GPG_PUBLIC_KEY, JRELEASER_GPG_SECRET_KEY and
+        // JRELEASER_GPG_PASSPHRASE environment variables set.
+    }
+    deploy {
+        maven {
+            mavenCentral {
+                sonatype {
+                    active = 'ALWAYS'
+                    url = 'https://central.sonatype.com/api/v1/publisher'
+                    stagingRepository('target/staging-deploy')
+                    // nned to have JRELEASER_MAVENCENTRAL_SONATYPE_USERNAME and
+                    // JRELEASER_MAVENCENTRAL_SONATYPE_PASSWORD environment variables set.
+                }
+            }
+        }
+    }
+}
+
