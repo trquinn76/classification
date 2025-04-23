@@ -91,6 +91,17 @@ public class ProtectiveMarkerBuilder {
 		this.classification = classification;
 		return this;
 	}
+	
+	/**
+	 * Sets the {@link Classification}.
+	 * 
+	 * @param name the name of an entry in the configured Classification enumeration.
+	 * @return this for function chaining.
+	 */
+	public ProtectiveMarkerBuilder setClassification(String name) {
+		this.classification = new Classification(name);
+		return this;
+	}
 
 	/**
 	 * Gets the {@link Classification} set in this builder.

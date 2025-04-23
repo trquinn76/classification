@@ -57,6 +57,9 @@ The Classifications are:
 - SECRET
 - TOP SECRET
 
+The `Classification` record is required to be built with a String which is the `name()` of one of the entries in the
+currently configured Classification enumeration.
+
 ##### Default Classifications
 
 By default the library is configured to use a set of `DevelopmentClassification`'s. These are deliberately distinct
@@ -255,7 +258,7 @@ eg:
 
 ## Implementation considerations
 
-### Classification as a wrapper
+### Classification as a Record with a String
 
 `Classification` was originally defined as an interface, with `PSPFClassification` and `DevelopmentClassification`
 both implementing it. This worked find until it came time to deserialise a `ProtectiveMarker`. Deserialising to an
@@ -268,21 +271,18 @@ development Classifications. The range of values to use from the enumeration wou
 production mode configuration. However, this then makes it very easy to cause technical breaches by confusing which
 range of values are currently allowed.
 
-So the current approach, where the `Classification` record is a wrapper for either a `PSPFClassification` or a
-`DevelopmentClassification`, was adopted. This allows a strict division between Real and Development Classifications
-and allows straight forward serialisation and deserialisation.
-
-This does result in an extra information appearing in the serialised representation. For example, from the
-`jackson-databind`:
+Another approach is to have the `Classification` class be a wrapper record around an instance of either
+`PSPFClassification` or `DevelopmentClassification`. This can work, but produces a serialised form with lots extra
+information appearing. eg:
 
     {"classification":{"pspfClassification":null,"developmentClassification":"DEVELOPMENT_SECRET"},"informationManagementMarkers":[],"securityCaveats":{"codeWords":[],"foreignGovernmentMarkings":[],"specialHandlingCaveat":null,"releasabilityCaveat":{"type":"REL","releasableToList":["AUS","CAN","NZL"]}}}
 
-Compared with the json for the original interface, or a single enumeration:
+The current approach is to have the `Classification` record contain a `String`, and require that String to be the
+`name()` of an entry in the appropriately configured Classification type. This produces a much nicer serialised form
 
-    {"classification":"DEVELOPMENT_SECRET","informationManagementMarkers":[],"securityCaveats":{"codeWords":[],"foreignGovernmentMarkings":[],"specialHandlingCaveat":null,"releasabilityCaveat":{"type":"REL","releasableToList":["AUS","CAN","NZL"]}}}
+    {"classification":{"classificationName":"DEVELOPMENT_SECRET"},"informationManagementMarkers":[],"securityCaveats":{"codeWords":[],"foreignGovernmentMarkings":[],"specialHandlingCaveat":null,"releasabilityCaveat":{"type":"REL","releasableToList":["AUS","CAN","NZL"]}}}
 
-This extra information is considered acceptable as it maintains ease of use of the library, and ensures true separation
-of real and development Classifications.
+While also retaining an API which is nice to work with.
 
 ### Sets for Lists
 
