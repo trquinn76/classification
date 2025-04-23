@@ -8,8 +8,6 @@ import org.junit.jupiter.api.Test;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import io.github.trquinn76.classification.aus.ClassificationConfig;
-import io.github.trquinn76.classification.aus.ProtectiveMarkerBuilder;
 import io.github.trquinn76.classification.aus.model.ProtectiveMarker;
 
 class ParsingTest {

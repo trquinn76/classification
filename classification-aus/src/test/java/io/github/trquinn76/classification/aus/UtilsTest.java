@@ -9,8 +9,6 @@ import java.util.TreeSet;
 
 import org.junit.jupiter.api.Test;
 
-import io.github.trquinn76.classification.aus.ProtectiveMarkerBuilder;
-import io.github.trquinn76.classification.aus.Utils;
 import io.github.trquinn76.classification.aus.model.ProtectiveMarker;
 import io.github.trquinn76.classification.aus.model.ReleasabilityType;
 

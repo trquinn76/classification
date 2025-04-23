@@ -7,9 +7,6 @@ import java.util.Comparator;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
-import io.github.trquinn76.classification.aus.ClassificationConfig;
-import io.github.trquinn76.classification.aus.Utils;
-
 class ClassificationConfigTest {
 	
 	@AfterEach

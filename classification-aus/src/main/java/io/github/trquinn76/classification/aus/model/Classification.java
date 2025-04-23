@@ -20,9 +20,16 @@ import io.github.trquinn76.classification.aus.ClassificationConfig;
  * The {@code classificationName} passed to this record is required to be the name of an entry in one of those
  * enumerations. Any other value will raise exceptions. In addition only values for the appropriate enumeration
  * based on the current configuration of production mode are accepted.
+ * 
+ * @param classificationName defines the name of an entry in the currently configured Classification enumeration.
  */
 public record Classification(String classificationName) implements Comparable<Classification> {
 	
+	/**
+	 * Constructor.
+	 * 
+	 * @param classificationName defines the name of an entry in the currently configured Classification enumeration.
+	 */
 	public Classification {
 		Objects.requireNonNull(classificationName);
 		if (ClassificationConfig.productionMode()) {
