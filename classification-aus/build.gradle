@@ -88,7 +88,7 @@ jreleaser {
         // JRELEASER_GPG_PASSPHRASE environment variables set.
     }
     announce {
-        active = NEVER
+        active = 'NEVER'
     }
     deploy {
         maven {
