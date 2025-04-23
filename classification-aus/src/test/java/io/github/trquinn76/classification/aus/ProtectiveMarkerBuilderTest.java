@@ -7,7 +7,6 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
-import io.github.trquinn76.classification.aus.ProtectiveMarkerBuilder;
 import io.github.trquinn76.classification.aus.model.Classification;
 import io.github.trquinn76.classification.aus.model.InformationManagementMarker;
 import io.github.trquinn76.classification.aus.model.InformationManagementTypes;
