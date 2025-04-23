@@ -11,6 +11,7 @@ import io.github.trquinn76.classification.aus.ProtectiveMarkerBuilder;
 import io.github.trquinn76.classification.aus.model.Classification;
 import io.github.trquinn76.classification.aus.model.InformationManagementMarker;
 import io.github.trquinn76.classification.aus.model.InformationManagementTypes;
+import io.github.trquinn76.classification.aus.model.PSPFClassification;
 import io.github.trquinn76.classification.aus.model.ProtectiveMarker;
 import io.github.trquinn76.classification.aus.model.ReleasabilityCaveat;
 import io.github.trquinn76.classification.aus.model.ReleasabilityType;
@@ -26,6 +27,13 @@ class ProtectiveMarkerBuilderTest {
 		List<String> report = builder.isValid();
 		assertEquals(List.of("Classification must be set."), report);
 		assertThrows(IllegalStateException.class, () -> { builder.build(); });
+	}
+	
+	@Test
+	void invalidClassificationStringTest() {
+		assertThrows(IllegalArgumentException.class, () -> { new Classification("I'm not a Classification."); });
+		// currently configured for DevelopmentClassifications, so test that PSPFClassification fails
+		assertThrows(IllegalArgumentException.class, () -> { new Classification(PSPFClassification.PROTECTED.name()); });
 	}
 
 	@Test

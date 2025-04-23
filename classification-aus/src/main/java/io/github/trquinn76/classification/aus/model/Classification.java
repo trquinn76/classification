@@ -5,8 +5,7 @@ import java.util.Objects;
 import io.github.trquinn76.classification.aus.ClassificationConfig;
 
 /**
- * An wrapper record for either a {@link PSPFClassification} or a {@link DevelopmentClassification} to represent a
- * specific Classification, such as OFFICIAL or SECRET.
+ * Represents a specific Classification such as OFFICIAL or SECRET.
  * <p>
  * There are two enumerations which represent Classifications, {@link PSPFClassification} and
  * {@link DevelopmentClassification}.
@@ -17,31 +16,28 @@ import io.github.trquinn76.classification.aus.ClassificationConfig;
  * {@link DevelopmentClassification} represents parallel Classifications, which should obviously map to the
  * real Classifications, and should be used in environments where data, and test data, should not be marked
  * with real Classifications.
+ * <p>
+ * The {@code classificationName} passed to this record is required to be the name of an entry in one of those
+ * enumerations. Any other value will raise exceptions. In addition only values for the appropriate enumeration
+ * based on the current configuration of production mode are accepted.
  */
-public record Classification(PSPFClassification pspfClassification, DevelopmentClassification developmentClassification) implements Comparable<Classification> {
+public record Classification(String classificationName) implements Comparable<Classification> {
 	
 	public Classification {
+		Objects.requireNonNull(classificationName);
 		if (ClassificationConfig.productionMode()) {
-			if (developmentClassification != null) {
-				throw new IllegalArgumentException(
-						"Classification may not contain a DevelopmentClassification when production mode is set.");
-			}
-			Objects.requireNonNull(pspfClassification);
+			PSPFClassification.valueOf(classificationName);
 		} else {
-			if (pspfClassification != null) {
-				throw new IllegalArgumentException(
-						"Classification may not contain a PSPFClassification when production mode is not set.");
-			}
-			Objects.requireNonNull(developmentClassification);
+			DevelopmentClassification.valueOf(classificationName);
 		}
 	}
 	
 	@Override
 	public String toString() {
 		if (ClassificationConfig.productionMode()) {
-			return this.pspfClassification.toString();
+			return PSPFClassification.valueOf(classificationName()).toString();
 		}
-		return this.developmentClassification.toString();
+		return DevelopmentClassification.valueOf(classificationName()).toString();
 	}
 
 	/**
@@ -51,9 +47,9 @@ public record Classification(PSPFClassification pspfClassification, DevelopmentC
 	 */
 	public static Classification unofficial() {
 		if (ClassificationConfig.productionMode()) {
-			return new Classification(PSPFClassification.UNOFFICIAL, null);
+			return new Classification(PSPFClassification.UNOFFICIAL.name());
 		}
-		return new Classification(null, DevelopmentClassification.DEVELOPMENT_UNOFFICIAL);
+		return new Classification(DevelopmentClassification.DEVELOPMENT_UNOFFICIAL.name());
 	}
 	
 	/**
@@ -63,9 +59,9 @@ public record Classification(PSPFClassification pspfClassification, DevelopmentC
 	 */
 	public static Classification official() {
 		if (ClassificationConfig.productionMode()) {
-			return new Classification(PSPFClassification.OFFICIAL, null);
+			return new Classification(PSPFClassification.OFFICIAL.name());
 		}
-		return new Classification(null, DevelopmentClassification.DEVELOPMENT_OFFICIAL);
+		return new Classification(DevelopmentClassification.DEVELOPMENT_OFFICIAL.name());
 	}
 	
 	/**
@@ -75,9 +71,9 @@ public record Classification(PSPFClassification pspfClassification, DevelopmentC
 	 */
 	public static Classification officialSensitive() {
 		if (ClassificationConfig.productionMode()) {
-			return new Classification(PSPFClassification.OFFICIAL_SENSITIVE, null);
+			return new Classification(PSPFClassification.OFFICIAL_SENSITIVE.name());
 		}
-		return new Classification(null, DevelopmentClassification.DEVELOPMENT_OFFICIAL_SENSITIVE);
+		return new Classification(DevelopmentClassification.DEVELOPMENT_OFFICIAL_SENSITIVE.name());
 	}
 	
 	/**
@@ -90,9 +86,9 @@ public record Classification(PSPFClassification pspfClassification, DevelopmentC
 	 */
 	public static Classification protect() {
 		if (ClassificationConfig.productionMode()) {
-			return new Classification(PSPFClassification.PROTECTED, null);
+			return new Classification(PSPFClassification.PROTECTED.name());
 		}
-		return new Classification(null, DevelopmentClassification.DEVELOPMENT_PROTECTED);
+		return new Classification(DevelopmentClassification.DEVELOPMENT_PROTECTED.name());
 	}
 	
 	/**
@@ -102,9 +98,9 @@ public record Classification(PSPFClassification pspfClassification, DevelopmentC
 	 */
 	public static Classification secret() {
 		if (ClassificationConfig.productionMode()) {
-			return new Classification(PSPFClassification.SECRET, null);
+			return new Classification(PSPFClassification.SECRET.name());
 		}
-		return new Classification(null, DevelopmentClassification.DEVELOPMENT_SECRET);
+		return new Classification(DevelopmentClassification.DEVELOPMENT_SECRET.name());
 	}
 	
 	/**
@@ -114,38 +110,9 @@ public record Classification(PSPFClassification pspfClassification, DevelopmentC
 	 */
 	public static Classification topSecret() {
 		if (ClassificationConfig.productionMode()) {
-			return new Classification(PSPFClassification.TOP_SECRET, null);
+			return new Classification(PSPFClassification.TOP_SECRET.name());
 		}
-		return new Classification(null, DevelopmentClassification.DEVELOPMENT_TOP_SECRET);
-	}
-	
-	/**
-	 * Gets the {@link Classification} for which the given text is the {@code toString()} value.
-	 * <p>
-	 * Only one of the {@link Classification} enumerations will be searched, depending on current configuration.
-	 * 
-	 * @param text the String to convert to a {@link Classification}
-	 * @return the {@link Classification} which has {@code text} as it's {@code toString()} value.
-	 * @throws IllegalArgumentException if unable to map the given text parameter to a {@link Classification}
-	 */
-	public static Classification fromString(String text) {
-		Objects.requireNonNull(text);
-		if (ClassificationConfig.productionMode()) {
-			for (PSPFClassification classification : PSPFClassification.values()) {
-				if (classification.toString().equals(text)) {
-					return new Classification(classification, null);
-				}
-			}
-			throw new IllegalArgumentException("Unable to map string \"" + text + "\" to a Classification");
-		}
-		else {
-			for (DevelopmentClassification developmentClassification : DevelopmentClassification.values()) {
-				if (developmentClassification.toString().equals(text)) {
-					return new Classification(null, developmentClassification);
-				}
-			}
-			throw new IllegalArgumentException("Unable to map string \"" + text + "\" to a DevelopmentClassification");
-		}
+		return new Classification(DevelopmentClassification.DEVELOPMENT_TOP_SECRET.name());
 	}
 	
 	/**
@@ -177,8 +144,8 @@ public record Classification(PSPFClassification pspfClassification, DevelopmentC
 	@Override
 	public int compareTo(Classification other) {
 		if (ClassificationConfig.productionMode()) {
-			return this.pspfClassification().compareTo(other.pspfClassification());
+			return PSPFClassification.valueOf(classificationName()).compareTo(PSPFClassification.valueOf(other.classificationName()));
 		}
-		return this.developmentClassification().compareTo(other.developmentClassification());
+		return DevelopmentClassification.valueOf(classificationName()).compareTo(DevelopmentClassification.valueOf(other.classificationName()));
 	}
 }
