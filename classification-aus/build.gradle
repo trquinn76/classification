@@ -14,9 +14,9 @@ dependencies {
 java {
     toolchain {
     	languageVersion = JavaLanguageVersion.of(20)
-	}
-	withSourcesJar()
-	withJavadocJar()
+    }
+    withSourcesJar()
+    withJavadocJar()
 }
 
 testing {
