@@ -87,9 +87,6 @@ jreleaser {
         // need to have JRELEASER_GPG_PUBLIC_KEY, JRELEASER_GPG_SECRET_KEY and
         // JRELEASER_GPG_PASSPHRASE environment variables set.
     }
-    announce {
-        active = 'NEVER'
-    }
     deploy {
         maven {
             mavenCentral {
