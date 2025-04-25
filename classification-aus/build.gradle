@@ -43,7 +43,7 @@ mavenPublishing {
     
     signAllPublications()
     
-    coordinates('${group}', 'classification-aus', '${version}')
+    coordinates('io.github.trquinn76', 'classification-aus', '${version}')
     
     pom {
         name = "Australian Classification Scheme"
