@@ -1,8 +1,6 @@
 plugins {
     id 'java-library'
     id 'jacoco'
-    //id 'maven-publish'
-    //id 'org.jreleaser' version '1.17.0'
     id 'com.vanniktech.maven.publish' version '0.31.0'
 }
 import com.vanniktech.maven.publish.SonatypeHost
@@ -72,45 +70,3 @@ mavenPublishing {
         }
     }
 }
-
-//publishing {
-//    publications {
-//        maven(MavenPublication) {
-//            groupId = 'io.github.trquinn76'
-//            artifactId = 'classification-aus'
-//
-//            from components.java
-//
-//            pom {
-//                name = 'Australian Classification'
-//                description = "Provides data model for Australian Protective Markings, which are immutable and suitable for use as DTO's"
-//                url = 'https://github.com/trquinn76/classification/tree/master/classification-aus'
-//                inceptionYear = '2025'
-//                licenses {
-//                    license {
-//                        name = 'MIT'
-//                        url = 'https://github.com/trquinn76/classification/blob/master/LICENSE'
-//                    }
-//                }
-//                developers {
-//                    developer {
-//                        id = 'trqinn76'
-//                        name = 'Tim Quinn'
-//                        url = 'https://github.com/trquinn76'
-//                    }
-//                }
-//                scm {
-//                    url = 'http://github.com/trquinn/classification'
-//                    connection = 'scm:git:https://github.com/trquinn76/classification.git'
-//                    developerConnection = 'scm:git:ssh://github.com/trquinn76/classification.git'
-//                }
-//            }
-//        }
-//    }
-//
-//    repositories {
-//        maven {
-//            url = layout.buildDirectory.dir('staging-deploy')
-//        }
-//    }
-//}
