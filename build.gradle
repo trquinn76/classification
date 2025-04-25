@@ -4,5 +4,5 @@ allprojects {
         mavenCentral()
     }
 
-    group 'io.github.trquinn76'
+    group = 'io.github.trquinn76'
 }
