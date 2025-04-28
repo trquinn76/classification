@@ -34,9 +34,6 @@ jobs:
     - name: Build with Gradle
       run: ./gradlew build publish
       
-    - name: Ensure Configuration
-      run: ./gradlew jreleaserConfig --stacktrace
-
     - name: Publish to Maven Central
       run: |
         ./gradlew jreleaserConfig --stacktrace
