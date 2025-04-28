@@ -32,12 +32,18 @@ jobs:
       run: chmod +x gradlew
 
     - name: Build with Gradle
-      run: ./gradlew build
+      run: ./gradlew build publish
+      
+    - name: Ensure Configuration
+      run: ./gradlew jreleaserConfig
 
     - name: Publish to Maven Central
-      run: ./gradlew publishAndReleaseToMavenCentral --stacktrace
+      run: ./gradlew jreleaserFullRelease --stacktrace
       env:
-        ORG_GRADLE_PROJECT_signingInMemoryKey: ${{ secrets.GPG_SECRET_KEY }}
-        ORG_GRADLE_PROJECT_signingInMemoryKeyPassword: ${{ secrets.GPG_PASSPHRASE }}
-        ORG_GRADLE_PROJECT_mavenCentralUsername: ${{ secrets.MAVENCENTRALTOKENUSERNAME }}
-        ORG_GRADLE_PROJECT_mavenCentralPassword: ${{ secrets.MAVENCENTRALTOKENPASSWORD }}
+        JRELEASER_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        JRELEASER_GIT_ROOT_SEARCH: true
+        JRELEASER_GPG_PUBLIC_KEY: ${{ secrets.GPG_PUBLIC_KEY }}
+        JRELEASER_GPG_SECRET_KEY: ${{ secrets.GPG_SECRET_KEY }}
+        JRELEASER_GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+        JRELEASER_MAVENCENTRAL_USERNAME: ${{ secrets.MAVENCENTRALTOKENUSERNAME }}
+        JRELEASER_MAVENCENTRAL_PASSWORD: ${{ secrets.MAVENCENTRALTOKENPASSWORD }}

@@ -1,9 +1,9 @@
 plugins {
     id 'java-library'
     id 'jacoco'
-    id 'com.vanniktech.maven.publish' version '0.31.0'
+    id 'maven-publish'
+    id 'org.jreleaser' version '1.17.0'
 }
-import com.vanniktech.maven.publish.SonatypeHost
 
 version = '1.0.2'
 
@@ -38,35 +38,62 @@ javadoc {
     failOnError = false
 }
 
-mavenPublishing {
-    publishToMavenCentral(SonatypeHost.CENTRAL_PORTAL)
-    
-    signAllPublications()
-    
-    coordinates('io.github.trquinn76', 'classification-aus', '${version}')
-    
-    pom {
-        name = "Australian Classification Scheme"
-        description = "A comprehensive model of Austrlian Protective Markers which are immutable and suitable for use as DTO's."
-        inceptionYear = "2025"
-        url = "https://github.com/trquinn76/classification"
-        licenses {
-            license {
-                name = 'MIT Licence'
-                url = 'https://github.com/trquinn76/classification/blob/master/LICENSE'
+publishing {
+    publications {
+        maven(MavenPublication) {
+            groupId = 'io.github.trquinn76'
+            artifactId = 'classification-aus'
+
+            from components.java
+
+            pom {
+                name = 'Australian Classification Scheme'
+                description = "Representation of Australian Protective Markings, which are immutable and suitable for use as DTO's"
+                inceptionYear = "2025"
+                url = "https://github.com/trquinn76/classification"
+                licenses {
+                    license {
+                        name = 'MIT Licence'
+                        url = 'https://github.com/trquinn76/classification/blob/master/LICENSE'
+                    }
+                }
+                developers {
+                    developer {
+                        id = 'trqinn76'
+                        name = 'Tim Quinn'
+                        url = 'https://github.com/trquinn76'
+                    }
+                }
+                scm {
+                    url = 'http://github.com/trquinn/classification'
+                    connection = 'scm:git:https://github.com/trquinn76/classification.git'
+                    developerConnection = 'scm:git:ssh://github.com/trquinn76/classification.git'
+                }
             }
         }
-        developers {
-            developer {
-                id = 'trqinn76'
-                name = 'Tim Quinn'
-                url = 'https://github.com/trquinn76'
-            }
+    }
+
+    repositories {
+        maven {
+            url = layout.buildDirectory.dir('staging-deploy')
         }
-        scm {
-            url = 'http://github.com/trquinn/classification'
-            connection = 'scm:git:https://github.com/trquinn76/classification.git'
-            developerConnection = 'scm:git:ssh://github.com/trquinn76/classification.git'
+    }
+}
+
+jreleaser {
+    signing {
+        active = 'ALWAYS'
+        armored = true
+    }
+    deploy {
+        maven {
+            mavenCentral {
+                sonatype {
+                    active = 'ALWAYS'
+                    url = 'https://central.sonatype.com/api/v1/publisher'
+                    stagingRepository('build/staging-deploy')
+                }
+            }
         }
     }
 }
