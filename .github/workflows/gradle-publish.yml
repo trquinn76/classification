@@ -35,7 +35,7 @@ jobs:
       run: ./gradlew build publish
       
     - name: Ensure Configuration
-      run: ./gradlew jreleaserConfig
+      run: ./gradlew jreleaserConfig --stacktrace
 
     - name: Publish to Maven Central
       run: ./gradlew jreleaserFullRelease --stacktrace
