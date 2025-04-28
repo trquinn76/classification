@@ -31,6 +31,9 @@ jobs:
     - name: Make gradlew executable
       run: chmod +x gradlew
 
+    - name: Checking JReleaser Environment Variables
+      run: ./gradlew jreleaserEnv
+
     - name: Build with Gradle
       run: ./gradlew build publish
       
