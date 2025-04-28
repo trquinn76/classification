@@ -31,9 +31,6 @@ jobs:
     - name: Make gradlew executable
       run: chmod +x gradlew
 
-    - name: Checking JReleaser Environment Variables
-      run: ./gradlew jreleaserEnv
-
     - name: Build with Gradle
       run: ./gradlew build publish
       
@@ -41,7 +38,9 @@ jobs:
       run: ./gradlew jreleaserConfig --stacktrace
 
     - name: Publish to Maven Central
-      run: ./gradlew jreleaserFullRelease --stacktrace
+      run: |
+        ./gradlew jreleaserConfig --stacktrace
+        ./gradlew jreleaserFullRelease --stacktrace
       env:
         JRELEASER_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         JRELEASER_GIT_ROOT_SEARCH: true
