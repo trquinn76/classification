@@ -12,3 +12,11 @@ the sub project folder for the each Classification schemes.
 ## Australian Protective Markers
 
 [README.md](./classification-aus/README.md).
+
+> #### Maven Coordinates:
+> 
+>     <dependency>
+>         <groupId>io.github.trquinn76</groupId>
+>         <artifactId>classification-aus</artifactId>
+>         <version>1.0.2</version>
+>     </dependency>

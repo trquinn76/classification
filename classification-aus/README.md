@@ -10,6 +10,14 @@ model may be found in [Documents](./documents/README.md). These documents are:
 - [Email Protective Marking Standard](./documents/email-protective-marking-standard/README.md)
 - [Record Keeping Metadata Standard](./documents/recordkeeping-metadata-standard/README.md)
 
+> #### Maven Coordinates:
+> 
+>     <dependency>
+>         <groupId>io.github.trquinn76</groupId>
+>         <artifactId>classification-aus</artifactId>
+>         <version>1.0.2</version>
+>     </dependency>
+
 ### Purpose
 
 This model exists to deal with the issue that data stored in computer systems frequently needs to maintain the
