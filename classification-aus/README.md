@@ -46,7 +46,7 @@ In the course of working with Classified data, it is not unusual to need to hold
 `ProtectiveMarkerBuilder`'s purposes is to be able to hold `ProtectiveMarker` information in an invalid state, while a
 User is actively editing it via a UI.
 
-## ProtectiveMarking structure
+## ProtectiveMarker structure
 
 The `ProtectiveMarker` `record` consists of the following fields:
 
@@ -302,7 +302,7 @@ and that the generated `List`'s are in alphabetical order.
 
 When using the `merge()` functions in the `Utils` class, it is important to remember that:
 - Special Handling Instructions are NOT merged. It is not clear from the source documentation how these values could be
-merged. Especially for cases such a Exclusive For instructions for different addressees, it is not clear how that
+merged. Especially for cases such as Exclusive For instructions for different addressees: it is not clear how that
 should be handled, or if that would represent a Breach.
 - The returned `ProtectiveMarkerBuilder` returned by each of the `merge()` functions is NOT guaranteed to be in a valid
 state, and it may require additional work to be able to build a new `ProtectiveMarker`. In particular Releasable To

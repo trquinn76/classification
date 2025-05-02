@@ -5,7 +5,7 @@ plugins {
     id 'org.jreleaser' version '1.17.0'
 }
 
-version = '1.0.3'
+version = '1.0.0'
 
 dependencies {
     testImplementation 'com.fasterxml.jackson.core:jackson-databind:2.18.3'
@@ -42,13 +42,13 @@ publishing {
     publications {
         maven(MavenPublication) {
             groupId = 'io.github.trquinn76'
-            artifactId = 'classification-aus'
+            artifactId = 'classification-nzl'
 
             from components.java
 
             pom {
-                name = 'Australian Classification Scheme'
-                description = "Representation of Australian Protective Markings, which are immutable and suitable for use as DTO's"
+                name = 'New Zealand Classification Scheme'
+                description = "Representation of New Zealand Protective Markings, which are immutable and suitable for use as DTO's"
                 inceptionYear = "2025"
                 url = "https://github.com/trquinn76/classification"
                 licenses {

@@ -1,3 +1,4 @@
 rootProject.name = 'classification'
 
 include 'classification-aus'
+include 'classification-nzl'
