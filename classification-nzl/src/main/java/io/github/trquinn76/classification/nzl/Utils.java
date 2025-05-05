@@ -3,6 +3,8 @@ package io.github.trquinn76.classification.nzl;
 import java.util.Comparator;
 import java.util.Set;
 
+import io.github.trquinn76.classification.nzl.model.Classification;
+
 /**
  * Utility functions and constants for the Classification scheme.
  */
@@ -16,6 +18,25 @@ public class Utils {
     public static final String USA = "USA";
     /** Five Eyes Set */
     public static final Set<String> FIVE_EYES = Set.of(NZL, AUS, CAN, GBR, USA);
+    
+    /**
+     * Provides the Set of {@link Classification}'s which are Policy and Privacy Classifications.
+     * 
+     * @return the Set of Policy and Privacy Classifications.
+     */
+    public static Set<Classification> policyAndPrivacyClassifications() {
+        return Set.of(Classification.inConfidence(), Classification.sensitive());
+    }
+
+    /**
+     * Provides the Set of {@link Classification}'s which are National Security Classifications.
+     * 
+     * @return the Set of National Security Classifications.
+     */
+    public static Set<Classification> nationalSecurityClassifications() {
+        return Set.of(Classification.restricted(), Classification.confidential(), Classification.secret(),
+                Classification.topSecret());
+    }
 
     /**
      * A {@link Comparator} which will sort 'NZL' first, and then remaining values

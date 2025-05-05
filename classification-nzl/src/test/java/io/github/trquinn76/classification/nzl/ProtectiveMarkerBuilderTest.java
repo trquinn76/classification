@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test;
 
 import io.github.trquinn76.classification.nzl.model.Classification;
 import io.github.trquinn76.classification.nzl.model.NZLClassifications;
+import io.github.trquinn76.classification.nzl.model.NationalSecurityEndorsements;
 import io.github.trquinn76.classification.nzl.model.PolicyAndPrivacyEndorsementMarking;
 import io.github.trquinn76.classification.nzl.model.PolicyAndPrivacyEndorsements;
 import io.github.trquinn76.classification.nzl.model.ProtectiveMarker;
@@ -45,50 +46,49 @@ class ProtectiveMarkerBuilderTest {
     void classificationSetTest() {
         ProtectiveMarkerBuilder builder = new ProtectiveMarkerBuilder();
 
-        ProtectiveMarker expectedMarker = new ProtectiveMarker(Classification.unclassified(), Collections.emptyList(),
-                false, Collections.emptyList(), null);
+        ProtectiveMarker expectedMarker = new ProtectiveMarker(Classification.unclassified(), Collections.emptyList(), null);
         ProtectiveMarker actualMarker = builder.unclassified().build();
         assertEquals(expectedMarker, actualMarker);
 
-        expectedMarker = new ProtectiveMarker(Classification.inConfidence(), Collections.emptyList(), false,
-                Collections.emptyList(), null);
+        expectedMarker = new ProtectiveMarker(Classification.inConfidence(), Collections.emptyList(), null);
         actualMarker = builder.inConfidence().build();
         assertEquals(expectedMarker, actualMarker);
 
-        expectedMarker = new ProtectiveMarker(Classification.sensitive(), Collections.emptyList(), false,
-                Collections.emptyList(), null);
+        expectedMarker = new ProtectiveMarker(Classification.sensitive(), Collections.emptyList(), null);
         actualMarker = builder.sensitive().build();
         assertEquals(expectedMarker, actualMarker);
 
-        expectedMarker = new ProtectiveMarker(Classification.restricted(), Collections.emptyList(), false,
-                Collections.emptyList(), null);
+        expectedMarker = new ProtectiveMarker(Classification.restricted(), Collections.emptyList(), null);
         actualMarker = builder.restricted().build();
         assertEquals(expectedMarker, actualMarker);
 
-        expectedMarker = new ProtectiveMarker(Classification.confidential(), Collections.emptyList(), false,
-                Collections.emptyList(), null);
+        expectedMarker = new ProtectiveMarker(Classification.confidential(), Collections.emptyList(), null);
         actualMarker = builder.confidental().build();
         assertEquals(expectedMarker, actualMarker);
 
-        expectedMarker = new ProtectiveMarker(Classification.secret(), Collections.emptyList(), false,
-                Collections.emptyList(), null);
+        expectedMarker = new ProtectiveMarker(Classification.secret(), Collections.emptyList(), null);
         actualMarker = builder.secret().build();
         assertEquals(expectedMarker, actualMarker);
 
-        expectedMarker = new ProtectiveMarker(Classification.topSecret(), Collections.emptyList(), true,
-                Collections.emptyList(), null);
+        NationalSecurityEndorsements ncEndorsements = new NationalSecurityEndorsements(true, Collections.emptyList(), Collections.emptyList(), null);
+        expectedMarker = new ProtectiveMarker(Classification.topSecret(), Collections.emptyList(), ncEndorsements);
         actualMarker = builder.topSecret().build();
         assertEquals(expectedMarker, actualMarker);
     }
 
     @Test
-    void copyConstructorTest() {
+    void copyConstructorPolicyAndPrivacyTest() {
         ProtectiveMarkerBuilder builder = new ProtectiveMarkerBuilder();
-        ProtectiveMarker marker = builder.sensitive().medical().toBeReviewedOn(LocalDateTime.of(2025, 5, 2, 10, 5))
-                .sensitiveCompartments("AAA").relTo(Utils.NZL, Utils.CAN).build();
-
+        ProtectiveMarker marker = builder.sensitive().medical().toBeReviewedOn(LocalDateTime.of(2025, 5, 2, 10, 5)).build();
         ProtectiveMarkerBuilder copy = new ProtectiveMarkerBuilder(marker);
-
+        assertEquals(builder, copy);
+    }
+    
+    @Test
+    void copyConstructorNationalSecurityTest() {
+        ProtectiveMarkerBuilder builder = new ProtectiveMarkerBuilder();
+        ProtectiveMarker marker = builder.confidental().relTo("NZL", "CAN", "GBR").disseminationMarks("ORCON").build();
+        ProtectiveMarkerBuilder copy = new ProtectiveMarkerBuilder(marker);
         assertEquals(builder, copy);
     }
 
@@ -103,7 +103,7 @@ class ProtectiveMarkerBuilderTest {
     void topSecretFunctionImplicitlySetsAccountableMaterialTest() {
         ProtectiveMarkerBuilder builder = new ProtectiveMarkerBuilder();
         ProtectiveMarker marker = builder.clear().topSecret().build();
-        assertTrue(marker.accountableMaterial());
+        assertTrue(marker.nationalSecurityEndorsements().accountableMaterial());
     }
 
     @Test
@@ -113,11 +113,11 @@ class ProtectiveMarkerBuilderTest {
 
         builder.sensitiveCompartments("AAA", "DDD", "BBB");
         ProtectiveMarker marker = builder.build();
-        assertEquals(List.of("AAA", "BBB", "DDD"), marker.sensitiveCompartments());
+        assertEquals(List.of("AAA", "BBB", "DDD"), marker.nationalSecurityEndorsements().sensitiveCompartments());
 
         builder.addSensitiveCompartment("CCC");
         marker = builder.build();
-        assertEquals(List.of("AAA", "BBB", "CCC", "DDD"), marker.sensitiveCompartments());
+        assertEquals(List.of("AAA", "BBB", "CCC", "DDD"), marker.nationalSecurityEndorsements().sensitiveCompartments());
 
         assertEquals(Set.of("AAA", "BBB", "CCC", "DDD"), builder.getSensitiveCompartments());
     }
@@ -140,18 +140,8 @@ class ProtectiveMarkerBuilderTest {
     @Test
     void releasabilityWithSensitiveTest() {
         ProtectiveMarkerBuilder builder = new ProtectiveMarkerBuilder();
-        ProtectiveMarker actualMarker = builder.sensitive().nzeo().build();
-        ReleasabilityMarking releasabilityMarking = new ReleasabilityMarking(ReleasabilityTypes.NZEO,
-                Collections.emptyList());
-        ProtectiveMarker expectedMarker = new ProtectiveMarker(Classification.sensitive(), Collections.emptyList(),
-                false, Collections.emptyList(), releasabilityMarking);
-        assertEquals(expectedMarker, actualMarker);
-
-        actualMarker = builder.relTo("NZL", "AUS", "CAN").build();
-        releasabilityMarking = new ReleasabilityMarking(ReleasabilityTypes.RELTO, List.of("NZL", "AUS", "CAN"));
-        expectedMarker = new ProtectiveMarker(Classification.sensitive(), Collections.emptyList(), false,
-                Collections.emptyList(), releasabilityMarking);
-        assertEquals(expectedMarker, actualMarker);
+        builder.sensitive().nzeo();
+        assertThrows(IllegalStateException.class, () -> { builder.build(); });
     }
 
     @Test
@@ -160,14 +150,17 @@ class ProtectiveMarkerBuilderTest {
         ProtectiveMarker actualMarker = builder.restricted().nzeo().build();
         ReleasabilityMarking releasabilityMarking = new ReleasabilityMarking(ReleasabilityTypes.NZEO,
                 Collections.emptyList());
+        NationalSecurityEndorsements ncEndorsements = new NationalSecurityEndorsements(false, Collections.emptyList(),
+                Collections.emptyList(), releasabilityMarking);
         ProtectiveMarker expectedMarker = new ProtectiveMarker(Classification.restricted(), Collections.emptyList(),
-                false, Collections.emptyList(), releasabilityMarking);
+                ncEndorsements);
         assertEquals(expectedMarker, actualMarker);
 
         actualMarker = builder.relTo("NZL", "AUS", "CAN").build();
         releasabilityMarking = new ReleasabilityMarking(ReleasabilityTypes.RELTO, List.of("NZL", "AUS", "CAN"));
-        expectedMarker = new ProtectiveMarker(Classification.restricted(), Collections.emptyList(), false,
-                Collections.emptyList(), releasabilityMarking);
+        ncEndorsements = new NationalSecurityEndorsements(false, Collections.emptyList(), Collections.emptyList(),
+                releasabilityMarking);
+        expectedMarker = new ProtectiveMarker(Classification.restricted(), Collections.emptyList(), ncEndorsements);
         assertEquals(expectedMarker, actualMarker);
     }
 
@@ -177,14 +170,16 @@ class ProtectiveMarkerBuilderTest {
         ProtectiveMarker actualMarker = builder.secret().nzeo().build();
         ReleasabilityMarking releasabilityMarking = new ReleasabilityMarking(ReleasabilityTypes.NZEO,
                 Collections.emptyList());
-        ProtectiveMarker expectedMarker = new ProtectiveMarker(Classification.secret(), Collections.emptyList(), false,
+        NationalSecurityEndorsements ncEndorsements = new NationalSecurityEndorsements(false, Collections.emptyList(),
                 Collections.emptyList(), releasabilityMarking);
+        ProtectiveMarker expectedMarker = new ProtectiveMarker(Classification.secret(), Collections.emptyList(), ncEndorsements);
         assertEquals(expectedMarker, actualMarker);
 
         actualMarker = builder.relTo("NZL", "AUS", "CAN").build();
         releasabilityMarking = new ReleasabilityMarking(ReleasabilityTypes.RELTO, List.of("NZL", "AUS", "CAN"));
-        expectedMarker = new ProtectiveMarker(Classification.secret(), Collections.emptyList(), false,
-                Collections.emptyList(), releasabilityMarking);
+        ncEndorsements = new NationalSecurityEndorsements(false, Collections.emptyList(), Collections.emptyList(),
+                releasabilityMarking);
+        expectedMarker = new ProtectiveMarker(Classification.secret(), Collections.emptyList(), ncEndorsements);
         assertEquals(expectedMarker, actualMarker);
     }
 
@@ -194,21 +189,24 @@ class ProtectiveMarkerBuilderTest {
         ProtectiveMarker actualMarker = builder.topSecret().nzeo().build();
         ReleasabilityMarking releasabilityMarking = new ReleasabilityMarking(ReleasabilityTypes.NZEO,
                 Collections.emptyList());
+        NationalSecurityEndorsements ncEndorsements = new NationalSecurityEndorsements(true, Collections.emptyList(),
+                Collections.emptyList(), releasabilityMarking);
         ProtectiveMarker expectedMarker = new ProtectiveMarker(Classification.topSecret(), Collections.emptyList(),
-                true, Collections.emptyList(), releasabilityMarking);
+                ncEndorsements);
         assertEquals(expectedMarker, actualMarker);
 
         actualMarker = builder.relTo("NZL", "AUS", "CAN").build();
         releasabilityMarking = new ReleasabilityMarking(ReleasabilityTypes.RELTO, List.of("NZL", "AUS", "CAN"));
-        expectedMarker = new ProtectiveMarker(Classification.topSecret(), Collections.emptyList(), true,
-                Collections.emptyList(), releasabilityMarking);
+        ncEndorsements = new NationalSecurityEndorsements(true, Collections.emptyList(), Collections.emptyList(),
+                releasabilityMarking);
+        expectedMarker = new ProtectiveMarker(Classification.topSecret(), Collections.emptyList(), ncEndorsements);
         assertEquals(expectedMarker, actualMarker);
     }
 
     @Test
     void appointmentsTest() {
         ProtectiveMarkerBuilder builder = new ProtectiveMarkerBuilder();
-        ProtectiveMarker marker = builder.unclassified().appointments().build();
+        ProtectiveMarker marker = builder.inConfidence().appointments().build();
         List<PolicyAndPrivacyEndorsementMarking> expectedEndorsements = List
                 .of(new PolicyAndPrivacyEndorsementMarking(PolicyAndPrivacyEndorsements.APPOINTMENTS, null));
 
@@ -218,7 +216,7 @@ class ProtectiveMarkerBuilderTest {
     @Test
     void budgetTest() {
         ProtectiveMarkerBuilder builder = new ProtectiveMarkerBuilder();
-        ProtectiveMarker marker = builder.unclassified().budget().build();
+        ProtectiveMarker marker = builder.inConfidence().budget().build();
         List<PolicyAndPrivacyEndorsementMarking> expectedEndorsements = List
                 .of(new PolicyAndPrivacyEndorsementMarking(PolicyAndPrivacyEndorsements.BUDGET, null));
 
@@ -228,7 +226,7 @@ class ProtectiveMarkerBuilderTest {
     @Test
     void cabinetTest() {
         ProtectiveMarkerBuilder builder = new ProtectiveMarkerBuilder();
-        ProtectiveMarker marker = builder.unclassified().cabinet().build();
+        ProtectiveMarker marker = builder.inConfidence().cabinet().build();
         List<PolicyAndPrivacyEndorsementMarking> expectedEndorsements = List
                 .of(new PolicyAndPrivacyEndorsementMarking(PolicyAndPrivacyEndorsements.CABINET, null));
 
@@ -238,7 +236,7 @@ class ProtectiveMarkerBuilderTest {
     @Test
     void commercialTest() {
         ProtectiveMarkerBuilder builder = new ProtectiveMarkerBuilder();
-        ProtectiveMarker marker = builder.unclassified().commercial().build();
+        ProtectiveMarker marker = builder.inConfidence().commercial().build();
         List<PolicyAndPrivacyEndorsementMarking> expectedEndorsements = List
                 .of(new PolicyAndPrivacyEndorsementMarking(PolicyAndPrivacyEndorsements.COMMERCIAL, null));
 
@@ -248,7 +246,7 @@ class ProtectiveMarkerBuilderTest {
     @Test
     void departmentUseOnlyTest() {
         ProtectiveMarkerBuilder builder = new ProtectiveMarkerBuilder();
-        ProtectiveMarker marker = builder.unclassified().departmentUseOnly("Thingy").build();
+        ProtectiveMarker marker = builder.inConfidence().departmentUseOnly("Thingy").build();
         List<PolicyAndPrivacyEndorsementMarking> expectedEndorsements = List
                 .of(new PolicyAndPrivacyEndorsementMarking(PolicyAndPrivacyEndorsements.DEPARTMENT_USE_ONLY, "Thingy"));
 
@@ -258,7 +256,7 @@ class ProtectiveMarkerBuilderTest {
     @Test
     void embargoedForReleaseTest() {
         ProtectiveMarkerBuilder builder = new ProtectiveMarkerBuilder();
-        ProtectiveMarker marker = builder.unclassified().embargoedForRelease(LocalDateTime.of(2025, 5, 9, 6, 30))
+        ProtectiveMarker marker = builder.inConfidence().embargoedForRelease(LocalDateTime.of(2025, 5, 9, 6, 30))
                 .build();
         List<PolicyAndPrivacyEndorsementMarking> expectedEndorsements = List.of(new PolicyAndPrivacyEndorsementMarking(
                 PolicyAndPrivacyEndorsements.EMBARGOED_FOR_RELEASE, "2025-05-09 06:30"));
@@ -269,7 +267,7 @@ class ProtectiveMarkerBuilderTest {
     @Test
     void evaluateTest() {
         ProtectiveMarkerBuilder builder = new ProtectiveMarkerBuilder();
-        ProtectiveMarker marker = builder.unclassified().evaluate().build();
+        ProtectiveMarker marker = builder.inConfidence().evaluate().build();
         List<PolicyAndPrivacyEndorsementMarking> expectedEndorsements = List
                 .of(new PolicyAndPrivacyEndorsementMarking(PolicyAndPrivacyEndorsements.EVALUATE, null));
 
@@ -279,7 +277,7 @@ class ProtectiveMarkerBuilderTest {
     @Test
     void honoursTest() {
         ProtectiveMarkerBuilder builder = new ProtectiveMarkerBuilder();
-        ProtectiveMarker marker = builder.unclassified().honours().build();
+        ProtectiveMarker marker = builder.inConfidence().honours().build();
         List<PolicyAndPrivacyEndorsementMarking> expectedEndorsements = List
                 .of(new PolicyAndPrivacyEndorsementMarking(PolicyAndPrivacyEndorsements.HONOURS, null));
 
@@ -289,7 +287,7 @@ class ProtectiveMarkerBuilderTest {
     @Test
     void legalPrivilegeTest() {
         ProtectiveMarkerBuilder builder = new ProtectiveMarkerBuilder();
-        ProtectiveMarker marker = builder.unclassified().legalPrivilege().build();
+        ProtectiveMarker marker = builder.inConfidence().legalPrivilege().build();
         List<PolicyAndPrivacyEndorsementMarking> expectedEndorsements = List
                 .of(new PolicyAndPrivacyEndorsementMarking(PolicyAndPrivacyEndorsements.LEGAL_PRIVILEGE, null));
 
@@ -299,7 +297,7 @@ class ProtectiveMarkerBuilderTest {
     @Test
     void medicalTest() {
         ProtectiveMarkerBuilder builder = new ProtectiveMarkerBuilder();
-        ProtectiveMarker marker = builder.unclassified().medical().build();
+        ProtectiveMarker marker = builder.inConfidence().medical().build();
         List<PolicyAndPrivacyEndorsementMarking> expectedEndorsements = List
                 .of(new PolicyAndPrivacyEndorsementMarking(PolicyAndPrivacyEndorsements.MEDICAL, null));
 
@@ -309,7 +307,7 @@ class ProtectiveMarkerBuilderTest {
     @Test
     void staffTest() {
         ProtectiveMarkerBuilder builder = new ProtectiveMarkerBuilder();
-        ProtectiveMarker marker = builder.unclassified().staff().build();
+        ProtectiveMarker marker = builder.inConfidence().staff().build();
         List<PolicyAndPrivacyEndorsementMarking> expectedEndorsements = List
                 .of(new PolicyAndPrivacyEndorsementMarking(PolicyAndPrivacyEndorsements.STAFF, null));
 
@@ -319,7 +317,7 @@ class ProtectiveMarkerBuilderTest {
     @Test
     void policyTest() {
         ProtectiveMarkerBuilder builder = new ProtectiveMarkerBuilder();
-        ProtectiveMarker marker = builder.unclassified().policy().build();
+        ProtectiveMarker marker = builder.inConfidence().policy().build();
         List<PolicyAndPrivacyEndorsementMarking> expectedEndorsements = List
                 .of(new PolicyAndPrivacyEndorsementMarking(PolicyAndPrivacyEndorsements.POLICY, null));
 
@@ -329,7 +327,7 @@ class ProtectiveMarkerBuilderTest {
     @Test
     void toBeReviewedOnTest() {
         ProtectiveMarkerBuilder builder = new ProtectiveMarkerBuilder();
-        ProtectiveMarker marker = builder.unclassified().toBeReviewedOn(LocalDateTime.of(2025, 5, 9, 6, 30)).build();
+        ProtectiveMarker marker = builder.inConfidence().toBeReviewedOn(LocalDateTime.of(2025, 5, 9, 6, 30)).build();
         List<PolicyAndPrivacyEndorsementMarking> expectedEndorsements = List.of(new PolicyAndPrivacyEndorsementMarking(
                 PolicyAndPrivacyEndorsements.TO_BE_REVIEWED_ON, "2025-05-09 06:30"));
 
@@ -339,7 +337,7 @@ class ProtectiveMarkerBuilderTest {
     @Test
     void departmentUseOnlyMissingDepartmentTest() {
         ProtectiveMarkerBuilder builder = new ProtectiveMarkerBuilder();
-        builder.unclassified().addPolicyAndPrivacyEndorsement(PolicyAndPrivacyEndorsements.DEPARTMENT_USE_ONLY);
+        builder.inConfidence().addPolicyAndPrivacyEndorsement(PolicyAndPrivacyEndorsements.DEPARTMENT_USE_ONLY);
 
         assertThrows(IllegalStateException.class, () -> {
             builder.build();
@@ -349,7 +347,7 @@ class ProtectiveMarkerBuilderTest {
     @Test
     void embargoedForReleaseMissingDateTest() {
         ProtectiveMarkerBuilder builder = new ProtectiveMarkerBuilder();
-        builder.unclassified().addPolicyAndPrivacyEndorsement(PolicyAndPrivacyEndorsements.EMBARGOED_FOR_RELEASE);
+        builder.inConfidence().addPolicyAndPrivacyEndorsement(PolicyAndPrivacyEndorsements.EMBARGOED_FOR_RELEASE);
 
         assertThrows(IllegalStateException.class, () -> {
             builder.build();
@@ -359,7 +357,7 @@ class ProtectiveMarkerBuilderTest {
     @Test
     void toBeReviewedOnMissingDateTest() {
         ProtectiveMarkerBuilder builder = new ProtectiveMarkerBuilder();
-        builder.unclassified().addPolicyAndPrivacyEndorsement(PolicyAndPrivacyEndorsements.TO_BE_REVIEWED_ON);
+        builder.inConfidence().addPolicyAndPrivacyEndorsement(PolicyAndPrivacyEndorsements.TO_BE_REVIEWED_ON);
 
         assertThrows(IllegalStateException.class, () -> {
             builder.build();
@@ -404,5 +402,21 @@ class ProtectiveMarkerBuilderTest {
 
         ProtectiveMarkerBuilder otherBuilder = new ProtectiveMarkerBuilder(marker);
         assertEquals(builder, otherBuilder);
+    }
+    
+    @Test
+    void unclassifiedAndEndorsementsTest() {
+        ProtectiveMarkerBuilder builder = new ProtectiveMarkerBuilder();
+        builder.unclassified();
+        assertThrows(IllegalStateException.class, () -> { builder.budget().build(); });
+        
+        builder.clearPolicyAndPrivacyEndorsements();
+        assertThrows(IllegalStateException.class, () -> { builder.accountableMaterial().build(); });
+        
+        builder.clearNationalSecurityEndorsements();
+        ProtectiveMarker marker = builder.build();
+        
+        ProtectiveMarker expected = new ProtectiveMarker(Classification.unclassified(), Collections.emptyList(), null);
+        assertEquals(expected, marker);
     }
 }

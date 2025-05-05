@@ -1,5 +1,10 @@
 package io.github.trquinn76.classification.nzl.model;
 
+/**
+ * Defines the set of Policy and Privacy Endorsements used in the library.
+ * 
+ * Taken from the "Overview of the Classification system" document.
+ */
 public enum PolicyAndPrivacyEndorsements {
 
     // @formatter:off

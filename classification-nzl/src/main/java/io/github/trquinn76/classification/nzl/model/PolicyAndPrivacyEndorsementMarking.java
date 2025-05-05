@@ -2,8 +2,21 @@ package io.github.trquinn76.classification.nzl.model;
 
 import java.util.Objects;
 
+/**
+ * Represents a Policy and Privacy Endorsement, with a String which is required
+ * for some endorsements, but not others.
+ * 
+ * @param endorsement        the {@link PolicyAndPrivacyEndorsements}.
+ * @param timeOrUseOnlyValue a String required for some Endorsements, or null.
+ */
 public record PolicyAndPrivacyEndorsementMarking(PolicyAndPrivacyEndorsements endorsement, String timeOrUseOnlyValue) {
 
+    /**
+     * Constructor allows ensuring the String is only populated when necessary.
+     * 
+     * @param endorsement        the {@link PolicyAndPrivacyEndorsements}.
+     * @param timeOrUseOnlyValue a String required for some Endorsements, or null.
+     */
     public PolicyAndPrivacyEndorsementMarking {
         Objects.requireNonNull(endorsement);
         switch (endorsement) {

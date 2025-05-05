@@ -11,6 +11,7 @@ import java.util.TreeSet;
 import java.util.logging.Logger;
 
 import io.github.trquinn76.classification.nzl.model.Classification;
+import io.github.trquinn76.classification.nzl.model.NationalSecurityEndorsements;
 import io.github.trquinn76.classification.nzl.model.PolicyAndPrivacyEndorsementMarking;
 import io.github.trquinn76.classification.nzl.model.PolicyAndPrivacyEndorsements;
 import io.github.trquinn76.classification.nzl.model.ProtectiveMarker;
@@ -39,6 +40,7 @@ public class ProtectiveMarkerBuilder {
     private LocalDateTime toBeReviewedOnTime = null;
     private boolean accountableMaterial = false;
     private Set<String> sensitiveCompartments = new TreeSet<>();
+    private Set<String> disseminationMarks = new TreeSet<>();
     private ReleasabilityTypes releasablityType = null;
     private Set<String> releasableToList = new TreeSet<>(ClassificationConfig.releasableToOrder());
 
@@ -57,41 +59,47 @@ public class ProtectiveMarkerBuilder {
     public ProtectiveMarkerBuilder(ProtectiveMarker marker) {
         this.classification = marker.classification();
 
-        for (PolicyAndPrivacyEndorsementMarking pnpEndorsement : marker.policyAndPrivacyEndorsements()) {
-            this.policyAndPrivacyEndorsements.add(pnpEndorsement.endorsement());
-            String timeOrUseOnlyStr = pnpEndorsement.timeOrUseOnlyValue();
-            if (timeOrUseOnlyStr != null) {
-                switch (pnpEndorsement.endorsement()) {
-                case EMBARGOED_FOR_RELEASE: {
-                    this.embargoedForReleaseTime = LocalDateTime.parse(timeOrUseOnlyStr,
-                            ClassificationConfig.dateTimeFormatter());
-                    break;
-                }
-                case TO_BE_REVIEWED_ON: {
-                    this.toBeReviewedOnTime = LocalDateTime.parse(timeOrUseOnlyStr,
-                            ClassificationConfig.dateTimeFormatter());
-                    break;
-                }
-                case DEPARTMENT_USE_ONLY: {
-                    this.departmentUseOnlyDepartments.addAll(parseDepartments(timeOrUseOnlyStr));
-                    break;
-                }
-                default:
-                    throw new IllegalArgumentException(
-                            "May not have a populated 'timeOrUseOnlyValue' for Policy and Privacy Endorsement "
-                                    + pnpEndorsement.endorsement().toString());
+        if (marker.hasPolicyAndPrivacyEndorsements()) {
+            for (PolicyAndPrivacyEndorsementMarking pnpEndorsement : marker.policyAndPrivacyEndorsements()) {
+                this.policyAndPrivacyEndorsements.add(pnpEndorsement.endorsement());
+                String timeOrUseOnlyStr = pnpEndorsement.timeOrUseOnlyValue();
+                if (timeOrUseOnlyStr != null) {
+                    switch (pnpEndorsement.endorsement()) {
+                    case EMBARGOED_FOR_RELEASE: {
+                        this.embargoedForReleaseTime = LocalDateTime.parse(timeOrUseOnlyStr,
+                                ClassificationConfig.dateTimeFormatter());
+                        break;
+                    }
+                    case TO_BE_REVIEWED_ON: {
+                        this.toBeReviewedOnTime = LocalDateTime.parse(timeOrUseOnlyStr,
+                                ClassificationConfig.dateTimeFormatter());
+                        break;
+                    }
+                    case DEPARTMENT_USE_ONLY: {
+                        this.departmentUseOnlyDepartments.addAll(parseDepartments(timeOrUseOnlyStr));
+                        break;
+                    }
+                    default:
+                        throw new IllegalArgumentException(
+                                "May not have a populated 'timeOrUseOnlyValue' for Policy and Privacy Endorsement "
+                                        + pnpEndorsement.endorsement().toString());
 
+                    }
                 }
             }
         }
 
-        this.accountableMaterial = marker.accountableMaterial();
-        this.sensitiveCompartments.addAll(marker.sensitiveCompartments());
+        if (marker.hasNationalSecurityEndorsements()) {
+            this.accountableMaterial = marker.nationalSecurityEndorsements().accountableMaterial();
+            this.sensitiveCompartments.addAll(marker.nationalSecurityEndorsements().sensitiveCompartments());
+            this.disseminationMarks.addAll(marker.nationalSecurityEndorsements().disseminationMarks());
 
-        if (marker.releasabilityMarker() != null) {
-            this.releasablityType = marker.releasabilityMarker().type();
-            this.releasableToList.addAll(marker.releasabilityMarker().releasableToList());
+            if (marker.nationalSecurityEndorsements().releasability() != null) {
+                this.releasablityType = marker.nationalSecurityEndorsements().releasability().type();
+                this.releasableToList.addAll(marker.nationalSecurityEndorsements().releasability().releasableToList());
+            }
         }
+        
     }
 
     /**
@@ -101,10 +109,20 @@ public class ProtectiveMarkerBuilder {
      */
     public ProtectiveMarkerBuilder clear() {
         setClassification(null);
+        clearPolicyAndPrivacyEndorsements();
+        return clearNationalSecurityEndorsements();
+    }
+    
+    /**
+     * Clears National Security related Endorsements from the builder.
+     *  
+     * @return this for function chaining.
+     */
+    public ProtectiveMarkerBuilder clearNationalSecurityEndorsements() {
         setAccountableMaterial(false);
         clearSensitiveCompartments();
+        clearDisseminationMarks();
         clearReleasability();
-        clearPolicyAndPrivacyEndorsements();
         return this;
     }
 
@@ -284,6 +302,61 @@ public class ProtectiveMarkerBuilder {
      */
     public ProtectiveMarkerBuilder sensitiveCompartments(String... compartments) {
         return setSensitiveCompartments(Arrays.asList(compartments));
+    }
+    
+    /**
+     * Sets Dissemination Marks in this builder.
+     * 
+     *  Will remove any existing values, and populate the dissemination list with the given values.
+     * 
+     * @param disseminationMarks the dissemination marks to set on the builder.
+     * @return this for function chaining.
+     */
+    public ProtectiveMarkerBuilder setDisseminationMarks(Collection<String> disseminationMarks) {
+        Objects.requireNonNull(disseminationMarks);
+        this.disseminationMarks.clear();
+        this.disseminationMarks.addAll(disseminationMarks);
+        return this;
+    }
+    
+    /**
+     * Adds the given dissemination mark to the builder's list of dissemination marks.
+     * 
+     * @param disseminationMark the dissemination mark to add.
+     * @return this for function chaining.
+     */
+    public ProtectiveMarkerBuilder addDisseminationMark(String disseminationMark) {
+        this.disseminationMarks.add(disseminationMark);
+        return this;
+    }
+    
+    /**
+     * Gets a copy of the current dissemination marks.
+     * 
+     * @return a Set which is a copy of the existing list in the builder.
+     */
+    public Set<String> getDisseminationMarks() {
+        return new TreeSet<>(this.disseminationMarks);
+    }
+    
+    /**
+     * Clears all existing dissemination marks from the builder.
+     * 
+     * @return this for function chaining.
+     */
+    public ProtectiveMarkerBuilder clearDisseminationMarks() {
+        this.disseminationMarks.clear();
+        return this;
+    }
+    
+    /**
+     * Sets the disseminations marks in the builder to the values in the given array.
+     * 
+     * @param disseminationMarks an array of dissemination marks to set.
+     * @return this for function chaining.
+     */
+    public ProtectiveMarkerBuilder disseminationMarks(String... disseminationMarks) {
+        return setDisseminationMarks(Arrays.asList(disseminationMarks));
     }
 
     /**
@@ -667,6 +740,25 @@ public class ProtectiveMarkerBuilder {
         this.toBeReviewedOnTime = dateTime;
         return this;
     }
+    
+    /**
+     * Returns true if the builder contains Policy and Privacy Endorsements.
+     * 
+     * @return true if there are Policy and Privacy Endorsements in the builder, false otherwise.
+     */
+    public boolean hasPolicyAndPrivacyEndorsements() {
+        return !this.policyAndPrivacyEndorsements.isEmpty();
+    }
+    
+    /**
+     * Returns true if the builder contains National Security Endorsements.
+     * 
+     * @return true if there are National Security Endorsements in the builder, false otherwise.
+     */
+    public boolean hasNationalSecurityEndorsements() {
+        return this.accountableMaterial || !this.sensitiveCompartments.isEmpty() || !this.disseminationMarks.isEmpty()
+                || this.releasablityType != null;
+    }
 
     /**
      * Used to determine if the builder is in a valid state, and able to build a {@link ProtectiveMarker}.
@@ -698,7 +790,7 @@ public class ProtectiveMarkerBuilder {
             for (String line : report) {
                 LOGGER.severe(line);
             }
-            throw new IllegalStateException("Invalid state, cannot build Protective Marking.");
+            throw new IllegalStateException("Invalid state, cannot build Protective Marking: " + report.get(0));
         }
 
         List<PolicyAndPrivacyEndorsementMarking> pnpEndorsementList = new ArrayList<>();
@@ -719,13 +811,19 @@ public class ProtectiveMarkerBuilder {
             pnpEndorsementList.add(marking);
         }
 
-        ReleasabilityMarking releasability = null;
-        if (this.releasablityType != null) {
-            releasability = new ReleasabilityMarking(this.releasablityType, List.copyOf(this.releasableToList));
+        NationalSecurityEndorsements ncEndorsements = null;
+        if (hasNationalSecurityEndorsements()) {
+            ReleasabilityMarking releasability = null;
+            if (this.releasablityType != null) {
+                releasability = new ReleasabilityMarking(this.releasablityType, List.copyOf(this.releasableToList));
+            }
+            
+            ncEndorsements = new NationalSecurityEndorsements(this.accountableMaterial,
+                    List.copyOf(this.sensitiveCompartments), List.copyOf(this.disseminationMarks), releasability);
         }
+        
 
-        return new ProtectiveMarker(this.classification, pnpEndorsementList, this.accountableMaterial,
-                List.copyOf(this.sensitiveCompartments), releasability);
+        return new ProtectiveMarker(this.classification, pnpEndorsementList, ncEndorsements);
     }
 
     private void checkClassificationValid(List<String> report) {
@@ -739,6 +837,11 @@ public class ProtectiveMarkerBuilder {
     }
 
     private void checkPolicyAndPrivacyEndorementsValid(List<String> report) {
+        if (this.classification != null && !Utils.policyAndPrivacyClassifications().contains(this.classification) && hasPolicyAndPrivacyEndorsements()) {
+            report.add(
+                    "May only have Policy And Privacy Endorsements for Policy And Privacy Classifications. They are not permitted on: "
+                            + this.classification.toString());
+        }
         if (this.policyAndPrivacyEndorsements.contains(PolicyAndPrivacyEndorsements.EMBARGOED_FOR_RELEASE)
                 && this.embargoedForReleaseTime == null) {
             report.add("For Endorsement '" + PolicyAndPrivacyEndorsements.EMBARGOED_FOR_RELEASE.toString()
@@ -773,19 +876,26 @@ public class ProtectiveMarkerBuilder {
     }
 
     private void checkSecurityEndorsements(List<String> report) {
-        if (this.releasablityType == ReleasabilityTypes.RELTO) {
-            // make sure releasable to list starts with "NZL" and has a length of at least
-            // 2.
-            if (!this.releasableToList.contains(Utils.NZL)) {
-                report.add("Releasable To Lists must contain `NZL`");
+        if (hasNationalSecurityEndorsements()) {
+            if (this.classification != null && !Utils.nationalSecurityClassifications().contains(this.classification) && hasNationalSecurityEndorsements()) {
+                report.add(
+                        "May only have National Security Endorsements for National Security Classifications. They are not permitted on: "
+                                + this.classification.toString());
             }
-            if (this.releasableToList.size() < 2) {
-                report.add("Releasable To List must have a minimum size of 2");
-            }
-        } else {
-            // make sure releasable to list is empty.
-            if (!this.releasableToList.isEmpty()) {
-                report.add("Cannot have a releasable to list with Releasability Type: " + this.releasablityType);
+            if (this.releasablityType == ReleasabilityTypes.RELTO) {
+                // make sure releasable to list starts with "NZL" and has a length of at least
+                // 2.
+                if (!this.releasableToList.contains(Utils.NZL)) {
+                    report.add("Releasable To Lists must contain `NZL`");
+                }
+                if (this.releasableToList.size() < 2) {
+                    report.add("Releasable To List must have a minimum size of 2");
+                }
+            } else {
+                // make sure releasable to list is empty.
+                if (!this.releasableToList.isEmpty()) {
+                    report.add("Cannot have a releasable to list with Releasability Type: " + this.releasablityType);
+                }
             }
         }
     }
@@ -807,9 +917,9 @@ public class ProtectiveMarkerBuilder {
 
     @Override
     public int hashCode() {
-        return Objects.hash(accountableMaterial, classification, departmentUseOnlyDepartments, embargoedForReleaseTime,
-                policyAndPrivacyEndorsements, releasableToList, releasablityType, sensitiveCompartments,
-                toBeReviewedOnTime);
+        return Objects.hash(accountableMaterial, classification, departmentUseOnlyDepartments, disseminationMarks,
+                embargoedForReleaseTime, policyAndPrivacyEndorsements, releasableToList, releasablityType,
+                sensitiveCompartments, toBeReviewedOnTime);
     }
 
     @Override
@@ -823,6 +933,7 @@ public class ProtectiveMarkerBuilder {
         ProtectiveMarkerBuilder other = (ProtectiveMarkerBuilder) obj;
         return accountableMaterial == other.accountableMaterial && Objects.equals(classification, other.classification)
                 && Objects.equals(departmentUseOnlyDepartments, other.departmentUseOnlyDepartments)
+                && Objects.equals(disseminationMarks, other.disseminationMarks)
                 && Objects.equals(embargoedForReleaseTime, other.embargoedForReleaseTime)
                 && Objects.equals(policyAndPrivacyEndorsements, other.policyAndPrivacyEndorsements)
                 && Objects.equals(releasableToList, other.releasableToList)

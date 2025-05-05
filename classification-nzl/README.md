@@ -66,7 +66,11 @@ The Classifications are:
 - SECRET
 - TOP SECRET
 
+##### Policy And Privacy Classifications
+
 IN-CONFIDENCE and SENSITIVE are considered to be Policy and Privacy Classifications.
+
+##### National Security Classifications
 
 RESTRICTED, CONFIDENTIAL, SECRET and TOP SECRET are considered to be National Security Classifications.
 
@@ -92,8 +96,8 @@ classification.
 
 ### Policy And Privacy Endorsements
 
-This library assumes that Policy and Privacy Endorsements may be applied to ANY Classification, as I didn't read the Overview
-closely enough, and it turns out it DOES say that PnP Endorsements are for PnP Classifications...
+This library assumes that Policy and Privacy Endorsements may only be applied with Policy And Privacy Classifications.
+That is `IN-CONFIDENCE` and `SENSITIVE` Classifications.
 
 A list of Policy and Privacy Endorsements, wrapped with an optional String, which is required for some Endorsements. The
 list of supported Policy and Privacy Endorsements is found in the [Overview](./documents/Overview/README.md):
@@ -139,10 +143,64 @@ assumed that the time is in the New Zealand time zone. Either standard time (UTC
 
 ### National Security Endorsements
 
-NS Endorsements should only be applied to NS Classifications..!
+This library assumes that National Security Endorsements may only be applied with National Security Classifications.
+That is `RESTRICTED`, `CONFIDENTIAL`, `SECRET` and `TOP SECRET` Classifications.
 
-#### Accountable Material
+#### Controls
 
-#### Sensitive Compartments
+##### Accountable Material
 
-#### Releasability
+Indicates material which requires strict control over access and regular auditing. `TOP SECRET` material is Accountable
+Material by default.
+
+In this library, the `TOP SECRET` classification is required to have the `ACCOUNTABLE MATERIAL` control set. It is
+represented with a `boolean` value.
+
+##### Sensitive Compartments
+
+> A sensitive compartmented marking is a word indicating that the information is in a specific need-to-know compartment.
+> This word could be a codeword or ‘Sensitive Compartmented Information (SCI)’.
+
+Sensitive Compartments is a list of Strings. It may be empty.
+
+#### Dissemination
+
+##### Additonal Dissemination Marks
+
+In the [Protectively marking information and equipment](./documents/ApplyMarkings/README.md) document, section
+**Applying National Security endorsement markings** there is a reference to an `ORCON` dissemination mark.
+
+> The format is:
+> 
+> CLASSIFICATION//CONTROL 1/CONTROL 2//DISSEMINATION 1/DISSEMINATION 2
+> 
+> Example 2:
+> 
+> **TOP SECRET//<SCI CODEWORD>//ORCON/REL TO NZL, FVEY**
+
+This dissemination mark is not mentioned anywhere else in the publicly facing documentation which has been found and
+adopted as the source of truth for this library. It is not clear if this marking is actually in use, or if it is now
+obsolete. It is also unclear what other markings might be in use which are not documented publicly.
+
+To handle this uncertainty this library allows arbitrary strings to be added to the `NationalSecurityEndorsements`
+`record` as additional Dissemination marks.
+
+##### Releasability
+
+The `ReleasabilityMarking` represents the releasability of the `ProtectiveMarker`. It is made up of a
+`ReleasabilityTypes` and a releasable to list.
+
+The `ReleasabilityTypes`, as defined in [Overview](./documents/Overview/README.md) section **National
+security endorsement markings** are:
+- NZEO
+- RELTO
+
+The `releasable to` list of the `ReleasabilityMarking` is only to be populated if the `ReleasabilityTypes` is RELTO.
+
+When the Releasable type is RELTO, then the `releasable to` list should be populated with a minimum of 2 values, one
+of which must be `NZL`. `Releasable to` lists are ordered alphabetically, with `NZL` leading.
+
+`Releasable to` lists are expected to be populated with country trigraphs, as defined in the 
+`International Standard ISO 3166-1:2013 alpha3 Codes`. This is not enforced, except for requiring that `NZL` be present.
+
+If there is no Releasability, then the `ReleasabilityMarking` field will be null.
