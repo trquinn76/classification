@@ -1,7 +1,7 @@
 /**
  * Defines Classification/Protective Marking models for the Australian Classification scheme.
  */
-open module trquinn.classification.aus {
+open module io.github.trquinn76.classification.aus {
 	requires java.logging;
 	
 	exports io.github.trquinn76.classification.aus;

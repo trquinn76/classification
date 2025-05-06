@@ -29,11 +29,12 @@ public class ClassificationConfig {
 	protected static final String AUSFIRST = "ausfirst";
 	protected static final String FIVEEYESFIRST = "fiveeyesfirst";
 	public static final List<String> RELTO_ORDER_VALUES = List.of(AUSFIRST, FIVEEYESFIRST);
+	
+	static final ConfigKeys PRODUCTIONMODECONFIGKEYS = new ConfigKeys("classificationProductionMode",
+            "CLASSIFICATION_PRODUCTION_MODE", "io.github.trquinn76.classification.production.mode");
 
 	static final ConfigKeys RELTOORDERCONFIGKEYS = new ConfigKeys("classificationAusReltoOrder",
 			"CLASSIFICATION_AUS_RELTO_ORDER", "io.github.trquinn76.classification.aus.relto.order");
-	static final ConfigKeys PRODUCTIONMODECONFIGKEYS = new ConfigKeys("classificationAusProductionMode",
-			"CLASSIFICATION_AUS_PRODUCTION_MODE", "io.github.trquinn76.classification.aus.production.mode");
 	
 	static final ConfigKeys DEVELUNOFFICIALNAME = new ConfigKeys("classificationAusDevelUnofficial", "CLASSIFICATION_AUS_DEVEL_UNOFFICIAL", "io.github.trquinn76.classification.aus.development.unofficial.name");
 	static final ConfigKeys DEVELOFFICIALNAME = new ConfigKeys("classificationAusDevelOfficial", "CLASSIFICATION_AUS_DEVEL_OFFICIAL", "io.github.trquinn76.classification.aus.development.official.name");

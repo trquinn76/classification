@@ -15,7 +15,7 @@ model may be found in [Documents](./documents/README.md). These documents are:
 >     <dependency>
 >         <groupId>io.github.trquinn76</groupId>
 >         <artifactId>classification-aus</artifactId>
->         <version>1.0.2</version>
+>         <version>1.0.3</version>
 >     </dependency>
 
 ### Purpose
@@ -46,7 +46,7 @@ In the course of working with Classified data, it is not unusual to need to hold
 `ProtectiveMarkerBuilder`'s purposes is to be able to hold `ProtectiveMarker` information in an invalid state, while a
 User is actively editing it via a UI.
 
-## ProtectiveMarking structure
+## ProtectiveMarker structure
 
 The `ProtectiveMarker` `record` consists of the following fields:
 
@@ -173,20 +173,21 @@ If there is no Releasability, then the `releasabilityCaveat` field will be null.
 
 ## Configuration
 
+##### Production Mode
+
+Determines if the library is operating in Production Mode. When true causes the library to use `PSPFClassification`'s,
+otherwise `DevelopmentClassification`'s are used. Defaults to `false`. This configuration value is shared with other
+Classification libraries.
+- Cmd Line Property: `classificationProductionMode`
+- Environment Variable: `CLASSIFICATION_PRODUCTION_MODE`
+- Config File Property: `io.github.trquinn76.classification.production.mode`
+
 ##### Releasable To Oder
 
 Determines which `Comparator` to use for sorting Releasable To lists. Default is `fiveeyesfirst`.
 - Cmd Line Property: `classificationAusReltoOrder`
 - Environment Variable: `CLASSIFICATION_AUS_RELTO_ORDER`
 - Config File Property: `io.github.trquinn76.classification.aus.relto.order`
-
-##### Production Mode
-
-Determines if the library is operating in Production Mode. When true causes the library to use `PSPFClassification`'s,
-otherwise `DevelopmentClassification`'s are used. Defaults to `false`.
-- Cmd Line Property: `classificationAusProductionMode`
-- Environment Variable: `CLASSIFICATION_AUS_PRODUCTION_MODE`
-- Config File Property: `io.github.trquinn76.classification.aus.production.mode`
 
 ##### Config File Location
 
@@ -260,9 +261,9 @@ By default the library will use the `DevelopmentClassification`'s, rather than t
 value. This can be done via runtime command line property, environment variable or configuration.
 
 eg:
-- `java -DclassificationAusProductionMode=true MyApp`
-- `CLASSIFICATION_AUS_PRODUCTION_MODE=true`
-- in config file `application.properties` set: `io.github.trquinn76.classification.aus.production.mode = true`
+- `java -DclassificationProductionMode=true MyApp`
+- `CLASSIFICATION_PRODUCTION_MODE=true`
+- in config file `application.properties` set: `io.github.trquinn76.classification.production.mode = true`
 
 ## Implementation considerations
 
@@ -302,7 +303,7 @@ and that the generated `List`'s are in alphabetical order.
 
 When using the `merge()` functions in the `Utils` class, it is important to remember that:
 - Special Handling Instructions are NOT merged. It is not clear from the source documentation how these values could be
-merged. Especially for cases such a Exclusive For instructions for different addressees, it is not clear how that
+merged. Especially for cases such as Exclusive For instructions for different addressees: it is not clear how that
 should be handled, or if that would represent a Breach.
 - The returned `ProtectiveMarkerBuilder` returned by each of the `merge()` functions is NOT guaranteed to be in a valid
 state, and it may require additional work to be able to build a new `ProtectiveMarker`. In particular Releasable To

@@ -30,14 +30,13 @@ public class Utils {
 	public static Comparator<String> AUS_FIRST = new Comparator<>() {
 		@Override
 		public int compare(String alpha, String beta) {
-			int retval = alpha.compareTo(beta);
-			if (alpha == AUS) {
-				retval = -1;
+			if (alpha == AUS && beta != AUS) {
+				return -1;
 			}
-			else if (beta == "AUS") {
-				retval = 1;
+			else if (alpha != AUS && beta == AUS) {
+				return 1;
 			}
-			return retval;
+			return alpha.compareTo(beta);
 		}
 	};
 	
