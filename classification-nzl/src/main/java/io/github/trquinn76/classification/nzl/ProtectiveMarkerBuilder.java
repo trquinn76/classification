@@ -436,7 +436,7 @@ public class ProtectiveMarkerBuilder {
     /**
      * Returns a copy of the Set containing the current releasable to list.
      * 
-     * This copy will have the same {@link Comparator} set as the internal Set.
+     * This copy will have the same {@link java.util.Comparator} set as the internal Set.
      * 
      * @return a Set of country codes, using the configured releasable to comparator.
      */
@@ -457,7 +457,7 @@ public class ProtectiveMarkerBuilder {
     }
 
     /**
-     * Sets the {@link ReleasablilityTypes} to NZEO, and clears any values from the releasable to list.
+     * Sets the {@link ReleasabilityTypes} to NZEO, and clears any values from the releasable to list.
      * 
      * @return this for function chaining.
      */
@@ -468,7 +468,7 @@ public class ProtectiveMarkerBuilder {
     }
 
     /**
-     * Sets the {@link ReleasablityTypes} to RELTO, and populates the releasable to list with the given array of country codes.
+     * Sets the {@link ReleasabilityTypes} to RELTO, and populates the releasable to list with the given array of country codes.
      * 
      * Country codes in Releasable To lists should be from 'International Standard ISO 3166-1:2013 alpha3 Codes'.
      * This is not enforced.

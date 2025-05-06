@@ -5,7 +5,7 @@ plugins {
     id 'org.jreleaser' version '1.17.0'
 }
 
-version = '1.0.3'
+version = '1.0.4'
 
 dependencies {
     testImplementation 'com.fasterxml.jackson.core:jackson-databind:2.18.3'
@@ -94,6 +94,11 @@ jreleaser {
                     stagingRepository('build/staging-deploy')
                 }
             }
+        }
+    }
+    release {
+        github {
+            enabled = false
         }
     }
 }
