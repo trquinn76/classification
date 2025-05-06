@@ -173,20 +173,21 @@ If there is no Releasability, then the `releasabilityCaveat` field will be null.
 
 ## Configuration
 
+##### Production Mode
+
+Determines if the library is operating in Production Mode. When true causes the library to use `PSPFClassification`'s,
+otherwise `DevelopmentClassification`'s are used. Defaults to `false`. This configuration value is shared with other
+Classification libraries.
+- Cmd Line Property: `classificationProductionMode`
+- Environment Variable: `CLASSIFICATION_PRODUCTION_MODE`
+- Config File Property: `io.github.trquinn76.classification.production.mode`
+
 ##### Releasable To Oder
 
 Determines which `Comparator` to use for sorting Releasable To lists. Default is `fiveeyesfirst`.
 - Cmd Line Property: `classificationAusReltoOrder`
 - Environment Variable: `CLASSIFICATION_AUS_RELTO_ORDER`
 - Config File Property: `io.github.trquinn76.classification.aus.relto.order`
-
-##### Production Mode
-
-Determines if the library is operating in Production Mode. When true causes the library to use `PSPFClassification`'s,
-otherwise `DevelopmentClassification`'s are used. Defaults to `false`.
-- Cmd Line Property: `classificationAusProductionMode`
-- Environment Variable: `CLASSIFICATION_AUS_PRODUCTION_MODE`
-- Config File Property: `io.github.trquinn76.classification.aus.production.mode`
 
 ##### Config File Location
 
@@ -260,9 +261,9 @@ By default the library will use the `DevelopmentClassification`'s, rather than t
 value. This can be done via runtime command line property, environment variable or configuration.
 
 eg:
-- `java -DclassificationAusProductionMode=true MyApp`
-- `CLASSIFICATION_AUS_PRODUCTION_MODE=true`
-- in config file `application.properties` set: `io.github.trquinn76.classification.aus.production.mode = true`
+- `java -DclassificationProductionMode=true MyApp`
+- `CLASSIFICATION_PRODUCTION_MODE=true`
+- in config file `application.properties` set: `io.github.trquinn76.classification.production.mode = true`
 
 ## Implementation considerations
 

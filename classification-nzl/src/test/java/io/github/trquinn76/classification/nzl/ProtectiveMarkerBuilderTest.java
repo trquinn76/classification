@@ -10,7 +10,7 @@ import java.util.Set;
 import org.junit.jupiter.api.Test;
 
 import io.github.trquinn76.classification.nzl.model.Classification;
-import io.github.trquinn76.classification.nzl.model.NZLClassifications;
+import io.github.trquinn76.classification.nzl.model.NZLClassification;
 import io.github.trquinn76.classification.nzl.model.NationalSecurityEndorsements;
 import io.github.trquinn76.classification.nzl.model.PolicyAndPrivacyEndorsementMarking;
 import io.github.trquinn76.classification.nzl.model.PolicyAndPrivacyEndorsements;
@@ -38,7 +38,7 @@ class ProtectiveMarkerBuilderTest {
         // currently configured for DevelopmentClassifications, so test that
         // NZLClassifications fails
         assertThrows(IllegalArgumentException.class, () -> {
-            new Classification(NZLClassifications.RESTRICTED.name());
+            new Classification(NZLClassification.RESTRICTED.name());
         });
     }
 

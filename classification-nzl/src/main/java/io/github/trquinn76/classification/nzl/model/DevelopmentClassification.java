@@ -14,7 +14,7 @@ import io.github.trquinn76.classification.nzl.ClassificationConfig;
  * {@link NZLClassification}'s in production it is necessary to set the production mode configuration value to
  * {@code true}.  
  */
-public enum DevelopmentClassifications {
+public enum DevelopmentClassification {
 
     // @formatter:off
     DEVELOPMENT_UNCLASSIFIED(ClassificationConfig.developmentUnclassifiedName()),
@@ -28,7 +28,7 @@ public enum DevelopmentClassifications {
 
     private final String text;
 
-    private DevelopmentClassifications(String text) {
+    private DevelopmentClassification(String text) {
         this.text = text;
     }
 

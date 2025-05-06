@@ -81,17 +81,17 @@ class ProtectiveMarkerBuilderTest {
 		ProtectiveMarkerBuilder builder = new ProtectiveMarkerBuilder();
 		builder.unofficial().agao();
 		List<String> report = builder.isValid();
-		assertEquals(List.of("Attempting to add a Security Caveat when the Classification \"Development UNOFFICIAL\" is lower than \"Development PROTECTED\""), report);
+		assertEquals(List.of("Attempting to add a Security Caveat when the Classification \"Development-UNOFFICIAL\" is lower than \"Development-PROTECTED\""), report);
 		assertThrows(IllegalStateException.class, () -> { builder.build(); });
 		
 		builder.official().austeo();
 		report = builder.isValid();
-		assertEquals(List.of("Attempting to add a Security Caveat when the Classification \"Development OFFICIAL\" is lower than \"Development PROTECTED\""), report);
+		assertEquals(List.of("Attempting to add a Security Caveat when the Classification \"Development-OFFICIAL\" is lower than \"Development-PROTECTED\""), report);
 		assertThrows(IllegalStateException.class, () -> { builder.build(); });
 		
 		builder.officialSensitive().rel("AUS", "NZL");
 		report = builder.isValid();
-		assertEquals(List.of("Attempting to add a Security Caveat when the Classification \"Development OFFICIAL: Sensitive\" is lower than \"Development PROTECTED\""), report);
+		assertEquals(List.of("Attempting to add a Security Caveat when the Classification \"Development-OFFICIAL: Sensitive\" is lower than \"Development-PROTECTED\""), report);
 		assertThrows(IllegalStateException.class, () -> { builder.build(); });
 	}
 	
@@ -247,17 +247,17 @@ class ProtectiveMarkerBuilderTest {
 		ProtectiveMarkerBuilder builder = new ProtectiveMarkerBuilder();
 		builder.unofficial().delicateSource();
 		List<String> report = builder.isValid();
-		assertEquals(List.of("Attempting to add a Security Caveat when the Classification \"Development UNOFFICIAL\" is lower than \"Development PROTECTED\""), report);
+		assertEquals(List.of("Attempting to add a Security Caveat when the Classification \"Development-UNOFFICIAL\" is lower than \"Development-PROTECTED\""), report);
 		assertThrows(IllegalStateException.class, () -> { builder.build(); });
 		
 		builder.official().orcon();
 		report = builder.isValid();
-		assertEquals(List.of("Attempting to add a Security Caveat when the Classification \"Development OFFICIAL\" is lower than \"Development PROTECTED\""), report);
+		assertEquals(List.of("Attempting to add a Security Caveat when the Classification \"Development-OFFICIAL\" is lower than \"Development-PROTECTED\""), report);
 		assertThrows(IllegalStateException.class, () -> { builder.build(); });
 		
 		builder.officialSensitive().cabinet();
 		report = builder.isValid();
-		assertEquals(List.of("Attempting to add a Security Caveat when the Classification \"Development OFFICIAL: Sensitive\" is lower than \"Development PROTECTED\""), report);
+		assertEquals(List.of("Attempting to add a Security Caveat when the Classification \"Development-OFFICIAL: Sensitive\" is lower than \"Development-PROTECTED\""), report);
 		assertThrows(IllegalStateException.class, () -> { builder.build(); });
 	}
 	
@@ -375,17 +375,17 @@ class ProtectiveMarkerBuilderTest {
 		ProtectiveMarkerBuilder builder = new ProtectiveMarkerBuilder();
 		builder.unofficial().addCodeword("AAA");
 		List<String> report = builder.isValid();
-		assertEquals(List.of("Attempting to add a Security Caveat when the Classification \"Development UNOFFICIAL\" is lower than \"Development PROTECTED\""), report);
+		assertEquals(List.of("Attempting to add a Security Caveat when the Classification \"Development-UNOFFICIAL\" is lower than \"Development-PROTECTED\""), report);
 		assertThrows(IllegalStateException.class, () -> { builder.build(); });
 		
 		builder.official();
 		report = builder.isValid();
-		assertEquals(List.of("Attempting to add a Security Caveat when the Classification \"Development OFFICIAL\" is lower than \"Development PROTECTED\""), report);
+		assertEquals(List.of("Attempting to add a Security Caveat when the Classification \"Development-OFFICIAL\" is lower than \"Development-PROTECTED\""), report);
 		assertThrows(IllegalStateException.class, () -> { builder.build(); });
 		
 		builder.officialSensitive();
 		report = builder.isValid();
-		assertEquals(List.of("Attempting to add a Security Caveat when the Classification \"Development OFFICIAL: Sensitive\" is lower than \"Development PROTECTED\""), report);
+		assertEquals(List.of("Attempting to add a Security Caveat when the Classification \"Development-OFFICIAL: Sensitive\" is lower than \"Development-PROTECTED\""), report);
 		assertThrows(IllegalStateException.class, () -> { builder.build(); });
 	}
 	
@@ -424,17 +424,17 @@ class ProtectiveMarkerBuilderTest {
 		ProtectiveMarkerBuilder builder = new ProtectiveMarkerBuilder();
 		builder.unofficial().addForeignGovernmentMarking("AAA");
 		List<String> report = builder.isValid();
-		assertEquals(List.of("Attempting to add a Security Caveat when the Classification \"Development UNOFFICIAL\" is lower than \"Development PROTECTED\""), report);
+		assertEquals(List.of("Attempting to add a Security Caveat when the Classification \"Development-UNOFFICIAL\" is lower than \"Development-PROTECTED\""), report);
 		assertThrows(IllegalStateException.class, () -> { builder.build(); });
 		
 		builder.official();
 		report = builder.isValid();
-		assertEquals(List.of("Attempting to add a Security Caveat when the Classification \"Development OFFICIAL\" is lower than \"Development PROTECTED\""), report);
+		assertEquals(List.of("Attempting to add a Security Caveat when the Classification \"Development-OFFICIAL\" is lower than \"Development-PROTECTED\""), report);
 		assertThrows(IllegalStateException.class, () -> { builder.build(); });
 		
 		builder.officialSensitive();
 		report = builder.isValid();
-		assertEquals(List.of("Attempting to add a Security Caveat when the Classification \"Development OFFICIAL: Sensitive\" is lower than \"Development PROTECTED\""), report);
+		assertEquals(List.of("Attempting to add a Security Caveat when the Classification \"Development-OFFICIAL: Sensitive\" is lower than \"Development-PROTECTED\""), report);
 		assertThrows(IllegalStateException.class, () -> { builder.build(); });
 	}
 	

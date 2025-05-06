@@ -7,7 +7,7 @@ package io.github.trquinn76.classification.nzl.model;
  * {@link Classification}'s to be used, it is necessary to set the classification production mode configuration
  * value to true.
  */
-public enum NZLClassifications {
+public enum NZLClassification {
 
     // @formatter:off
     UNCLASSIFIED("UNCLASSIFIED"),
@@ -21,7 +21,7 @@ public enum NZLClassifications {
 
     private final String text;
 
-    private NZLClassifications(String text) {
+    private NZLClassification(String text) {
         this.text = text;
     }
 

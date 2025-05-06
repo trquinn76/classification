@@ -96,7 +96,7 @@ classification.
 
 ### Policy And Privacy Endorsements
 
-This library assumes that Policy and Privacy Endorsements may only be applied with Policy And Privacy Classifications.
+In this library Policy and Privacy Endorsements may only be applied to Policy And Privacy Classifications.
 That is `IN-CONFIDENCE` and `SENSITIVE` Classifications.
 
 A list of Policy and Privacy Endorsements, wrapped with an optional String, which is required for some Endorsements. The
@@ -143,7 +143,7 @@ assumed that the time is in the New Zealand time zone. Either standard time (UTC
 
 ### National Security Endorsements
 
-This library assumes that National Security Endorsements may only be applied with National Security Classifications.
+In this library National Security Endorsements may only be applied to National Security Classifications.
 That is `RESTRICTED`, `CONFIDENTIAL`, `SECRET` and `TOP SECRET` Classifications.
 
 #### Controls
@@ -203,4 +203,115 @@ of which must be `NZL`. `Releasable to` lists are ordered alphabetically, with `
 `Releasable to` lists are expected to be populated with country trigraphs, as defined in the 
 `International Standard ISO 3166-1:2013 alpha3 Codes`. This is not enforced, except for requiring that `NZL` be present.
 
+In this library the preferred way to represent the Five Eyes in a RELTO list is to explicitly list each country. eg:
+`NZL, AUS, CAN, GBR, USA`. Use of Strings like `FVEY` is not prevented, but `NZL` will always be required.
+
 If there is no Releasability, then the `ReleasabilityMarking` field will be null.
+
+## Configuration
+
+##### Production Mode
+
+Determines if the library is operating in Production Mode. When true causes the library to use `NZLClassification`'s,
+otherwise `DevelopmentClassification`'s are used. Defaults to `false`. This configuration value is shared with other
+Classification libraries.
+- Cmd Line Property: `classificationProductionMode`
+- Environment Variable: `CLASSIFICATION_PRODUCTION_MODE`
+- Config File Property: `io.github.trquinn76.classification.production.mode`
+
+##### Config File Location
+
+Specifies a User defined Config File. This configuration value is shared with other Classification libraries.
+- Cmd Line Property: `classificationConfigFile`
+- Environment Variable: `CLASSIFICATION_CONFIG_FILE`
+
+##### Development UNCLASSIFIED String
+
+Determines the String used when displaying the `DEVELOPMENT_UNCLASSIFIED` Classification.
+- Cmd Line Property: `classificationNzlDevelUnclassified`
+- Environment Variable: `CLASSIFICATION_NZL_DEVEL_UNCLASSIFIED`
+- Config File Property: `io.github.trquinn76.classification.nzl.development.unclassified.name`
+
+##### Development IN-CONFIDENCE String
+
+Determines the String used when displaying the `DEVELOPMENT_IN_CONFIDENCE` Classification.
+- Cmd Line Property: `classificationNzlDevelInConfidence`
+- Environment Variable: `CLASSIFICATION_NZL_DEVEL_IN_CONFIDENCE`
+- Config File Property: `io.github.trquinn76.classification.nzl.development.in.confidence.name`
+
+##### Development SENSITIVE String
+
+Determines the String used when displaying the `DEVELOPMENT_SENSITIVE` Classification.
+- Cmd Line Property: `classificationNzlDevelSensitive`
+- Environment Variable: `CLASSIFICATION_NZL_DEVEL_SENSITIVE`
+- Config File Property: `io.github.trquinn76.classification.nzl.development.sensitive.name`
+
+##### Development RESTRICTED String
+
+Determines the String used when displaying the `DEVELOPMENT_RESTRICTED` Classification.
+- Cmd Line Property: `classificationNzlDevelRestricted`
+- Environment Variable: `CLASSIFICATION_NZL_DEVEL_RESTRICTED`
+- Config File Property: `io.github.trquinn76.classification.nzl.development.restricted.name`
+
+##### Development CONFIDENTIAL String
+
+Determines the String used when displaying the `DEVELOPMENT_CONFIDENTIAL` Classification.
+- Cmd Line Property: `classificationNzlDevelConfidential`
+- Environment Variable: `CLASSIFICATION_NZL_DEVEL_CONFIDENTIAL`
+- Config File Property: `io.github.trquinn76.classification.nzl.development.confidential.name`
+
+##### Development SECRET String
+
+Determines the String used when displaying the `DEVELOPMENT_SECRET` Classification.
+- Cmd Line Property: `classificationNzlDevelSecret`
+- Environment Variable: `CLASSIFICATION_NZL_DEVEL_SECRET`
+- Config File Property: `io.github.trquinn76.classification.nzl.development.secret.name`
+
+##### Development TOP SECRET String
+
+Determines the String used when displaying the `DEVELOPMENT_TOP_SECRET` Classification.
+- Cmd Line Property: `classificationNzlDevelTopSecret`
+- Environment Variable: `CLASSIFICATION_NZL_DEVEL_TOP_SECRET`
+- Config File Property: `io.github.trquinn76.classification.nzl.development.top.secret.name`
+
+#### Config precedence
+
+The order of precedence for configuration values are:
+- Cmd Line Property
+- Environment Variable
+- Configuration File value
+- Default value
+
+When searching configuration files, the library will search for files in the following order:
+- file defined via the `classificationConfigFile` command line property. eg:
+`java -DclassificationConfigFile=myconfig.properties MyApp`. Or the `CLASSIFICATION_CONFIG_FILE` environment variable.
+- `application.properties`: this config file name is used by both **SpringBoot** and **Quarkus**.
+- `classification-config.properties`: the developer can create this file anywhere on the classpath and it should be
+successfully read in.
+- `default-classification-config.properties`: which already exists in the library `JAR` file, and holds the default
+values used in this library.
+
+#### Configuring to use real/NZL Classifications
+
+By default the library will use the `DevelopmentClassification`'s, rather than the real Classifications defined in
+`NZLClassification`. In order to use the `NZLClassification`'s, it is necessary to set the Production Mode config
+value. This can be done via runtime command line property, environment variable or configuration.
+
+eg:
+- `java -DclassificationProductionMode=true MyApp`
+- `CLASSIFICATION_PRODUCTION_MODE=true`
+- in config file `application.properties` set: `io.github.trquinn76.classification.production.mode = true`
+
+## Implementation Considerations
+
+### Sets for Lists
+
+There are a number of `List`'s in the `ProtectiveMarkerBuilder` which are implemented as `TreeSet`'s. These `Set`'s are
+converted to true `List`'s when the `ProtectiveMarker` is built. Their use ensures that duplicate values are handled
+and that the generated `List`'s are in alphabetical order.
+
+### No Endorsements for UNCLASSIFIED
+
+This library does not allow Endorsements to be applied when the Classification is `UNCLASSIFIED`. The `UNCLASSIFIED`
+Classification mainly exists for those cases where data structures require a Classification, but the data is not
+Classified.

@@ -27,77 +27,77 @@ public record Classification(String classificationName) implements Comparable<Cl
     public Classification {
         Objects.requireNonNull(classificationName);
         if (ClassificationConfig.productionMode()) {
-            NZLClassifications.valueOf(classificationName);
+            NZLClassification.valueOf(classificationName);
         } else {
-            DevelopmentClassifications.valueOf(classificationName);
+            DevelopmentClassification.valueOf(classificationName);
         }
     }
 
     @Override
     public String toString() {
         if (ClassificationConfig.productionMode()) {
-            return NZLClassifications.valueOf(classificationName()).toString();
+            return NZLClassification.valueOf(classificationName()).toString();
         }
-        return DevelopmentClassifications.valueOf(classificationName()).toString();
+        return DevelopmentClassification.valueOf(classificationName()).toString();
     }
 
     public static Classification unclassified() {
         if (ClassificationConfig.productionMode()) {
-            return new Classification(NZLClassifications.UNCLASSIFIED.name());
+            return new Classification(NZLClassification.UNCLASSIFIED.name());
         }
-        return new Classification(DevelopmentClassifications.DEVELOPMENT_UNCLASSIFIED.name());
+        return new Classification(DevelopmentClassification.DEVELOPMENT_UNCLASSIFIED.name());
     }
 
     public static Classification inConfidence() {
         if (ClassificationConfig.productionMode()) {
-            return new Classification(NZLClassifications.IN_CONFIDENCE.name());
+            return new Classification(NZLClassification.IN_CONFIDENCE.name());
         }
-        return new Classification(DevelopmentClassifications.DEVELOPMENT_IN_CONFIDENCE.name());
+        return new Classification(DevelopmentClassification.DEVELOPMENT_IN_CONFIDENCE.name());
     }
 
     public static Classification sensitive() {
         if (ClassificationConfig.productionMode()) {
-            return new Classification(NZLClassifications.SENSITIVE.name());
+            return new Classification(NZLClassification.SENSITIVE.name());
         }
-        return new Classification(DevelopmentClassifications.DEVELOPMENT_SENSITIVE.name());
+        return new Classification(DevelopmentClassification.DEVELOPMENT_SENSITIVE.name());
     }
 
     public static Classification restricted() {
         if (ClassificationConfig.productionMode()) {
-            return new Classification(NZLClassifications.RESTRICTED.name());
+            return new Classification(NZLClassification.RESTRICTED.name());
         }
-        return new Classification(DevelopmentClassifications.DEVELOPMENT_RESTRICTED.name());
+        return new Classification(DevelopmentClassification.DEVELOPMENT_RESTRICTED.name());
     }
 
     public static Classification confidential() {
         if (ClassificationConfig.productionMode()) {
-            return new Classification(NZLClassifications.CONFIDENTIAL.name());
+            return new Classification(NZLClassification.CONFIDENTIAL.name());
         }
-        return new Classification(DevelopmentClassifications.DEVELOPMENT_CONFIDENTIAL.name());
+        return new Classification(DevelopmentClassification.DEVELOPMENT_CONFIDENTIAL.name());
     }
 
     public static Classification secret() {
         if (ClassificationConfig.productionMode()) {
-            return new Classification(NZLClassifications.SECRET.name());
+            return new Classification(NZLClassification.SECRET.name());
         }
-        return new Classification(DevelopmentClassifications.DEVELOPMENT_SECRET.name());
+        return new Classification(DevelopmentClassification.DEVELOPMENT_SECRET.name());
     }
 
     public static Classification topSecret() {
         if (ClassificationConfig.productionMode()) {
-            return new Classification(NZLClassifications.TOP_SECRET.name());
+            return new Classification(NZLClassification.TOP_SECRET.name());
         }
-        return new Classification(DevelopmentClassifications.DEVELOPMENT_TOP_SECRET.name());
+        return new Classification(DevelopmentClassification.DEVELOPMENT_TOP_SECRET.name());
     }
 
     @Override
     public int compareTo(Classification other) {
         if (ClassificationConfig.productionMode()) {
-            return NZLClassifications.valueOf(classificationName())
-                    .compareTo(NZLClassifications.valueOf(other.classificationName()));
+            return NZLClassification.valueOf(classificationName())
+                    .compareTo(NZLClassification.valueOf(other.classificationName()));
         }
-        return DevelopmentClassifications.valueOf(classificationName())
-                .compareTo(DevelopmentClassifications.valueOf(other.classificationName()));
+        return DevelopmentClassification.valueOf(classificationName())
+                .compareTo(DevelopmentClassification.valueOf(other.classificationName()));
     }
 
     @Override

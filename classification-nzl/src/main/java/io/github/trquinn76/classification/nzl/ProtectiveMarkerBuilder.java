@@ -405,7 +405,8 @@ public class ProtectiveMarkerBuilder {
      * <p>
      * To be valid a Releasable To list must contain a minimum of 2 values, one of which must be 'NZL'.
      * <p>
-     * The country codes in Releasable To lists should be from 'SAI-Global – ISO 3166-1 Codes'. This is not enforced.
+     * The country codes in Releasable To lists should be from 'International Standard ISO 3166-1:2013 alpha3 Codes'.
+     * This is not enforced.
      * 
      * @param releasableToList the list of countries to which release is allowed. May not be null.
      * @return this for function chaining.
@@ -420,7 +421,8 @@ public class ProtectiveMarkerBuilder {
     /**
      * Add the given country code to the Releasable To List.
      * 
-     * Country codes in Releasable To lists should be from 'SAI-Global – ISO 3166-1 Codes'. This is not enforced.
+     * Country codes in Releasable To lists should be from 'International Standard ISO 3166-1:2013 alpha3 Codes'.
+     * This is not enforced.
      * 
      * @param country the country code to add to the releasable to list. May not be null.
      * @return this for function chaining.
@@ -468,7 +470,8 @@ public class ProtectiveMarkerBuilder {
     /**
      * Sets the {@link ReleasablityTypes} to RELTO, and populates the releasable to list with the given array of country codes.
      * 
-     * Country codes in Releasable To lists should be from 'SAI-Global – ISO 3166-1 Codes'. This is not enforced.
+     * Country codes in Releasable To lists should be from 'International Standard ISO 3166-1:2013 alpha3 Codes'.
+     * This is not enforced.
      * 
      * @param releasableToList a String array of country codes. May not be null. May be empty.
      * @return this for function chaining.

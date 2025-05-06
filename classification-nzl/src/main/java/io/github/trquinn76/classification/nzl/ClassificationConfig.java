@@ -30,11 +30,13 @@ public class ClassificationConfig {
     protected static final String NZLFIRST = "nzlfirst";
     protected static final String FIVEEYESFIRST = "fiveeyesfirst";
     public static final List<String> RELTO_ORDER_VALUES = List.of(NZLFIRST, FIVEEYESFIRST);
+    
+    static final ConfigKeys PRODUCTIONMODECONFIGKEYS = new ConfigKeys("classificationProductionMode",
+            "CLASSIFICATION_PRODUCTION_MODE", "io.github.trquinn76.classification.production.mode");
 
     static final ConfigKeys RELTOORDERCONFIGKEYS = new ConfigKeys("classificationNzlReltoOrder",
             "CLASSIFICATION_NZL_RELTO_ORDER", "io.github.trquinn76.classification.nzl.relto.order");
-    static final ConfigKeys PRODUCTIONMODECONFIGKEYS = new ConfigKeys("classificationNzlProductionMode",
-            "CLASSIFICATION_NZL_PRODUCTION_MODE", "io.github.trquinn76.classification.nzl.production.mode");
+    
 
     static final ConfigKeys DEVELUNCLASSIFIEDNAME = new ConfigKeys("classificationNzlDevelUnclassified",
             "CLASSIFICATION_NZL_DEVEL_UNCLASSIFIED",
