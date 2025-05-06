@@ -18,7 +18,7 @@ the sub project folder for the each Classification schemes.
 >     <dependency>
 >         <groupId>io.github.trquinn76</groupId>
 >         <artifactId>classification-aus</artifactId>
->         <version>1.0.3</version>
+>         <version>1.0.4</version>
 >     </dependency>
 
 ## New Zealand Protective Markers
@@ -30,5 +30,5 @@ the sub project folder for the each Classification schemes.
 >     <dependency>
 >         <groupId>io.github.trquinn76</groupId>
 >         <artifactId>classification-nzl</artifactId>
->         <version>1.0.0</version>
+>         <version>1.0.1</version>
 >     </dependency>

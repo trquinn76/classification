@@ -15,7 +15,7 @@ model may be found in [Documents](./documents/README.md). These documents are:
 >     <dependency>
 >         <groupId>io.github.trquinn76</groupId>
 >         <artifactId>classification-aus</artifactId>
->         <version>1.0.3</version>
+>         <version>1.0.4</version>
 >     </dependency>
 
 ### Purpose
@@ -251,7 +251,7 @@ When searching configuration files, the library will search for files in the fol
 - `application.properties`: this config file name is used by both **SpringBoot** and **Quarkus**.
 - `classification-config.properties`: the developer can create this file anywhere on the classpath and it should be
 successfully read in.
-- `default-classification-config.properties`: which already exists in the library `JAR` file, and holds the default
+- `aus-default-classification-config.properties`: which already exists in the library `JAR` file, and holds the default
 values used in this library.
 
 #### Configuring to use real/PSPF Classifications

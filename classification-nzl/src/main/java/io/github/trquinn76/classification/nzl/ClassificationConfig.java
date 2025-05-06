@@ -64,7 +64,7 @@ public class ClassificationConfig {
     private static Config INSTANCE = null;
 
     private static final List<String> CONFIG_FILES = List.of("application.properties",
-            "classification-config.properties", "default-classification-config.properties");
+            "classification-config.properties", "nzl-default-classification-config.properties");
 
     private static final Logger LOGGER = Logger.getLogger(ClassificationConfig.class.getCanonicalName());
 

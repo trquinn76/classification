@@ -7,7 +7,7 @@ import java.util.Objects;
  * Represents the Releasability of Classified data.
  * <p>
  * The {@code releasableToList} should only be populated when the
- * {@link ReleasabilityType} is {@code RELTO}. It is expected to be populated
+ * {@link ReleasabilityTypes} is {@code RELTO}. It is expected to be populated
  * with country trigraphs, as defined in the {@code ISO 3166-1 Codes} list. This
  * is not enforced.
  * <p>
