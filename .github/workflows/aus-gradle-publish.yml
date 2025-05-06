@@ -4,7 +4,7 @@
 # documentation.
 # This workflow will build a package using Gradle and then publish it to Maven Central.
 
-name: Gradle Build and Publish
+name: AUS Gradle Build and Publish
 
 on:
   workflow_dispatch:
@@ -32,12 +32,12 @@ jobs:
       run: chmod +x gradlew
 
     - name: Build with Gradle
-      run: ./gradlew build publish
+      run: ./gradlew classification-aus:build classification-aus:publish
       
     - name: Publish to Maven Central
       run: |
-        ./gradlew jreleaserConfig --stacktrace
-        ./gradlew jreleaserFullRelease --stacktrace
+        ./gradlew classification-aus:jreleaserConfig --stacktrace
+        ./gradlew classification-aus:jreleaserFullRelease --stacktrace
       env:
         JRELEASER_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         JRELEASER_GIT_ROOT_SEARCH: true
