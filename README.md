@@ -18,5 +18,17 @@ the sub project folder for the each Classification schemes.
 >     <dependency>
 >         <groupId>io.github.trquinn76</groupId>
 >         <artifactId>classification-aus</artifactId>
->         <version>1.0.2</version>
+>         <version>1.0.3</version>
+>     </dependency>
+
+## New Zealand Protective Markers
+
+[README.md](./classification-nzl/README.md).
+
+> #### Maven Coordinates:
+> 
+>     <dependency>
+>         <groupId>io.github.trquinn76</groupId>
+>         <artifactId>classification-nzl</artifactId>
+>         <version>1.0.0</version>
 >     </dependency>
