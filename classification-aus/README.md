@@ -15,7 +15,7 @@ model may be found in [Documents](./documents/README.md). These documents are:
 >     <dependency>
 >         <groupId>io.github.trquinn76</groupId>
 >         <artifactId>classification-aus</artifactId>
->         <version>1.0.2</version>
+>         <version>1.0.3</version>
 >     </dependency>
 
 ### Purpose
