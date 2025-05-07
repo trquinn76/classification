@@ -96,4 +96,10 @@ jreleaser {
             }
         }
     }
+    release {
+        github {
+            repoOwner = 'trquinn76'
+            skipRelease = true
+        }
+    }
 }
