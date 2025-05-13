@@ -41,7 +41,7 @@ public record ClassificationMarker(boolean ukPrefix, Classification classificati
         if (!handlingInstructions().isEmpty()) {
             buf.append(" -");
             for (String instruction : handlingInstructions()) {
-                if (instruction.endsWith(Utils.USE_ONLY)) {
+                if (Utils.endsInOrganisationUseOnly(instruction)) {
                     instruction = instruction.replace(",", "");
                 }
                 buf.append(" ").append(instruction);

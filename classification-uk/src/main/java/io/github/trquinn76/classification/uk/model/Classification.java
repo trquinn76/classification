@@ -58,5 +58,4 @@ public record Classification(String classificationName) implements Comparable<Cl
         return DevelopmentClassification.valueOf(classificationName())
                 .compareTo(DevelopmentClassification.valueOf(other.classificationName()));
     }
-
 }

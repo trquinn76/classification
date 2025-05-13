@@ -7,7 +7,6 @@ import java.util.Comparator;
  */
 public class Utils {
 	
-	// Five Eyes Country Codes
 	public static final String UK = "UK";
 	public static final String FIVE = "FIVE";
 	public static final String REL_EU = "REL-EU";
@@ -53,6 +52,16 @@ public class Utils {
 			return alpha.compareTo(beta);
 		}
 	};
+	
+	/**
+	 * Determines if the given String ends with 'USE ONLY', but not 'HMG USE ONLY'.
+	 * 
+	 * @param str the String to test.
+	 * @return true iff the given String ends with 'USE ONLY', but not 'HMG USE ONLY'.
+	 */
+	public static boolean endsInOrganisationUseOnly(String str) {
+	    return str.endsWith(Utils.USE_ONLY) && !str.endsWith(Utils.HMG_USE_ONLY);
+	}
 	
 	private Utils() {}
 }

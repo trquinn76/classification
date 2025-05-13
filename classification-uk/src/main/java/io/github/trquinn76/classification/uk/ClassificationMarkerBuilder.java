@@ -30,17 +30,17 @@ public class ClassificationMarkerBuilder {
         
     }
     
-    public ClassificationMarkerBuilder(ClassificationMarker classificationAndMarkings) {
-        this.ukPrefix = classificationAndMarkings.ukPrefix();
-        this.classification = classificationAndMarkings.classification();
-        this.sensitive = classificationAndMarkings.sensitive();
-        this.descriptors.addAll(classificationAndMarkings.descriptors());
-        this.codeWords.addAll(classificationAndMarkings.codeWords());
-        this.eyesOnly.addAll(classificationAndMarkings.eyesOnly());
-        this.additionalInstructions.addAll(classificationAndMarkings.additionalInstructions());
+    public ClassificationMarkerBuilder(ClassificationMarker classificationMarker) {
+        this.ukPrefix = classificationMarker.ukPrefix();
+        this.classification = classificationMarker.classification();
+        this.sensitive = classificationMarker.sensitive();
+        this.descriptors.addAll(classificationMarker.descriptors());
+        this.codeWords.addAll(classificationMarker.codeWords());
+        this.eyesOnly.addAll(classificationMarker.eyesOnly());
+        this.additionalInstructions.addAll(classificationMarker.additionalInstructions());
         
-        for (String handlingInstruction : classificationAndMarkings.handlingInstructions()) {
-            if (handlingInstruction.endsWith(Utils.USE_ONLY)) {
+        for (String handlingInstruction : classificationMarker.handlingInstructions()) {
+            if (Utils.endsInOrganisationUseOnly(handlingInstruction)) {
                 String str = handlingInstruction.substring(0, handlingInstruction.length() - Utils.USE_ONLY.length()).trim();
                 String[] organisations = str.split(", ");
                 this.useOnly(organisations);
@@ -57,8 +57,7 @@ public class ClassificationMarkerBuilder {
     }
     
     public ClassificationMarkerBuilder ukPrefix() {
-        this.ukPrefix = true;
-        return this;
+        return setUkPrefix(true);
     }
     
     public boolean getUkPrefix() {
@@ -98,6 +97,7 @@ public class ClassificationMarkerBuilder {
     
     public ClassificationMarkerBuilder official() {
         this.classification = Classification.official();
+        this.sensitive = false;
         return this;
     }
     
@@ -109,11 +109,13 @@ public class ClassificationMarkerBuilder {
     
     public ClassificationMarkerBuilder secret() {
         this.classification = Classification.secret();
+        this.sensitive = false;
         return this;
     }
     
     public ClassificationMarkerBuilder topSecret() {
         this.classification = Classification.topSecret();
+        this.sensitive = false;
         return this;
     }
     
@@ -124,11 +126,6 @@ public class ClassificationMarkerBuilder {
     
     public boolean getSensitiveMark() {
         return this.sensitive;
-    }
-    
-    public ClassificationMarkerBuilder sensitive() {
-        this.sensitive = true;
-        return this;
     }
     
     public ClassificationMarkerBuilder clearClassification() {
@@ -172,7 +169,7 @@ public class ClassificationMarkerBuilder {
         return this;
     }
     
-    public ClassificationMarkerBuilder addUseOnlyOrganisations(String organisation) {
+    public ClassificationMarkerBuilder addUseOnlyOrganisation(String organisation) {
         this.useOnlyOrganisations.add(organisation);
         return this;
     }
@@ -187,13 +184,11 @@ public class ClassificationMarkerBuilder {
     }
     
     public ClassificationMarkerBuilder recipientsOnly() {
-        this.handlingInstructions.add(Utils.RECIPIENTS_ONLY);
-        return this;
+        return addHandlingInstruction(Utils.RECIPIENTS_ONLY);
     }
     
     public ClassificationMarkerBuilder forPublicRelease() {
-        this.handlingInstructions.add(Utils.FOR_PUBLIC_RELEASE);
-        return this;
+        return addHandlingInstruction(Utils.FOR_PUBLIC_RELEASE);
     }
     
     public ClassificationMarkerBuilder useOnly(String... organisations) {
@@ -201,20 +196,16 @@ public class ClassificationMarkerBuilder {
         if (organisations.length < 1) {
             throw new IllegalArgumentException("When using Organisation Use Only Handler, there must be a minimum of one Organisation.");
         }
-        this.handlingInstructions.add(Utils.USE_ONLY);
-        this.useOnlyOrganisations.clear();
-        this.useOnlyOrganisations.addAll(Arrays.asList(organisations));
-        return this;
+        addHandlingInstruction(Utils.USE_ONLY);
+        return setUseOnlyOrganisations(Arrays.asList(organisations));
     }
     
     public ClassificationMarkerBuilder hmgUseOnly() {
-        this.handlingInstructions.add(Utils.HMG_USE_ONLY);
-        return this;
+        return addHandlingInstruction(Utils.HMG_USE_ONLY);
     }
     
     public ClassificationMarkerBuilder embargoed() {
-        this.handlingInstructions.add(Utils.EMBARGOED);
-        return this;
+        return addHandlingInstruction(Utils.EMBARGOED);
     }
     
     public ClassificationMarkerBuilder setDescriptors(Collection<String> descriptors) {
@@ -238,33 +229,27 @@ public class ClassificationMarkerBuilder {
     }
     
     public ClassificationMarkerBuilder personalData() {
-        this.descriptors.add(Utils.PERSONAL_DATA);
-        return this;
+        return addDescriptor(Utils.PERSONAL_DATA);
     }
     
     public ClassificationMarkerBuilder legalProfessionalPrivilege() {
-        this.descriptors.add(Utils.LEGAL_PROFESSIONAL_PRIVILEGE);
-        return this;
+        return addDescriptor(Utils.LEGAL_PROFESSIONAL_PRIVILEGE);
     }
     
     public ClassificationMarkerBuilder legal() {
-        this.descriptors.add(Utils.LEGAL);
-        return this;
+        return addDescriptor(Utils.LEGAL);
     }
     
     public ClassificationMarkerBuilder marketSensitive() {
-        this.descriptors.add(Utils.MARKET_SENSITIVE);
-        return this;
+        return addDescriptor(Utils.MARKET_SENSITIVE);
     }
     
     public ClassificationMarkerBuilder commercial() {
-        this.descriptors.add(Utils.COMMERCIAL);
-        return this;
+        return addDescriptor(Utils.COMMERCIAL);
     }
     
     public ClassificationMarkerBuilder hrManagement() {
-        this.descriptors.add(Utils.HR_MANAGEMENT);
-        return this;
+        return addDescriptor(Utils.HR_MANAGEMENT);
     }
     
     public ClassificationMarkerBuilder setCodeWords(Collection<String> codeWords) {
@@ -289,9 +274,7 @@ public class ClassificationMarkerBuilder {
     
     public ClassificationMarkerBuilder codeWords(String... codeWords) {
         Objects.requireNonNull(codeWords);
-        clearCodeWords();
-        this.codeWords.addAll(Arrays.asList(codeWords));
-        return this;
+        return setCodeWords(Arrays.asList(codeWords));
     }
     
     public ClassificationMarkerBuilder setEyesOnly(Collection<String> eyesOnlyList) {
@@ -318,15 +301,15 @@ public class ClassificationMarkerBuilder {
     
     public ClassificationMarkerBuilder eyesOnly(String... countries) {
         Objects.requireNonNull(countries);
-        clearEyesOnly();
-        this.eyesOnly.addAll(Arrays.asList(countries));
-        return this;
+        return setEyesOnly(Arrays.asList(countries));
+    }
+    
+    public ClassificationMarkerBuilder ukEyesOnly() {
+        return eyesOnly(Utils.UK);
     }
     
     public ClassificationMarkerBuilder fiveEyesOnly() {
-        clearEyesOnly();
-        this.eyesOnly.add(Utils.FIVE);
-        return this;
+        return eyesOnly(Utils.FIVE);
     }
     
     public ClassificationMarkerBuilder setAdditionalInstructions(Collection<String> instructions) {
@@ -416,17 +399,17 @@ public class ClassificationMarkerBuilder {
     private void checkClassificationValid(List<String> report) {
         if (this.classification == null) {
             report.add("Classification must be set.");
-        } else if (this.sensitive && Classification.official() != this.classification) {
+        } else if (this.sensitive && !Classification.official().equals(this.classification)) {
             StringBuilder buf = new StringBuilder();
             buf.append("The SENSITIVE mark is only permitted when the Classification is '")
-                    .append(Classification.official()).append("'. Current Classification is: ")
-                    .append(this.classification);
+                    .append(Classification.official()).append("'. Current Classification is: '")
+                    .append(this.classification).append("'.");
             report.add(buf.toString());
         }
     }
     
     private void checkHandlingInstructionsValid(List<String> report) {
-        if (this.handlingInstructions.contains(Utils.RECIPIENTS_ONLY) && Classification.official() == this.classification && !this.sensitive) {
+        if (this.handlingInstructions.contains(Utils.RECIPIENTS_ONLY) && Classification.official().equals(this.classification) && !this.sensitive) {
             StringBuilder buf = new StringBuilder();
             buf.append(Utils.RECIPIENTS_ONLY).append(" Handling Instruction may not be used with '")
                 .append(Classification.official())
@@ -435,14 +418,14 @@ public class ClassificationMarkerBuilder {
         }
         
         if (this.handlingInstructions.contains(Utils.FOR_PUBLIC_RELEASE)) {
-            if (Classification.official() != this.classification) {
+            if (!Classification.official().equals(this.classification)) {
                 StringBuilder buf = new StringBuilder();
                 buf.append("May only use Handling Instruction ").append(Utils.FOR_PUBLIC_RELEASE).append(" with '")
                     .append(Classification.official()).append("' Classification. It may not be used with: '")
                     .append(this.classification.toString()).append("'.");
                 report.add(buf.toString());
             }
-            else if (Classification.official() == this.classification && this.sensitive) {
+            else if (Classification.official().equals(this.classification) && this.sensitive) {
                 StringBuilder buf = new StringBuilder();
                 buf.append("May only use Handling Instruction ").append(Utils.FOR_PUBLIC_RELEASE).append(" with '")
                     .append(Classification.official()).append("' Classification without the SENSITIVE mark.");
@@ -454,7 +437,7 @@ public class ClassificationMarkerBuilder {
             report.add("When the [INSERT ORGANISATION(S) NAME] USE ONLY Handling Instruction is used, there must be at least one 'Use Only Organisation' defined.");
         }
         
-        if (this.handlingInstructions.contains(Utils.HMG_USE_ONLY) && Classification.official() != this.classification) {
+        if (this.handlingInstructions.contains(Utils.HMG_USE_ONLY) && !Classification.official().equals(this.classification)) {
             StringBuilder buf = new StringBuilder();
             buf.append("May only use ").append(Utils.HMG_USE_ONLY).append(" Handling Instruction with '")
                 .append(Classification.official()).append("' Classification. It may not be used with: '")
@@ -462,13 +445,13 @@ public class ClassificationMarkerBuilder {
             report.add(buf.toString());
         }
         
-        if (this.handlingInstructions.contains(Utils.EMBARGOED) && Classification.topSecret() == this.classification) {
+        if (this.handlingInstructions.contains(Utils.EMBARGOED) && Classification.topSecret().equals(this.classification)) {
             report.add("May not use the " + Utils.EMBARGOED + " Handling Instruction with the Classification '" + Classification.topSecret() + "'.");
         }
     }
     
     private void checkDescriptorsValid(List<String> report) {
-        if (this.descriptors.contains(Utils.LEGAL) && Classification.official() != this.classification) {
+        if (this.descriptors.contains(Utils.LEGAL) && !Classification.official().equals(this.classification)) {
             StringBuilder buf = new StringBuilder();
             buf.append("May only use ").append(Utils.LEGAL).append(" Handling Instruction when the Classification is '")
                 .append(Classification.official()).append("'. It may not be used with: '")
@@ -479,6 +462,13 @@ public class ClassificationMarkerBuilder {
     
     private void checkNationalCaveats(List<String> report) {
         if (!this.eyesOnly.isEmpty()) {
+            if (!Set.of(Classification.secret(), Classification.topSecret()).contains(this.classification)) {
+                StringBuilder buf = new StringBuilder();
+                buf.append("National/Eyes Only Caveats may only be added to '").append(Classification.secret())
+                    .append("' and '").append(Classification.topSecret())
+                    .append("' Classifications. They may not be used with '").append(this.classification).append("'.");
+                report.add(buf.toString());
+            }
             if (!this.eyesOnly.contains(Utils.UK) && !this.eyesOnly.contains(Utils.FIVE)) {
                 StringBuilder buf = new StringBuilder();
                 buf.append("When Eyes Only Caveats are present, the list must contain either ")
@@ -486,5 +476,27 @@ public class ClassificationMarkerBuilder {
                 report.add(buf.toString());
             }
         }
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(additionalInstructions, classification, codeWords, descriptors, eyesOnly,
+                handlingInstructions, sensitive, ukPrefix, useOnlyOrganisations);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        ClassificationMarkerBuilder other = (ClassificationMarkerBuilder) obj;
+        return Objects.equals(additionalInstructions, other.additionalInstructions)
+                && Objects.equals(classification, other.classification) && Objects.equals(codeWords, other.codeWords)
+                && Objects.equals(descriptors, other.descriptors) && Objects.equals(eyesOnly, other.eyesOnly)
+                && Objects.equals(handlingInstructions, other.handlingInstructions) && sensitive == other.sensitive
+                && ukPrefix == other.ukPrefix && Objects.equals(useOnlyOrganisations, other.useOnlyOrganisations);
     }
 }
