@@ -15,192 +15,196 @@ import java.util.logging.Logger;
  */
 public class ClassificationConfig {
 
-	/**
-	 * A command line option to set the configuration file to retrieve configuration
-	 * from.
-	 */
-	public static final String CMD_LINE_CONFIG_FILE_PROPERTY = "classificationConfigFile";
-	/**
-	 * An environment variable to allow the setting of the configuration file t
-	 * retrieve configuration from.
-	 */
-	public static final String ENV_VARIABLE_CONFIG_FILE = "CLASSIFICATION_CONFIG_FILE";
+    /**
+     * A command line option to set the configuration file to retrieve configuration
+     * from.
+     */
+    public static final String CMD_LINE_CONFIG_FILE_PROPERTY = "classificationConfigFile";
+    /**
+     * An environment variable to allow the setting of the configuration file t
+     * retrieve configuration from.
+     */
+    public static final String ENV_VARIABLE_CONFIG_FILE = "CLASSIFICATION_CONFIG_FILE";
 
-	protected static final String UKFIRST = "ukfirst";
-	protected static final String ALPHABETICAL = "alphabetical";
-	
-	static final ConfigKeys PRODUCTIONMODECONFIGKEYS = new ConfigKeys("classificationProductionMode",
+    protected static final String UKFIRST = "ukfirst";
+    protected static final String ALPHABETICAL = "alphabetical";
+
+    static final ConfigKeys PRODUCTIONMODECONFIGKEYS = new ConfigKeys("classificationProductionMode",
             "CLASSIFICATION_PRODUCTION_MODE", "io.github.trquinn76.classification.production.mode");
 
-	static final ConfigKeys EYESONLYORDERCONFIGKEYS = new ConfigKeys("classificationUkEyesOnlyOrder",
-			"CLASSIFICATION_UK_RELTO_ORDER", "io.github.trquinn76.classification.uk.eyes.only.order");
-	
-	static final ConfigKeys DEVELOFFICIALNAME = new ConfigKeys("classificationUkDevelOfficial", "CLASSIFICATION_UK_DEVEL_OFFICIAL", "io.github.trquinn76.classification.uk.development.official.name");
-	static final ConfigKeys DEVELSENSITIVEMARKNAME = new ConfigKeys("classificationUkDevelSensitiveMark", "CLASSIFICATION_UK_DEVEL_SENSITIVE_MARK", "io.github.trquinn76.classification.uk.development.sensitive.mark.name");
-	static final ConfigKeys DEVELSECRETNAME = new ConfigKeys("classificationUkDevelSecret", "CLASSIFICATION_UK_DEVEL_SECRET", "io.github.trquinn76.classification.uk.development.secret.name");
-	static final ConfigKeys DEVELTOPSECRETNAME = new ConfigKeys("classificationUkDevelTopSecret", "CLASSIFICATION_UK_DEVEL_TOP_SECRET", "io.github.trquinn76.classification.uk.development.top.secret.name");
-	
+    static final ConfigKeys EYESONLYORDERCONFIGKEYS = new ConfigKeys("classificationUkEyesOnlyOrder",
+            "CLASSIFICATION_UK_RELTO_ORDER", "io.github.trquinn76.classification.uk.eyes.only.order");
 
-	private static Config INSTANCE = null;
+    static final ConfigKeys DEVELOFFICIALNAME = new ConfigKeys("classificationUkDevelOfficial",
+            "CLASSIFICATION_UK_DEVEL_OFFICIAL", "io.github.trquinn76.classification.uk.development.official.name");
+    static final ConfigKeys DEVELSENSITIVEMARKNAME = new ConfigKeys("classificationUkDevelSensitiveMark",
+            "CLASSIFICATION_UK_DEVEL_SENSITIVE_MARK",
+            "io.github.trquinn76.classification.uk.development.sensitive.mark.name");
+    static final ConfigKeys DEVELSECRETNAME = new ConfigKeys("classificationUkDevelSecret",
+            "CLASSIFICATION_UK_DEVEL_SECRET", "io.github.trquinn76.classification.uk.development.secret.name");
+    static final ConfigKeys DEVELTOPSECRETNAME = new ConfigKeys("classificationUkDevelTopSecret",
+            "CLASSIFICATION_UK_DEVEL_TOP_SECRET", "io.github.trquinn76.classification.uk.development.top.secret.name");
 
-	private static final List<String> CONFIG_FILES = List.of("application.properties",
-			"classification-config.properties", "uk-default-classification-config.properties");
+    private static Config INSTANCE = null;
 
-	private static final Logger LOGGER = Logger.getLogger(ClassificationConfig.class.getCanonicalName());
+    private static final List<String> CONFIG_FILES = List.of("application.properties",
+            "classification-config.properties", "uk-default-classification-config.properties");
 
-	/**
-	 * Gets the {@link Comparator} which defines the order in which eyes only
-	 * lists should be sorted.
-	 * 
-	 * @return the configured {@link Comparator}.
-	 */
-	public static Comparator<String> eyesOnlyOrder() {
-		Config config = getInstance();
-		if (config.trquinnClassificationUkEyesOnlyOrder.equals(UKFIRST)) {
-			return Utils.UK_FIRST;
-		}
-		return Utils.ALPHABETICAL;
-	}
+    private static final Logger LOGGER = Logger.getLogger(ClassificationConfig.class.getCanonicalName());
 
-	public static boolean productionMode() {
-		Config config = getInstance();
-		return config.trquinnClassificationProductionMode;
-	}
-	
-	public static String developmentOfficialName() {
-		return getInstance().develOfficalName;
-	}
-	
-	public static String sensitiveMark() {
-		return getInstance().sensitiveMark;
-	}
-	
-	public static String developmentSecretName() {
-		return getInstance().develSecretName;
-	}
-	
-	public static String developmentTopSecretName() {
-		return getInstance().develTopSecretName;
-	}
+    /**
+     * Gets the {@link Comparator} which defines the order in which eyes only lists
+     * should be sorted.
+     * 
+     * @return the configured {@link Comparator}.
+     */
+    public static Comparator<String> eyesOnlyOrder() {
+        Config config = getInstance();
+        if (config.trquinnClassificationUkEyesOnlyOrder.equals(UKFIRST)) {
+            return Utils.UK_FIRST;
+        }
+        return Utils.ALPHABETICAL;
+    }
 
-	/**
-	 * for testing... resets config and will force a reload.
-	 */
-	protected static void reset() {
-		INSTANCE = null;
-	}
+    public static boolean productionMode() {
+        Config config = getInstance();
+        return config.trquinnClassificationProductionMode;
+    }
 
-	private static Config getInstance() {
-		if (INSTANCE == null) {
-			List<String> filesToSearch = makeListOfConfigFiles();
-			List<Properties> configProperties = readPropertiesConfigFiles(filesToSearch);
+    public static String developmentOfficialName() {
+        return getInstance().develOfficalName;
+    }
 
-			Config config = new Config();
-			config.trquinnClassificationUkEyesOnlyOrder = getConfig(EYESONLYORDERCONFIGKEYS, configProperties);
-			config.trquinnClassificationProductionMode = Boolean
-					.parseBoolean(getConfig(PRODUCTIONMODECONFIGKEYS, configProperties));
-			
-			config.develOfficalName = getConfig(DEVELOFFICIALNAME, configProperties);
-			config.sensitiveMark = getConfig(DEVELSENSITIVEMARKNAME, configProperties);
-			config.develSecretName = getConfig(DEVELSECRETNAME, configProperties);
-			config.develTopSecretName = getConfig(DEVELTOPSECRETNAME, configProperties);
+    public static String sensitiveMark() {
+        return getInstance().sensitiveMark;
+    }
 
-			INSTANCE = config;
-		}
-		return INSTANCE;
-	}
+    public static String developmentSecretName() {
+        return getInstance().develSecretName;
+    }
 
-	/**
-	 * Builds a list of possible configuration files, in the order they should be
-	 * searched for config information.
-	 * 
-	 * @return
-	 */
-	private static List<String> makeListOfConfigFiles() {
-		List<String> files = new ArrayList<>();
-		String userDefinedConfigFile = System.getProperty(CMD_LINE_CONFIG_FILE_PROPERTY);
-		if (userDefinedConfigFile == null) {
-			userDefinedConfigFile = System.getenv(ENV_VARIABLE_CONFIG_FILE);
-		}
-		if (userDefinedConfigFile != null) {
-			files.add(userDefinedConfigFile);
-		}
-		files.addAll(CONFIG_FILES);
-		return files;
-	}
+    public static String developmentTopSecretName() {
+        return getInstance().develTopSecretName;
+    }
 
-	private static List<Properties> readPropertiesConfigFiles(List<String> configFileNameList) {
-		List<Properties> configPropertiesFromFiles = new ArrayList<>();
-		for (String fileName : configFileNameList) {
-			try {
-				Properties properties = loadPropertiesFile(fileName);
-				if (properties != null) {
-					configPropertiesFromFiles.add(properties);
-				}
-			} catch (IOException ioe) {
-				LOGGER.config("IOException when attempting to read config file " + fileName + ": " + ioe.getMessage());
-			}
-		}
-		return configPropertiesFromFiles;
-	}
+    /**
+     * for testing... resets config and will force a reload.
+     */
+    protected static void reset() {
+        INSTANCE = null;
+    }
 
-	private static Properties loadPropertiesFile(String propertiesFileName) throws IOException {
-		Enumeration<URL> resources = Thread.currentThread().getContextClassLoader().getResources(propertiesFileName);
-		if (resources.hasMoreElements()) {
-			try (InputStream in = Thread.currentThread().getContextClassLoader()
-					.getResourceAsStream(propertiesFileName)) {
-				Properties configProps = new Properties();
-				configProps.load(in);
+    private static Config getInstance() {
+        if (INSTANCE == null) {
+            List<String> filesToSearch = makeListOfConfigFiles();
+            List<Properties> configProperties = readPropertiesConfigFiles(filesToSearch);
 
-				return configProps;
-			}
-		}
-		return null;
-	}
+            Config config = new Config();
+            config.trquinnClassificationUkEyesOnlyOrder = getConfig(EYESONLYORDERCONFIGKEYS, configProperties);
+            config.trquinnClassificationProductionMode = Boolean
+                    .parseBoolean(getConfig(PRODUCTIONMODECONFIGKEYS, configProperties));
 
-	private static String getConfig(ConfigKeys keys, List<Properties> propertiesList) {
-		String cmdLineValue = System.getProperty(keys.cmdLineProperty());
-		LOGGER.config("Attempted to get cmd line property: " + keys.cmdLineProperty() + " : " + cmdLineValue);
-		if (cmdLineValue != null && !cmdLineValue.isBlank()) {
-			return cmdLineValue;
-		}
-		String envValue = System.getenv(keys.envVariable());
-		LOGGER.config("Attempted to get env variable: " + keys.envVariable() + " : " + envValue);
-		if (envValue != null && !envValue.isBlank()) {
-			return envValue;
-		}
-		for (Properties properties : propertiesList) {
-			String value = properties.getProperty(keys.configFileProperty());
-			LOGGER.config("Attempted to get config property: " + keys.configFileProperty() + " : " + value);
-			if (value != null && !value.isBlank()) {
-				return value;
-			}
-		}
-		throw new Error("No configuration value found for " + keys.configFileProperty()
-				+ "! At least a default value should have been found.");
-	}
+            config.develOfficalName = getConfig(DEVELOFFICIALNAME, configProperties);
+            config.sensitiveMark = getConfig(DEVELSENSITIVEMARKNAME, configProperties);
+            config.develSecretName = getConfig(DEVELSECRETNAME, configProperties);
+            config.develTopSecretName = getConfig(DEVELTOPSECRETNAME, configProperties);
 
-	private static class Config {
+            INSTANCE = config;
+        }
+        return INSTANCE;
+    }
 
-	    public boolean trquinnClassificationProductionMode;
-		public String trquinnClassificationUkEyesOnlyOrder;
-		
-		public String develOfficalName;
-		public String sensitiveMark;
-		public String develSecretName;
-		public String develTopSecretName;
-	}
+    /**
+     * Builds a list of possible configuration files, in the order they should be
+     * searched for config information.
+     * 
+     * @return
+     */
+    private static List<String> makeListOfConfigFiles() {
+        List<String> files = new ArrayList<>();
+        String userDefinedConfigFile = System.getProperty(CMD_LINE_CONFIG_FILE_PROPERTY);
+        if (userDefinedConfigFile == null) {
+            userDefinedConfigFile = System.getenv(ENV_VARIABLE_CONFIG_FILE);
+        }
+        if (userDefinedConfigFile != null) {
+            files.add(userDefinedConfigFile);
+        }
+        files.addAll(CONFIG_FILES);
+        return files;
+    }
 
-	/**
-	 * Defines a set of keys for a single configuration value.
-	 * 
-	 * Configuration can come from the command line, an environment variable, or a
-	 * config file. This structure holds the property keys for each of these
-	 * different sources for a single configuration value.
-	 */
-	record ConfigKeys(String cmdLineProperty, String envVariable, String configFileProperty) {
-	}
+    private static List<Properties> readPropertiesConfigFiles(List<String> configFileNameList) {
+        List<Properties> configPropertiesFromFiles = new ArrayList<>();
+        for (String fileName : configFileNameList) {
+            try {
+                Properties properties = loadPropertiesFile(fileName);
+                if (properties != null) {
+                    configPropertiesFromFiles.add(properties);
+                }
+            } catch (IOException ioe) {
+                LOGGER.config("IOException when attempting to read config file " + fileName + ": " + ioe.getMessage());
+            }
+        }
+        return configPropertiesFromFiles;
+    }
 
-	private ClassificationConfig() {
-	}
+    private static Properties loadPropertiesFile(String propertiesFileName) throws IOException {
+        Enumeration<URL> resources = Thread.currentThread().getContextClassLoader().getResources(propertiesFileName);
+        if (resources.hasMoreElements()) {
+            try (InputStream in = Thread.currentThread().getContextClassLoader()
+                    .getResourceAsStream(propertiesFileName)) {
+                Properties configProps = new Properties();
+                configProps.load(in);
+
+                return configProps;
+            }
+        }
+        return null;
+    }
+
+    private static String getConfig(ConfigKeys keys, List<Properties> propertiesList) {
+        String cmdLineValue = System.getProperty(keys.cmdLineProperty());
+        LOGGER.config("Attempted to get cmd line property: " + keys.cmdLineProperty() + " : " + cmdLineValue);
+        if (cmdLineValue != null && !cmdLineValue.isBlank()) {
+            return cmdLineValue;
+        }
+        String envValue = System.getenv(keys.envVariable());
+        LOGGER.config("Attempted to get env variable: " + keys.envVariable() + " : " + envValue);
+        if (envValue != null && !envValue.isBlank()) {
+            return envValue;
+        }
+        for (Properties properties : propertiesList) {
+            String value = properties.getProperty(keys.configFileProperty());
+            LOGGER.config("Attempted to get config property: " + keys.configFileProperty() + " : " + value);
+            if (value != null && !value.isBlank()) {
+                return value;
+            }
+        }
+        throw new Error("No configuration value found for " + keys.configFileProperty()
+                + "! At least a default value should have been found.");
+    }
+
+    private static class Config {
+
+        public boolean trquinnClassificationProductionMode;
+        public String trquinnClassificationUkEyesOnlyOrder;
+
+        public String develOfficalName;
+        public String sensitiveMark;
+        public String develSecretName;
+        public String develTopSecretName;
+    }
+
+    /**
+     * Defines a set of keys for a single configuration value.
+     * 
+     * Configuration can come from the command line, an environment variable, or a
+     * config file. This structure holds the property keys for each of these
+     * different sources for a single configuration value.
+     */
+    record ConfigKeys(String cmdLineProperty, String envVariable, String configFileProperty) {
+    }
+
+    private ClassificationConfig() {
+    }
 }

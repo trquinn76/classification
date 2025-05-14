@@ -8,7 +8,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
 class ClassificationConfigTest {
-    
+
     @AfterEach
     void afterEach() {
         ClassificationConfig.reset();
@@ -25,13 +25,15 @@ class ClassificationConfigTest {
 
     @Test
     void cmdLineTest() {
-        setAndWaitForSystemProperty(ClassificationConfig.EYESONLYORDERCONFIGKEYS.cmdLineProperty(), ClassificationConfig.UKFIRST);
+        setAndWaitForSystemProperty(ClassificationConfig.EYESONLYORDERCONFIGKEYS.cmdLineProperty(),
+                ClassificationConfig.UKFIRST);
         Comparator<String> actual = ClassificationConfig.eyesOnlyOrder();
         assertEquals(Utils.UK_FIRST, actual);
         assertFalse(ClassificationConfig.productionMode());
-        // ClassificationConfig.EYESONLYORDERCONFIGKEYS.cmdLineProperty() cleaned up in afterEach()
+        // ClassificationConfig.EYESONLYORDERCONFIGKEYS.cmdLineProperty() cleaned up in
+        // afterEach()
     }
-    
+
     @Test
     void cmdLineConfigFileTest() {
         setAndWaitForSystemProperty(ClassificationConfig.CMD_LINE_CONFIG_FILE_PROPERTY, "test-config.properties");
@@ -40,10 +42,11 @@ class ClassificationConfigTest {
         assertTrue(ClassificationConfig.productionMode());
         // ClassificationConfig.CMD_LINE_CONFIG_FILE_PROPERTY cleaned up in afterEach()
     }
-    
+
     /**
-     * This function helps address intermittent bugs in tests where the properties do not appear to have been set by
-     * the time the Config code is attempting to read it.
+     * This function helps address intermittent bugs in tests where the properties
+     * do not appear to have been set by the time the Config code is attempting to
+     * read it.
      * 
      * @param propertyName
      * @param value
