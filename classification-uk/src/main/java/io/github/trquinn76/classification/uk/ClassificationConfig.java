@@ -37,9 +37,9 @@ public class ClassificationConfig {
 
     static final ConfigKeys DEVELOFFICIALNAME = new ConfigKeys("classificationUkDevelOfficial",
             "CLASSIFICATION_UK_DEVEL_OFFICIAL", "io.github.trquinn76.classification.uk.development.official.name");
-    static final ConfigKeys DEVELSENSITIVEMARKNAME = new ConfigKeys("classificationUkDevelSensitiveMark",
-            "CLASSIFICATION_UK_DEVEL_SENSITIVE_MARK",
-            "io.github.trquinn76.classification.uk.development.sensitive.mark.name");
+    static final ConfigKeys SENSITIVEMARKNAME = new ConfigKeys("classificationUkSensitiveMark",
+            "CLASSIFICATION_UK_SENSITIVE_MARK",
+            "io.github.trquinn76.classification.uk.sensitive.mark.name");
     static final ConfigKeys DEVELSECRETNAME = new ConfigKeys("classificationUkDevelSecret",
             "CLASSIFICATION_UK_DEVEL_SECRET", "io.github.trquinn76.classification.uk.development.secret.name");
     static final ConfigKeys DEVELTOPSECRETNAME = new ConfigKeys("classificationUkDevelTopSecret",
@@ -105,7 +105,7 @@ public class ClassificationConfig {
                     .parseBoolean(getConfig(PRODUCTIONMODECONFIGKEYS, configProperties));
 
             config.develOfficalName = getConfig(DEVELOFFICIALNAME, configProperties);
-            config.sensitiveMark = getConfig(DEVELSENSITIVEMARKNAME, configProperties);
+            config.sensitiveMark = getConfig(SENSITIVEMARKNAME, configProperties);
             config.develSecretName = getConfig(DEVELSECRETNAME, configProperties);
             config.develTopSecretName = getConfig(DEVELTOPSECRETNAME, configProperties);
 

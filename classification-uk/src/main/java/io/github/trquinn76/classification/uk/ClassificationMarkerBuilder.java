@@ -207,7 +207,7 @@ public class ClassificationMarkerBuilder {
     }
 
     /**
-     * Sets the {@link Classification to TOP SECRET. The SENSITIVE mark is set
+     * Sets the {@link Classification} to TOP SECRET. The SENSITIVE mark is set
      * false.
      * 
      * @return this for function chaining.

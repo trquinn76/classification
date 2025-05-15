@@ -47,7 +47,7 @@ publishing {
             from components.java
 
             pom {
-                name = 'UK Classification Scheme'
+                name = 'UK Security Classification Scheme'
                 description = "Representation of UK Government Security Classifications, which are immutable and suitable for use as DTO's"
                 inceptionYear = "2025"
                 url = "https://github.com/trquinn76/classification"
