@@ -32,3 +32,15 @@ the sub project folder for the each Classification schemes.
 >         <artifactId>classification-nzl</artifactId>
 >         <version>1.0.1</version>
 >     </dependency>
+
+## UK Security Classification Markers
+
+[README.md](./classification-uk/README.md).
+
+> #### Maven Coordinates:
+> 
+>     <dependency>
+>         <groupId>io.github.trquinn76</groupId>
+>         <artifactId>classification-uk</artifactId>
+>         <version>1.0.0</version>
+>     </dependency>
