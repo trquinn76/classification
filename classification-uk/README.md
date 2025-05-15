@@ -79,7 +79,7 @@ currently configured Classification enumeration.
 
 ##### Sensitive Mark
 
-There is an `Additional Mark`, `SENSITIVE`, which may be applied to the OFFICIAL Classification. This indicate OFFICIAL
+There is an `Additional Mark`, `SENSITIVE`, which may be applied to the OFFICIAL Classification. This indicates OFFICIAL
 data which requires additional protections. See 
 [Government Security Classification Policy](./documents/GovernmentSecurityClassificationsPolicy/README.md)
 **Applying the-SENSITIVE marking**.
@@ -96,7 +96,7 @@ in less secure environments than the final target production environment.
 ### Additional Markings
 
 Quoting from [Government Security Classification Policy](./documents/GovernmentSecurityClassificationsPolicy/README.md)
-** What are Additional Markings? - 22**:
+** What are Additional Markings?** - **22**:
 
 > Additional markings can be added in conjunction with a classification to indicate the nature or source of the
 > information, or to limit access to specific user groups.
@@ -163,7 +163,10 @@ alphabetic order.
 
 Countries (or Organisations) should be in all caps. This is not enforced.
 
-Currently this library requires that either `UK` or `FIVE` appears in the list of National Caveats, if they are present.
+Currently this library requires that either `UK` or `FIVE` appears in the list of National Caveats, if they are
+present.
+
+This library allows the order of the National Caveats to be changed by configuration to `UK` first.
 
 ### Additional Instructions
 
@@ -186,6 +189,14 @@ Classification libraries.
 Specifies a User defined Config File. This configuration value is shared with other Classification libraries.
 - Cmd Line Property: `classificationConfigFile`
 - Environment Variable: `CLASSIFICATION_CONFIG_FILE`
+
+##### National Caveats (Eyes Only) Order
+
+Determines the order of National Caveats when they are displayed. Valid values are: `alphabetical` and `ukfirst`.
+The `alphabetical` value is the default.
+- Cmd Line Property: `classificationUkEyesOnlyOrder`
+- Environment Variable: `CLASSIFICATION_UK_EYES_ONLY_ORDER`
+- Config File Property: `io.github.trquinn76.classification.uk.eyes.only.order`
 
 ##### Development OFFICIAL String
 

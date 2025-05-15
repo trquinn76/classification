@@ -33,7 +33,7 @@ public class ClassificationConfig {
             "CLASSIFICATION_PRODUCTION_MODE", "io.github.trquinn76.classification.production.mode");
 
     static final ConfigKeys EYESONLYORDERCONFIGKEYS = new ConfigKeys("classificationUkEyesOnlyOrder",
-            "CLASSIFICATION_UK_RELTO_ORDER", "io.github.trquinn76.classification.uk.eyes.only.order");
+            "CLASSIFICATION_UK_EYES_ONLY_ORDER", "io.github.trquinn76.classification.uk.eyes.only.order");
 
     static final ConfigKeys DEVELOFFICIALNAME = new ConfigKeys("classificationUkDevelOfficial",
             "CLASSIFICATION_UK_DEVEL_OFFICIAL", "io.github.trquinn76.classification.uk.development.official.name");
