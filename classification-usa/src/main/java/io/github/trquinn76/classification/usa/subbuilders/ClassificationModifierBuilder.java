@@ -98,6 +98,14 @@ public class ClassificationModifierBuilder {
     public ClassificationMarkerBuilder cosmic() {
         return setNonUsAndJointType(NonUSAndJointType.COSMIC);
     }
+    
+    public ClassificationMarkerBuilder boheamia() {
+        return setNatoSpecialMark(Utils.BOHEMIA);
+    }
+    
+    public ClassificationMarkerBuilder atomal() {
+        return setNatoSpecialMark(Utils.ATOMAL);
+    }
 
     public ClassificationMarkerBuilder foreign(String country) {
         Objects.requireNonNull(country);
@@ -119,6 +127,18 @@ public class ClassificationModifierBuilder {
     public boolean isPopulated() {
         return this.nonUsAndJointType != null || !this.nonUsAndJointCountryList.isEmpty()
                 || this.natoSpecialMark != null;
+    }
+    
+    public boolean isNato() {
+        return List.of(NonUSAndJointType.NATO, NonUSAndJointType.COSMIC).contains(nonUsAndJointType);
+    }
+    
+    public boolean isForeign() {
+        return NonUSAndJointType.FOREIGN.equals(nonUsAndJointType);
+    }
+    
+    public boolean isJoint() {
+        return NonUSAndJointType.JOINT.equals(nonUsAndJointType);
     }
 
     public List<String> isValid() {
@@ -158,7 +178,10 @@ public class ClassificationModifierBuilder {
                     break;
                 case JOINT:
                     // country list should be of minimum length 2. May not have NATO special mark.
-                    // NOTE: USA is NOT required here.
+                    if (!this.nonUsAndJointCountryList.contains(Utils.USA)) {
+                        report.add("A " + NonUSAndJointType.JOINT.name()
+                                + " Classification Modifier Country list must contain '" + Utils.USA + "'.");
+                    }
                     if (this.nonUsAndJointCountryList.size() < 2) {
                         StringBuilder buf = new StringBuilder();
                         buf.append(

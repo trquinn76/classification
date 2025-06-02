@@ -12,80 +12,86 @@ import io.github.trquinn76.classification.usa.Utils;
 import io.github.trquinn76.classification.usa.model.ForeignGovernmentInformationMarker;
 
 public class FGIBuilder {
-    
+
     private boolean concealed = false;
     private Set<String> countries = new TreeSet<>(Utils.ALPHABETIC);
 
     private ClassificationMarkerBuilder parent;
-    
+
     public FGIBuilder(ClassificationMarkerBuilder parent) {
         this.parent = parent;
     }
-    
+
     public ClassificationMarkerBuilder populate(ForeignGovernmentInformationMarker marker) {
         clear();
         if (marker != null) {
             if (marker.countries().isEmpty()) {
                 this.concealed();
-            }
-            else {
+            } else {
                 this.setCountries(marker.countries());
             }
         }
         return parent;
     }
-    
+
     public ClassificationMarkerBuilder concealed() {
         clear();
         this.concealed = true;
         return parent;
     }
-    
+
     public ClassificationMarkerBuilder setConcealed(boolean concealed) {
         this.concealed = concealed;
         return parent;
     }
-    
+
     public ClassificationMarkerBuilder setCountries(Collection<String> countries) {
         Objects.requireNonNull(countries);
         clear();
         this.countries.addAll(countries);
         return parent;
     }
-    
+
     public ClassificationMarkerBuilder addCountry(String country) {
         Objects.requireNonNull(country);
         this.countries.add(country);
         return parent;
     }
     
+    public Set<String> getCountries() {
+        Set<String> retSet = new TreeSet<>(Utils.ALPHABETIC);
+        retSet.addAll(countries);
+        return retSet;
+    }
+
     public ClassificationMarkerBuilder removeCountry(String country) {
         this.countries.remove(country);
         return parent;
     }
-    
+
     public ClassificationMarkerBuilder clear() {
         this.concealed = false;
         this.countries.clear();
         return parent;
     }
-    
+
     public boolean isPopulated() {
         return concealed || !countries.isEmpty();
     }
-    
+
     public List<String> isValid() {
         List<String> report = new ArrayList<>();
-        
+
         if (concealed && !this.countries.isEmpty()) {
-            report.add("Cannot have a list of Foreign Government Information countries, while also have Concealed set.");
+            report.add(
+                    "Cannot have a list of Foreign Government Information countries, while also have Concealed Foreign Countries.");
         }
-        
+
         return report;
     }
-    
+
     public ForeignGovernmentInformationMarker build() {
-        
+
         List<String> report = isValid();
         if (!report.isEmpty()) {
             // Invalid state to build a ForeignGovernmentInformationMarker.
@@ -94,7 +100,7 @@ public class FGIBuilder {
             throw new IllegalStateException(
                     "Invalid state. Cannot build instance of ForeignGovernmentInformationMarker.");
         }
-        
+
         if (isPopulated()) {
             return new ForeignGovernmentInformationMarker(List.copyOf(this.countries));
         }

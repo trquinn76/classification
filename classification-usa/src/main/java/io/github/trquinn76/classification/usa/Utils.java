@@ -6,6 +6,10 @@ public class Utils {
     
     public static final String USA = "USA";
     
+    // Published NATO marks.
+    public static final String BOHEMIA = "BOHEMIA";
+    public static final String ATOMAL = "ATOMAL";
+    
     // Published SCI Control Systems
     public static final String HCS = "HCS"; // HUMINT Control System
     public static final String RESERVE = "RESERVE";
@@ -22,9 +26,13 @@ public class Utils {
     public static final String NONBOOK = "NONBOOK";
     
     // Published SCI Compartments in TK.
+    public static final String GEOCAP = "GEOCAP";
     public static final String BLUEFISH = "BLUEFISH";
     public static final String IDITAROD = "IDITAROD";
     public static final String KANDIK = "KANDIK";
+    
+    // SAP additional Markers
+    public static final String HVSACO = "HVSACO";
     
     public static Comparator<String> USA_FIRST = new Comparator<>() {
 

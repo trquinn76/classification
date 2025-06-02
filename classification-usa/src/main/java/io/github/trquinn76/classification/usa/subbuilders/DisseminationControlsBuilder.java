@@ -69,6 +69,14 @@ public class DisseminationControlsBuilder {
         return addDissemination(dissemControl, country);
     }
     
+    public Set<String> getCountries(DisseminationControls dissemControl) {
+        Set<String> retSet = new TreeSet<>(Utils.USA_FIRST);
+        if (hasDissemination(dissemControl)) {
+            retSet.addAll(this.disseminationMap.get(dissemControl));
+        }
+        return retSet;
+    }
+    
     public ClassificationMarkerBuilder removeCountry(DisseminationControls dissemControl, String country) {
         Objects.requireNonNull(dissemControl);
         if (this.disseminationMap.keySet().contains(dissemControl)) {

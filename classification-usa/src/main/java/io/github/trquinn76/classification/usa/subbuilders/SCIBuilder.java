@@ -50,6 +50,10 @@ public class SCIBuilder {
         return parent;
     }
     
+    public Set<String> getControlSystems() {
+        return Collections.unmodifiableSet(this.sciControlSystems.keySet());
+    }
+    
     public ClassificationMarkerBuilder removeControlSystem(String controlSystem) {
         this.sciControlSystems.remove(controlSystem);
         return parent;
@@ -65,6 +69,14 @@ public class SCIBuilder {
             compartments.put(compartment, new TreeSet<>(Utils.ALPHANUMERIC));
         }
         return parent;
+    }
+    
+    public Set<String> getCompartments(String controlSystem) {
+        Map<String, Set<String>> compartments = this.sciControlSystems.get(controlSystem);
+        if (compartments != null) {
+            return Collections.unmodifiableSet(compartments.keySet());
+        }
+        return Collections.emptySet();
     }
     
     public ClassificationMarkerBuilder removeCompartment(String controlSystem, String compartment) {
@@ -85,6 +97,17 @@ public class SCIBuilder {
         }
         compartments.get(compartment).add(subCompartment);
         return parent;
+    }
+    
+    public Set<String> getSubCompartments(String controlSystem, String compartment) {
+        Map<String, Set<String>> compartments = this.sciControlSystems.get(controlSystem);
+        if (compartments != null) {
+            Set<String> subCompartments = compartments.get(compartment);
+            if (subCompartments != null) {
+                return Collections.unmodifiableSet(subCompartments);
+            }
+        }
+        return Collections.emptySet();
     }
     
     public ClassificationMarkerBuilder removeSubCompartment(String controlSystem, String compartment, String subCompartment) {

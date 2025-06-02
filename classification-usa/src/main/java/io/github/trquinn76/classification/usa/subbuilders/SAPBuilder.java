@@ -49,6 +49,14 @@ public class SAPBuilder {
         return parent;
     }
     
+    public Map<String, Map<String, Set<String>>> getControlSystems() {
+        Map<String, Map<String, Set<String>>> retMap = new TreeMap<>(Utils.ALPHABETIC);
+        for (String controlSystem : this.sapControlSystems.keySet()) {
+            retMap.put(controlSystem, getCompartments(controlSystem));
+        }
+        return retMap;
+    }
+    
     public ClassificationMarkerBuilder removeControlSystem(String controlSystem) {
         this.sapControlSystems.remove(controlSystem);
         return parent;
@@ -64,6 +72,17 @@ public class SAPBuilder {
             compartments.put(compartment, new TreeSet<>(Utils.ALPHANUMERIC));
         }
         return parent;
+    }
+    
+    public Map<String, Set<String>> getCompartments(String controlSystem) {
+        Map<String, Set<String>> retMap = new TreeMap<>(Utils.ALPHANUMERIC);
+        if (this.sapControlSystems.containsKey(controlSystem)) {
+            Map<String, Set<String>> compartments = this.sapControlSystems.get(controlSystem);
+            for (String compartment : compartments.keySet()) {
+                retMap.put(compartment, getSubCompartments(controlSystem, compartment));
+            }
+        }
+        return retMap;
     }
     
     public ClassificationMarkerBuilder removeCompartment(String controlSystem, String compartment) {
@@ -86,6 +105,17 @@ public class SAPBuilder {
         return parent;
     }
     
+    public Set<String> getSubCompartments(String controlSystem, String compartment) {
+        Set<String> retSet = new TreeSet<>(Utils.ALPHANUMERIC);
+        if (this.sapControlSystems.containsKey(controlSystem)) {
+            Map<String, Set<String>> compartments = this.sapControlSystems.get(controlSystem);
+            if (compartments.containsKey(compartment)) {
+                retSet.addAll(compartments.get(compartment));
+            }
+        }
+        return retSet;
+    }
+    
     public ClassificationMarkerBuilder removeSubCompartment(String controlSystem, String compartment, String subCompartment) {
         Map<String, Set<String>> compartments = this.sapControlSystems.get(controlSystem);
         if (compartments != null) {
@@ -97,13 +127,17 @@ public class SAPBuilder {
         return parent;
     }
     
+    public boolean isPopulated() {
+        return !this.sapControlSystems.isEmpty();
+    }
+    
     public ClassificationMarkerBuilder waived() {
-        // TODO: implement...
+        parent.disseminations.waived();
         return parent;
     }
     
     public ClassificationMarkerBuilder hvsaco() {
-        // TODO: implement, add to additional marks...
+        parent.addAdditionMarking(Utils.HVSACO);
         return parent;
     }
     
