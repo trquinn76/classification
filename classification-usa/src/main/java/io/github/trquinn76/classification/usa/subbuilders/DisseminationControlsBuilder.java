@@ -57,6 +57,10 @@ public class DisseminationControlsBuilder {
         return parent;
     }
     
+    public Set<DisseminationControls> getDisseminations() {
+        return new TreeSet<>(this.disseminationMap.keySet());
+    }
+    
     public ClassificationMarkerBuilder removeDissemination(DisseminationControls dissemControl) {
         this.disseminationMap.remove(dissemControl);
         return parent;

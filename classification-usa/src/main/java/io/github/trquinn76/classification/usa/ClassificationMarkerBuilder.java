@@ -13,6 +13,7 @@ import io.github.trquinn76.classification.usa.model.Classification;
 import io.github.trquinn76.classification.usa.model.ClassificationMarker;
 import io.github.trquinn76.classification.usa.model.DisseminationControls;
 import io.github.trquinn76.classification.usa.model.NonUSAndJointType;
+import io.github.trquinn76.classification.usa.model.OtherDisseminationControls;
 import io.github.trquinn76.classification.usa.subbuilders.AtomicEnergyActInformationBuilder;
 import io.github.trquinn76.classification.usa.subbuilders.ClassificationModifierBuilder;
 import io.github.trquinn76.classification.usa.subbuilders.DisseminationControlsBuilder;
@@ -57,6 +58,7 @@ public class ClassificationMarkerBuilder {
         fgi.populate(marker.foreignGovernmentInformationMarker());
         disseminations.populate(marker.disseminations());
         otherDisseminations.populate(marker.otherDisseminations());
+        additionalMarkings.addAll(marker.additionalMarkings());
     }
 
     public ClassificationMarkerBuilder setClassification(Classification classification) {
@@ -91,7 +93,33 @@ public class ClassificationMarkerBuilder {
         return this.setClassification(Classification.topSecret());
     }
 
-    public ClassificationMarkerBuilder setAdditionalMarkings(Collection<String> additionalMarkings) {
+    public boolean isUnclassified() {
+        return Classification.unclassified().equals(this.classification);
+    }
+
+    public boolean isRestricted() {
+        return Classification.restricted().equals(this.classification);
+    }
+
+    public boolean isClassified() {
+        return Set.of(Classification.confidential(), Classification.secret(), Classification.topSecret())
+                .contains(this.classification);
+    }
+
+    public boolean isHighlyClassified() {
+        return Set.of(Classification.secret(), Classification.topSecret()).contains(this.classification);
+    }
+
+    public boolean isClassifiedOrControlUnclassified() {
+        boolean retval = isClassified();
+        if (!retval) {
+            retval = Classification.unclassified().equals(this.classification)
+                    && disseminations.hasDissemination(DisseminationControls.CONTROLLED_UNCLASSIFIED_INFORMATION);
+        }
+        return retval;
+    }
+
+    public ClassificationMarkerBuilder addAdditionalMarkings(Collection<String> additionalMarkings) {
         this.additionalMarkings.addAll(additionalMarkings);
         return this;
     }
@@ -99,6 +127,10 @@ public class ClassificationMarkerBuilder {
     public ClassificationMarkerBuilder addAdditionMarking(String str) {
         this.additionalMarkings.add(str);
         return this;
+    }
+    
+    public Set<String> getAdditionalMarkings() {
+        return new TreeSet<>(this.additionalMarkings);
     }
 
     public ClassificationMarkerBuilder removeAdditionalMarking(String str) {
@@ -193,9 +225,7 @@ public class ClassificationMarkerBuilder {
                         .append(classification.toString()).append("'.");
                 report.add(buf.toString());
             }
-            if (Utils.ATOMAL.equals(modifier.getNatoSpecialMark())
-                    && !List.of(Classification.topSecret(), Classification.secret(), Classification.confidential())
-                            .contains(classification)) {
+            if (Utils.ATOMAL.equals(modifier.getNatoSpecialMark()) && !isClassified()) {
                 StringBuilder buf = new StringBuilder();
                 buf.append("NATO mark ").append(Utils.ATOMAL).append(" may only be used with classifications '")
                         .append(Classification.confidential().toString()).append("', '")
@@ -215,7 +245,7 @@ public class ClassificationMarkerBuilder {
     }
 
     private void checkClassification(List<String> report) {
-        if (this.classification == Classification.restricted()) {
+        if (isRestricted()) {
             // Restricted is not usually valid in the USA context. Check that the context
             // has been appropriately modified.
             if (modifier.isPopulated() && (modifier.isForeign() || modifier.isNato())) {
@@ -241,7 +271,7 @@ public class ClassificationMarkerBuilder {
                     StringBuilder buf = new StringBuilder();
                     buf.append("The '").append(Classification.restricted().toString())
                             .append("' classification is not valid for the ").append(Utils.USA)
-                            .append(". It is only valid in a few cases involving foreign data sharing.");
+                            .append(". It is only valid in cases involving foreign or NATO data sharing.");
                     report.add(buf.toString());
                 }
             }
@@ -278,7 +308,7 @@ public class ClassificationMarkerBuilder {
                     AtomicEnergyActMarkings.DOD_UNCLASSIFIED_CONTROLLED_NUCLEAR_INFORMATION,
                     AtomicEnergyActMarkings.DOE_UNCLASSIFIED_CONTROLLED_NUCLEAR_INFORMATION);
             if (highClassificationSet.contains(aea.getMark())) {
-                if (!List.of(Classification.secret(), Classification.topSecret()).contains(this.classification)) {
+                if (!isHighlyClassified()) {
                     StringBuilder buf = new StringBuilder();
                     buf.append("Atomic Energy Act Information ").append(aea.getMark().toString())
                             .append(" is only valid for classifications '").append(Classification.secret().toString())
@@ -289,8 +319,7 @@ public class ClassificationMarkerBuilder {
                 }
             }
             if (classificationSet.contains(aea.getMark())) {
-                if (!List.of(Classification.confidential(), Classification.secret(), Classification.topSecret())
-                        .contains(this.classification)) {
+                if (isClassified()) {
                     StringBuilder buf = new StringBuilder();
                     buf.append("Atomic Energy Act Information ").append(aea.getMark().toString())
                             .append(" is only valid for classifications '")
@@ -302,7 +331,7 @@ public class ClassificationMarkerBuilder {
                 }
             }
             if (unclassifiedSet.contains(aea.getMark())) {
-                if (!Classification.unclassified().equals(this.classification)) {
+                if (!isUnclassified()) {
                     StringBuilder buf = new StringBuilder();
                     buf.append("Atomic Energy Act Information ").append(aea.getMark().toString())
                             .append(" is only valid for classification '")
@@ -318,15 +347,11 @@ public class ClassificationMarkerBuilder {
             if (nofornRequiredSet.contains(aea.getMark())) {
                 if (!disseminations.hasDissemination(DisseminationControls.NOFORN)) {
                     // According to "Intelligence Community Markings System Register and Manual"
-                    // these AEA markings
-                    // require the Dissemination marking NOFORN, unless there is a sharing
-                    // agreement. Meanwhile
-                    // the "DoD Information Security Program: Marking of Information" document does
-                    // not mention this
-                    // requirement.
+                    // these AEA markings require the Dissemination marking NOFORN, unless there
+                    // is a sharing agreement. Meanwhile the "DoD Information Security Program:
+                    // Marking of Information" document does not mention this requirement.
                     // So in this library, will detect the lack of NOFORN for these AEA Markings,
-                    // and will put out a
-                    // WARNING rather than an error.
+                    // and will put out a WARNING rather than an error.
                     StringBuilder buf = new StringBuilder();
                     buf.append("The AEA Mark '").append(aea.getMark().toString())
                             .append("' is expected to be associated with the dissemination mark '")
@@ -340,8 +365,7 @@ public class ClassificationMarkerBuilder {
 
     private void checkFgi(List<String> report) {
         if (fgi.isPopulated()) {
-            if (!List.of(Classification.confidential(), Classification.secret(), Classification.topSecret())
-                    .contains(this.classification)) {
+            if (!isClassified()) {
                 StringBuilder buf = new StringBuilder();
                 buf.append("The FGI markings is only valid for classifications '")
                         .append(Classification.confidential().toString()).append("', '")
@@ -357,8 +381,8 @@ public class ClassificationMarkerBuilder {
                 intersection.retainAll(disseminations.getCountries(DisseminationControls.RELEASE_TO));
                 if (!intersection.equals(fgi.getCountries())) {
                     StringBuilder buf = new StringBuilder();
-                    buf.append("When using the '").append(DisseminationControls.RELEASE_TO.toString()).append(
-                            "' Dissemination with Foreign Government Information, the Releasable To list needs to contain all Countries in the FGI list. FGI list: ");
+                    buf.append("When using the ").append(DisseminationControls.RELEASE_TO).append(
+                            " Dissemination with Foreign Government Information, the Releasable To list needs to contain all Countries in the FGI list. FGI list: ");
                     buf.append(String.join(", ", fgi.getCountries()));
                     buf.append(". Releasable To list: ");
                     buf.append(String.join(", ", disseminations.getCountries(DisseminationControls.RELEASE_TO)));
@@ -377,8 +401,7 @@ public class ClassificationMarkerBuilder {
             report.add(buf.toString());
         }
 
-        if (disseminations.hasDissemination(DisseminationControls.FOUO)
-                && !Classification.unclassified().equals(this.classification)) {
+        if (disseminations.hasDissemination(DisseminationControls.FOUO) && !isUnclassified()) {
             StringBuilder buf = new StringBuilder();
             buf.append("The ").append(DisseminationControls.FOUO).append(" may only be used with '")
                     .append(Classification.unclassified()).append("'. It is not valid for classification: '")
@@ -387,7 +410,7 @@ public class ClassificationMarkerBuilder {
         }
 
         if (disseminations.hasDissemination(DisseminationControls.CONTROLLED_UNCLASSIFIED_INFORMATION)
-                && !Classification.unclassified().equals(this.classification)) {
+                && !isUnclassified()) {
             StringBuilder buf = new StringBuilder();
             buf.append("The ").append(DisseminationControls.CONTROLLED_UNCLASSIFIED_INFORMATION)
                     .append(" may only be used with '").append(Classification.unclassified())
@@ -395,46 +418,145 @@ public class ClassificationMarkerBuilder {
             report.add(buf.toString());
         }
 
-        if (disseminations.hasDissemination(DisseminationControls.ORIGINATOR_CONTROLLED)
-                && !Set.of(Classification.confidential(), Classification.secret(), Classification.topSecret())
-                        .contains(this.classification)) {
+        if (disseminations.hasDissemination(DisseminationControls.ORIGINATOR_CONTROLLED) && !isClassified()) {
             StringBuilder buf = new StringBuilder();
             buf.append("The ").append(DisseminationControls.ORIGINATOR_CONTROLLED)
                     .append(" Dissemination may only be used with Classifications '")
                     .append(Classification.confidential()).append("', '").append(Classification.secret())
                     .append("' or '").append(Classification.topSecret())
-                    .append("'. It may not be used with classification: '").append(this.classification).append("'.");
+                    .append("'. It is not valid for classification: '").append(this.classification).append("'.");
             report.add(buf.toString());
         }
 
-        if (disseminations.hasDissemination(DisseminationControls.RELEASE_TO)
-                && !Set.of(Classification.confidential(), Classification.secret(), Classification.topSecret())
-                        .contains(this.classification)
-                || !(Classification.unclassified().equals(this.classification) && disseminations
-                        .hasDissemination(DisseminationControls.CONTROLLED_UNCLASSIFIED_INFORMATION))) {
+        if (disseminations.hasDissemination(DisseminationControls.RELEASE_TO) && !isClassifiedOrControlUnclassified()) {
             StringBuilder buf = new StringBuilder();
             buf.append("The ").append(DisseminationControls.RELEASE_TO).append(" Dissemination may only be used with '")
                     .append(Classification.confidential()).append("', '").append(Classification.secret())
                     .append("' and '").append(Classification.topSecret()).append("' classifications, or '")
                     .append(Classification.unclassified()).append("' classification with the Dissemination ")
-                    .append(DisseminationControls.CONTROLLED_UNCLASSIFIED_INFORMATION).append(".");
+                    .append(DisseminationControls.CONTROLLED_UNCLASSIFIED_INFORMATION)
+                    .append(". It is not valid for classification: '").append(this.classification).append("'.");
             report.add(buf.toString());
         }
 
-        if (disseminations.hasDissemination(DisseminationControls.DISPLAY_ONLY)
-                && !Set.of(Classification.confidential(), Classification.secret(), Classification.topSecret())
-                        .contains(this.classification)) {
+        if (disseminations.hasDissemination(DisseminationControls.DISPLAY_ONLY) && !isClassified()) {
             StringBuilder buf = new StringBuilder();
             buf.append("The ").append(DisseminationControls.DISPLAY_ONLY)
                     .append(" Dissemination may only be used with Classifications '")
                     .append(Classification.confidential()).append("', '").append(Classification.secret())
                     .append("' or '").append(Classification.topSecret())
-                    .append("'. It may not be used with classification: '").append(this.classification).append("'.");
+                    .append("'. It is not valid for classification: '").append(this.classification).append("'.");
+            report.add(buf.toString());
+        }
+
+        if (disseminations.hasDissemination(DisseminationControls.CONTROLLED_IMAGERY) && !isHighlyClassified()) {
+            StringBuilder buf = new StringBuilder();
+            buf.append("The ").append(DisseminationControls.CONTROLLED_IMAGERY)
+                    .append(" Dissemination is only valid for '").append(Classification.secret())
+                    .append("' classification. It is also permitted for '").append(Classification.topSecret())
+                    .append("' classification in this library, as merging data could lead to this out come. This Dissemination is not valid for classification: '")
+                    .append(this.classification).append("'.");
+            report.add(buf.toString());
+        }
+
+        if (disseminations.hasDissemination(DisseminationControls.NOFORN) && !isClassifiedOrControlUnclassified()) {
+            StringBuilder buf = new StringBuilder();
+            buf.append("The ").append(DisseminationControls.NOFORN).append(" Dissemination is only valid for '")
+                    .append(Classification.confidential()).append("', ;").append(Classification.secret())
+                    .append("' or '").append(Classification.topSecret()).append("' classifications, or the '")
+                    .append(Classification.unclassified()).append("' classification with the ")
+                    .append(DisseminationControls.CONTROLLED_UNCLASSIFIED_INFORMATION)
+                    .append(" Dissemination. It is not valid for classification: '").append(this.classification)
+                    .append("'.");
+            report.add(buf.toString());
+        }
+
+        if (disseminations.hasDissemination(DisseminationControls.RELIDO) && !isClassified()) {
+            StringBuilder buf = new StringBuilder();
+            buf.append("The ").append(DisseminationControls.RELIDO).append(" Dissemination is only valid for '")
+                    .append(Classification.confidential()).append("', '").append(Classification.secret())
+                    .append("' and '").append(Classification.topSecret())
+                    .append("'. It is not valid for classification: '").append(this.classification).append("'.");
             report.add(buf.toString());
         }
     }
 
     private void checkOtherDisseminations(List<String> report) {
+        if (otherDisseminations.hasOtherDissemination(OtherDisseminationControls.EXCLUSIVE_DISTRIBUTION)) {
+            if (!isClassifiedOrControlUnclassified()) {
+                StringBuilder buf = new StringBuilder();
+                buf.append("The ").append(OtherDisseminationControls.EXCLUSIVE_DISTRIBUTION)
+                        .append(" Other Dissemination is only valid for '").append(Classification.confidential())
+                        .append("', ;").append(Classification.secret()).append("' or '")
+                        .append(Classification.topSecret()).append("' classifications, or the '")
+                        .append(Classification.unclassified()).append("' classification with the ")
+                        .append(DisseminationControls.CONTROLLED_UNCLASSIFIED_INFORMATION)
+                        .append(" Dissemination. It is not valid for classification: '").append(this.classification)
+                        .append("'.");
+                report.add(buf.toString());
+            }
+            if (disseminations.hasDissemination(DisseminationControls.RELEASE_TO)) {
+                StringBuilder buf = new StringBuilder();
+                buf.append("The ").append(OtherDisseminationControls.EXCLUSIVE_DISTRIBUTION).append(
+                        " Other Dissemination may not be shared with foreign governments or international organisations. As such it is mutually exclusive with the ")
+                        .append(DisseminationControls.RELEASE_TO).append(" Dissemination.");
+                report.add(buf.toString());
+            }
+        }
 
+        if (otherDisseminations.hasOtherDissemination(OtherDisseminationControls.NO_DISTRIBUTION)) {
+            if (!isClassifiedOrControlUnclassified()) {
+                StringBuilder buf = new StringBuilder();
+                buf.append("The ").append(OtherDisseminationControls.NO_DISTRIBUTION)
+                        .append(" Other Dissemination is only valid for '").append(Classification.confidential())
+                        .append("', ;").append(Classification.secret()).append("' or '")
+                        .append(Classification.topSecret()).append("' classifications, or the '")
+                        .append(Classification.unclassified()).append("' classification with the ")
+                        .append(DisseminationControls.CONTROLLED_UNCLASSIFIED_INFORMATION)
+                        .append(" Dissemination. It is not valid for classification: '").append(this.classification)
+                        .append("'.");
+                report.add(buf.toString());
+            }
+            if (disseminations.hasDissemination(DisseminationControls.RELEASE_TO)) {
+                StringBuilder buf = new StringBuilder();
+                buf.append("The ").append(OtherDisseminationControls.NO_DISTRIBUTION).append(
+                        " Other Dissemination may not be shared with foreign governments or international organisations. As such it is mutually exclusive with the ")
+                        .append(DisseminationControls.RELEASE_TO).append(" Dissemination.");
+                report.add(buf.toString());
+            }
+            if (this.additionalMarkings.isEmpty()) {
+                // Additional Markings is empty, indicating that there are no Distribution
+                // Instructions provided for
+                // this used of NODIS. Of course when there ARE Additional Markings there is no
+                // guarantee that they
+                // are Distribution Instructions for a NODIS Dissemination mark.
+                StringBuilder buf = new StringBuilder();
+                buf.append("Have ").append(OtherDisseminationControls.NO_DISTRIBUTION).append(
+                        " Other Dissemination. It is expected that this will have Distribution Instructions associated with it. ")
+                        .append("Such Distribution Instructions should appear as Additional Markings in this Builder. ")
+                        .append("However Additional Markings is empty, indicating that no such Distribution Instructions have been included.");
+                LOGGER.warning(buf.toString());
+            }
+        }
+
+        if (otherDisseminations.hasOtherDissemination(OtherDisseminationControls.SENSITIVE_BUT_UNCLASSIFIED)
+                && !isUnclassified()) {
+            StringBuilder buf = new StringBuilder();
+            buf.append("The ").append(OtherDisseminationControls.SENSITIVE_BUT_UNCLASSIFIED)
+                    .append(" Other Dissemination may only be used with the '").append(Classification.unclassified())
+                    .append("' classification. It is not valid for classification: '").append(this.classification)
+                    .append("'.");
+            report.add(buf.toString());
+        }
+
+        if (otherDisseminations.hasOtherDissemination(OtherDisseminationControls.SENSITIVE_BUT_UNCLASSIFIED_NOFORN)
+                && !isUnclassified()) {
+            StringBuilder buf = new StringBuilder();
+            buf.append("The ").append(OtherDisseminationControls.SENSITIVE_BUT_UNCLASSIFIED_NOFORN)
+                    .append(" Other Dissemination may only be used with the '").append(Classification.unclassified())
+                    .append("' classification. It is not valid for classification: '").append(this.classification)
+                    .append("'.");
+            report.add(buf.toString());
+        }
     }
 }

@@ -44,6 +44,10 @@ public class FGIBuilder {
         this.concealed = concealed;
         return parent;
     }
+    
+    public boolean isConcealed() {
+        return this.concealed;
+    }
 
     public ClassificationMarkerBuilder setCountries(Collection<String> countries) {
         Objects.requireNonNull(countries);
@@ -84,7 +88,7 @@ public class FGIBuilder {
 
         if (concealed && !this.countries.isEmpty()) {
             report.add(
-                    "Cannot have a list of Foreign Government Information countries, while also have Concealed Foreign Countries.");
+                    "Cannot have a list of Foreign Government Information countries, while also Concealing Foreign Countries.");
         }
 
         return report;

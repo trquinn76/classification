@@ -41,9 +41,42 @@ public class OtherDisseminationControlsBuilder {
         this.otherDisseminationControlsMap.put(dissemControl, nicks);
         return parent;
     }
+    
+    public Set<OtherDisseminationControls> getDisseminations() {
+        return new TreeSet<>(this.otherDisseminationControlsMap.keySet());
+    }
 
     public ClassificationMarkerBuilder removeDissemination(OtherDisseminationControls dissemControl) {
         this.otherDisseminationControlsMap.remove(dissemControl);
+        return parent;
+    }
+    
+    public ClassificationMarkerBuilder addNickname(OtherDisseminationControls dissemControl, String nickname) {
+        Objects.requireNonNull(dissemControl);
+        Objects.requireNonNull(nickname);
+        if (!hasOtherDissemination(dissemControl)) {
+            this.otherDisseminationControlsMap.put(dissemControl, new TreeSet<>(Set.of(nickname)));
+        }
+        else {
+            this.otherDisseminationControlsMap.get(dissemControl).add(nickname);
+        }
+        return parent;
+    }
+    
+    public Set<String> getNicknames(OtherDisseminationControls dissemControl) {
+        Set<String> retSet = new TreeSet<>();
+        if (hasOtherDissemination(dissemControl)) {
+            retSet.addAll(this.otherDisseminationControlsMap.get(dissemControl));
+        }
+        return retSet;
+    }
+    
+    public ClassificationMarkerBuilder removeNickname(OtherDisseminationControls dissemControl, String nickname) {
+        Objects.requireNonNull(dissemControl);
+        Objects.requireNonNull(nickname);
+        if (hasOtherDissemination(dissemControl)) {
+            this.otherDisseminationControlsMap.get(dissemControl).remove(nickname);
+        }
         return parent;
     }
 
@@ -57,7 +90,9 @@ public class OtherDisseminationControlsBuilder {
         return setDissemination(OtherDisseminationControls.EXCLUSIVE_DISTRIBUTION);
     }
 
-    public ClassificationMarkerBuilder noDistribution() {
+    public ClassificationMarkerBuilder noDistribution(String... distributionInstructions) {
+        Objects.requireNonNull(distributionInstructions);
+        parent.addAdditionalMarkings(Arrays.asList(distributionInstructions));
         return setDissemination(OtherDisseminationControls.NO_DISTRIBUTION);
     }
 
