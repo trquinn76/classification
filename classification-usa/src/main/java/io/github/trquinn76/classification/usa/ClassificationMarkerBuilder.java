@@ -51,6 +51,7 @@ public class ClassificationMarkerBuilder {
 
     public ClassificationMarkerBuilder(ClassificationMarker marker) {
         this();
+        classification = marker.classification();
         modifier.populate(marker.classificationModifier());
         sci.populate(marker.sensitiveCompartmentInformationControlSystems());
         sap.populate(marker.specialAccessPrograms());
@@ -245,6 +246,9 @@ public class ClassificationMarkerBuilder {
     }
 
     private void checkClassification(List<String> report) {
+        if (this.classification == null) {
+            report.add("Classification must be set.");
+        }
         if (isRestricted()) {
             // Restricted is not usually valid in the USA context. Check that the context
             // has been appropriately modified.
@@ -299,38 +303,30 @@ public class ClassificationMarkerBuilder {
 
     private void checkAea(List<String> report) {
         if (aea.isPopulated()) {
-            Set<AtomicEnergyActMarkings> highClassificationSet = Set.of(AtomicEnergyActMarkings.RESTRICTED_DATA,
-                    AtomicEnergyActMarkings.RESTRICTED_DATA_CNWDI, AtomicEnergyActMarkings.RESTRICTED_DATA_SIGMA);
-            Set<AtomicEnergyActMarkings> classificationSet = Set.of(AtomicEnergyActMarkings.FORMALLY_RESTRICTED_DATA,
-                    AtomicEnergyActMarkings.FORMALLY_RESTRICTED_DATA_SIGMA,
-                    AtomicEnergyActMarkings.TRANSCLASSIFIED_FOREIGN_NUCLEAR_INFORMATION);
-            Set<AtomicEnergyActMarkings> unclassifiedSet = Set.of(
-                    AtomicEnergyActMarkings.DOD_UNCLASSIFIED_CONTROLLED_NUCLEAR_INFORMATION,
-                    AtomicEnergyActMarkings.DOE_UNCLASSIFIED_CONTROLLED_NUCLEAR_INFORMATION);
-            if (highClassificationSet.contains(aea.getMark())) {
+            if (AtomicEnergyActInformationBuilder.HIGHCLASSIFICATIONSET.contains(aea.getMark())) {
                 if (!isHighlyClassified()) {
                     StringBuilder buf = new StringBuilder();
                     buf.append("Atomic Energy Act Information ").append(aea.getMark().toString())
                             .append(" is only valid for classifications '").append(Classification.secret().toString())
-                            .append("'and '").append(Classification.topSecret())
+                            .append("' and '").append(Classification.topSecret())
                             .append("'. It is not valid for classification: '").append(this.classification.toString())
                             .append("'.");
                     report.add(buf.toString());
                 }
             }
-            if (classificationSet.contains(aea.getMark())) {
-                if (isClassified()) {
+            if (AtomicEnergyActInformationBuilder.CLASSIFICATIONSET.contains(aea.getMark())) {
+                if (!isClassified()) {
                     StringBuilder buf = new StringBuilder();
                     buf.append("Atomic Energy Act Information ").append(aea.getMark().toString())
                             .append(" is only valid for classifications '")
-                            .append(Classification.confidential().toString()).append("', ")
-                            .append(Classification.secret().toString()).append("'and '")
+                            .append(Classification.confidential().toString()).append("', '")
+                            .append(Classification.secret().toString()).append("' and '")
                             .append(Classification.topSecret()).append("'. It is not valid for classification: '")
                             .append(this.classification.toString()).append("'.");
                     report.add(buf.toString());
                 }
             }
-            if (unclassifiedSet.contains(aea.getMark())) {
+            if (AtomicEnergyActInformationBuilder.UNCLASSIFIEDSET.contains(aea.getMark())) {
                 if (!isUnclassified()) {
                     StringBuilder buf = new StringBuilder();
                     buf.append("Atomic Energy Act Information ").append(aea.getMark().toString())
@@ -340,11 +336,7 @@ public class ClassificationMarkerBuilder {
                 }
             }
 
-            Set<AtomicEnergyActMarkings> nofornRequiredSet = Set.of(AtomicEnergyActMarkings.RESTRICTED_DATA,
-                    AtomicEnergyActMarkings.RESTRICTED_DATA_CNWDI, AtomicEnergyActMarkings.RESTRICTED_DATA_SIGMA,
-                    AtomicEnergyActMarkings.FORMALLY_RESTRICTED_DATA,
-                    AtomicEnergyActMarkings.FORMALLY_RESTRICTED_DATA_SIGMA);
-            if (nofornRequiredSet.contains(aea.getMark())) {
+            if (AtomicEnergyActInformationBuilder.NOFORNREQUIREDSET.contains(aea.getMark())) {
                 if (!disseminations.hasDissemination(DisseminationControls.NOFORN)) {
                     // According to "Intelligence Community Markings System Register and Manual"
                     // these AEA markings require the Dissemination marking NOFORN, unless there

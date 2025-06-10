@@ -42,6 +42,7 @@ public class SAPBuilder {
 
     public ClassificationMarkerBuilder addControlSystem(String controlSystem) {
         Objects.requireNonNull(controlSystem);
+        controlSystem = removeDevelStrPrefixIfNeeded(controlSystem);
         if (!this.sapControlSystems.containsKey(controlSystem)) {
             // Compartments are sorted AlphaNumerically.
             this.sapControlSystems.put(controlSystem, new TreeMap<>(Utils.ALPHANUMERIC));
@@ -58,11 +59,17 @@ public class SAPBuilder {
     }
     
     public ClassificationMarkerBuilder removeControlSystem(String controlSystem) {
-        this.sapControlSystems.remove(controlSystem);
+        if (controlSystem != null) {
+            controlSystem = removeDevelStrPrefixIfNeeded(controlSystem);
+            this.sapControlSystems.remove(controlSystem);
+        }
         return parent;
     }
     
     public ClassificationMarkerBuilder addCompartment(String controlSystem, String compartment) {
+        Objects.requireNonNull(controlSystem);
+        Objects.requireNonNull(compartment);
+        controlSystem = removeDevelStrPrefixIfNeeded(controlSystem);
         if (!this.sapControlSystems.containsKey(controlSystem)) {
             addControlSystem(controlSystem);
         }
@@ -75,6 +82,8 @@ public class SAPBuilder {
     }
     
     public Map<String, Set<String>> getCompartments(String controlSystem) {
+        Objects.requireNonNull(controlSystem);
+        controlSystem = removeDevelStrPrefixIfNeeded(controlSystem);
         Map<String, Set<String>> retMap = new TreeMap<>(Utils.ALPHANUMERIC);
         if (this.sapControlSystems.containsKey(controlSystem)) {
             Map<String, Set<String>> compartments = this.sapControlSystems.get(controlSystem);
@@ -86,14 +95,21 @@ public class SAPBuilder {
     }
     
     public ClassificationMarkerBuilder removeCompartment(String controlSystem, String compartment) {
-        Map<String, Set<String>> compartments = this.sapControlSystems.get(controlSystem);
-        if (compartments != null) {
-            compartments.remove(compartment);
+        if (controlSystem != null) {
+            controlSystem = removeDevelStrPrefixIfNeeded(controlSystem);
+            Map<String, Set<String>> compartments = this.sapControlSystems.get(controlSystem);
+            if (compartments != null) {
+                compartments.remove(compartment);
+            }
         }
         return parent;
     }
     
     public ClassificationMarkerBuilder addSubCompartment(String controlSystem, String compartment, String subCompartment) {
+        Objects.requireNonNull(controlSystem);
+        Objects.requireNonNull(compartment);
+        Objects.requireNonNull(subCompartment);
+        controlSystem = removeDevelStrPrefixIfNeeded(controlSystem);
         if (!this.sapControlSystems.containsKey(controlSystem)) {
             addControlSystem(controlSystem);
         }
@@ -106,6 +122,9 @@ public class SAPBuilder {
     }
     
     public Set<String> getSubCompartments(String controlSystem, String compartment) {
+        Objects.requireNonNull(controlSystem);
+        Objects.requireNonNull(compartment);
+        controlSystem = removeDevelStrPrefixIfNeeded(controlSystem);
         Set<String> retSet = new TreeSet<>(Utils.ALPHANUMERIC);
         if (this.sapControlSystems.containsKey(controlSystem)) {
             Map<String, Set<String>> compartments = this.sapControlSystems.get(controlSystem);
@@ -117,11 +136,14 @@ public class SAPBuilder {
     }
     
     public ClassificationMarkerBuilder removeSubCompartment(String controlSystem, String compartment, String subCompartment) {
-        Map<String, Set<String>> compartments = this.sapControlSystems.get(controlSystem);
-        if (compartments != null) {
-            Set<String> subCompartments = compartments.get(compartment);
-            if (subCompartments != null) {
-                subCompartments.remove(subCompartment);
+        if (controlSystem != null) {
+            controlSystem = removeDevelStrPrefixIfNeeded(controlSystem);
+            Map<String, Set<String>> compartments = this.sapControlSystems.get(controlSystem);
+            if (compartments != null) {
+                Set<String> subCompartments = compartments.get(compartment);
+                if (subCompartments != null) {
+                    subCompartments.remove(subCompartment);
+                }
             }
         }
         return parent;
@@ -171,5 +193,31 @@ public class SAPBuilder {
             }
         }
         return sapName;
+    }
+    
+    private String removeDevelStrPrefixIfNeeded(String sciCiName) {
+        if (!ClassificationConfig.productionMode()) {
+            if (sciCiName.startsWith(ClassificationConfig.developmentSapPrefix())) {
+                return sciCiName.replaceFirst(ClassificationConfig.developmentSapPrefix(), "");
+            }
+        }
+        return sciCiName;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(sapControlSystems);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        SAPBuilder other = (SAPBuilder) obj;
+        return Objects.equals(sapControlSystems, other.sapControlSystems);
     }
 }
