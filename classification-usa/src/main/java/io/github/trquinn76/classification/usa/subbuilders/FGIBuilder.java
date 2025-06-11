@@ -110,4 +110,21 @@ public class FGIBuilder {
         }
         return null;
     }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(concealed, countries);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        FGIBuilder other = (FGIBuilder) obj;
+        return concealed == other.concealed && Objects.equals(countries, other.countries);
+    }
 }

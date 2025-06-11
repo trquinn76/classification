@@ -65,4 +65,74 @@ class AtomicEnergyActInformationBuilderTest {
         assertEquals(builder.aea, otherBuilder.aea);
     }
 
+    @Test
+    void highClassificationRequirementsTest() {
+        ClassificationMarkerBuilder builder = new ClassificationMarkerBuilder();
+        builder.topSecret().aea.restrictedData();
+        assertTrue(builder.isValid().isEmpty());
+        
+        builder.secret();
+        assertTrue(builder.isValid().isEmpty());
+        
+        builder.confidential();
+        assertFalse(builder.isValid().isEmpty()); // require SECRET or TOP SECRET for RD.
+        
+        builder.topSecret().aea.restrictedDataCnwdi();
+        assertTrue(builder.isValid().isEmpty());
+        
+        builder.secret();
+        assertTrue(builder.isValid().isEmpty());
+        
+        builder.confidential();
+        assertFalse(builder.isValid().isEmpty()); // require SECRET or TOP SECRET for RD CNWDI.
+        
+        builder.topSecret().aea.restrictedDataSigma(1);
+        assertTrue(builder.isValid().isEmpty());
+        
+        builder.secret();
+        assertTrue(builder.isValid().isEmpty());
+        
+        builder.confidential();
+        assertFalse(builder.isValid().isEmpty()); // require SECRET or TOP SECRET for RD SIGMA.
+    }
+    
+    @Test
+    void classificationRequirementsTest() {
+        ClassificationMarkerBuilder builder = new ClassificationMarkerBuilder();
+        builder.topSecret().aea.formallyRestrictedData();
+        assertTrue(builder.isValid().isEmpty());
+        
+        builder.secret();
+        assertTrue(builder.isValid().isEmpty());
+        
+        builder.confidential();
+        assertTrue(builder.isValid().isEmpty());
+        
+        builder.unclassified();
+        assertFalse(builder.isValid().isEmpty());
+        
+        builder.topSecret().aea.formallyRestrictedDataSigma(1);
+        assertTrue(builder.isValid().isEmpty());
+        
+        builder.secret();
+        assertTrue(builder.isValid().isEmpty());
+        
+        builder.confidential();
+        assertTrue(builder.isValid().isEmpty());
+        
+        builder.unclassified();
+        assertFalse(builder.isValid().isEmpty());
+        
+        builder.aea.clear().topSecret().aea.setMark(AtomicEnergyActMarkings.TRANSCLASSIFIED_FOREIGN_NUCLEAR_INFORMATION);
+        assertTrue(builder.isValid().isEmpty());
+        
+        builder.secret();
+        assertTrue(builder.isValid().isEmpty());
+        
+        builder.confidential();
+        assertTrue(builder.isValid().isEmpty());
+        
+        builder.unclassified();
+        assertFalse(builder.isValid().isEmpty());
+    }
 }
