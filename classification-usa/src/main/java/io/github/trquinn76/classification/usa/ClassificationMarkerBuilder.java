@@ -254,7 +254,7 @@ public class ClassificationMarkerBuilder {
             // has been appropriately modified.
             if (modifier.isPopulated() && (modifier.isForeign() || modifier.isNato())) {
                 StringBuilder buf = new StringBuilder();
-                buf.append("Allowing classification '").append(Classification.restricted().toString())
+                buf.append("Allowing classification '").append(Classification.restricted())
                         .append("' which is not usually valid in the ").append(Utils.USA)
                         .append(" context. It is permitted as the context is: ");
                 if (modifier.isNato()) {
@@ -283,7 +283,7 @@ public class ClassificationMarkerBuilder {
     }
 
     private void checkSci(List<String> report) {
-        if (sci.getControlSystems().contains(Utils.HCS)
+        if (sci.hasControlSystem(Utils.HCS)
                 || sci.getCompartments(Utils.TALENT_KEYHOLE).contains(Utils.GEOCAP)) {
             // must have dissem NOFORN
             if (!disseminations.hasDissemination(DisseminationControls.NOFORN)) {

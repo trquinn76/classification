@@ -48,11 +48,32 @@ class SAPTest {
     void hvsacoFunctionPopulatesAdditionalMarkingsTest() {
         ClassificationMarkerBuilder builder = new ClassificationMarkerBuilder();
         builder.secret();
-        builder.sap.addSubCompartment("AA", "CC", "S1");
-        builder.sap.addSubCompartment("AA", "CC", "S2");
         builder.sap.hvsaco();
         
         assertTrue(builder.getAdditionalMarkings().contains(Utils.HVSACO));
+    }
+    
+    @Test
+    void hvsacoAndSAPMutuallyExclusiveTest() {
+        ClassificationMarkerBuilder builder = new ClassificationMarkerBuilder();
+        builder.secret().sap.hvsaco();
+        builder.sap.addSubCompartment("AA", "BB", "CC");
+        builder.sap.addSubCompartment("AA", "BB", "DD");
+        builder.sap.addSubCompartment("AA", "EE", "FF");
+        builder.sap.addSubCompartment("AA", "GG", "HH");
+        
+        assertFalse(builder.isValid().isEmpty());
+        
+        builder.sap.clear();
+        builder.sap.hvsaco();
+        assertTrue(builder.isValid().isEmpty());
+        
+        builder.sap.clear();
+        builder.sap.addSubCompartment("AA", "BB", "CC");
+        builder.sap.addSubCompartment("AA", "BB", "DD");
+        builder.sap.addSubCompartment("AA", "EE", "FF");
+        builder.sap.addSubCompartment("AA", "GG", "HH");
+        assertTrue(builder.isValid().isEmpty());
     }
 
     @Test

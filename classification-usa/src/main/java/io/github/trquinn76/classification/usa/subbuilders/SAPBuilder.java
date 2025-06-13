@@ -1,7 +1,6 @@
 package io.github.trquinn76.classification.usa.subbuilders;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -159,17 +158,28 @@ public class SAPBuilder {
     }
     
     public ClassificationMarkerBuilder hvsaco() {
+        clear();
         parent.addAdditionMarking(Utils.HVSACO);
         return parent;
     }
     
     public ClassificationMarkerBuilder clear() {
         this.sapControlSystems.clear();
+        parent.removeAdditionalMarking(Utils.HVSACO);
         return parent;
     }
     
     public List<String> isValid() {
-        return Collections.emptyList();
+        List<String> report = new ArrayList<>();
+        if (!this.sapControlSystems.isEmpty() && parent.getAdditionalMarkings().contains(Utils.HVSACO)) {
+            StringBuilder buf = new StringBuilder();
+            buf.append("The '").append(Utils.HVSACO).append("' mark is added to classified or unclassified material ")
+                    .append("which exists in a SAP environment, or which needs to be handled in a SAP ")
+                    .append("environment. As such the '").append(Utils.HVSACO)
+                    .append("' mark may not be used with SAP markings.");
+            report.add(buf.toString());
+        }
+        return report;
     }
     
     public List<SARProgram> build() {

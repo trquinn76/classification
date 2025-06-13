@@ -43,7 +43,7 @@ public class SCIBuilder {
     
     public ClassificationMarkerBuilder addControlSystem(String controlSystem) {
         Objects.requireNonNull(controlSystem);
-        controlSystem = removeDevelStrPrefixIfNeeded(controlSystem);
+        controlSystem = prefixDevelStrIfNeeded(controlSystem);
         if (!this.sciControlSystems.containsKey(controlSystem)) {
             // Compartments are sorted AlphaNumerically.
             this.sciControlSystems.put(controlSystem, new TreeMap<>(Utils.ALPHANUMERIC));
@@ -55,9 +55,15 @@ public class SCIBuilder {
         return new TreeSet<>(this.sciControlSystems.keySet());
     }
     
+    public boolean hasControlSystem(String controlSystem) {
+        if (controlSystem == null) return false;
+        controlSystem = prefixDevelStrIfNeeded(controlSystem);
+        return this.sciControlSystems.keySet().contains(controlSystem);
+    }
+    
     public ClassificationMarkerBuilder removeControlSystem(String controlSystem) {
         if (controlSystem != null) {
-            controlSystem = removeDevelStrPrefixIfNeeded(controlSystem);
+            controlSystem = prefixDevelStrIfNeeded(controlSystem);
             this.sciControlSystems.remove(controlSystem);
         }
         return parent;
@@ -66,7 +72,7 @@ public class SCIBuilder {
     public ClassificationMarkerBuilder addCompartment(String controlSystem, String compartment) {
         Objects.requireNonNull(controlSystem);
         Objects.requireNonNull(compartment);
-        controlSystem = removeDevelStrPrefixIfNeeded(controlSystem);
+        controlSystem = prefixDevelStrIfNeeded(controlSystem);
         if (!this.sciControlSystems.containsKey(controlSystem)) {
             addControlSystem(controlSystem);
         }
@@ -80,7 +86,7 @@ public class SCIBuilder {
     
     public Set<String> getCompartments(String controlSystem) {
         Objects.requireNonNull(controlSystem);
-        controlSystem = removeDevelStrPrefixIfNeeded(controlSystem);
+        controlSystem = prefixDevelStrIfNeeded(controlSystem);
         Map<String, Set<String>> compartments = this.sciControlSystems.get(controlSystem);
         if (compartments != null) {
             return Collections.unmodifiableSet(compartments.keySet());
@@ -90,7 +96,7 @@ public class SCIBuilder {
     
     public ClassificationMarkerBuilder removeCompartment(String controlSystem, String compartment) {
         if (controlSystem != null) {
-            controlSystem = removeDevelStrPrefixIfNeeded(controlSystem);
+            controlSystem = prefixDevelStrIfNeeded(controlSystem);
             Map<String, Set<String>> compartments = this.sciControlSystems.get(controlSystem);
             if (compartments != null) {
                 compartments.remove(compartment);
@@ -103,7 +109,7 @@ public class SCIBuilder {
         Objects.requireNonNull(controlSystem);
         Objects.requireNonNull(compartment);
         Objects.requireNonNull(subCompartment);
-        controlSystem = removeDevelStrPrefixIfNeeded(controlSystem);
+        controlSystem = prefixDevelStrIfNeeded(controlSystem);
         if (!this.sciControlSystems.containsKey(controlSystem)) {
             addControlSystem(controlSystem);
         }
@@ -118,7 +124,7 @@ public class SCIBuilder {
     public Set<String> getSubCompartments(String controlSystem, String compartment) {
         Objects.requireNonNull(controlSystem);
         Objects.requireNonNull(compartment);
-        controlSystem = removeDevelStrPrefixIfNeeded(controlSystem);
+        controlSystem = prefixDevelStrIfNeeded(controlSystem);
         Map<String, Set<String>> compartments = this.sciControlSystems.get(controlSystem);
         if (compartments != null) {
             Set<String> subCompartments = compartments.get(compartment);
@@ -131,7 +137,7 @@ public class SCIBuilder {
     
     public ClassificationMarkerBuilder removeSubCompartment(String controlSystem, String compartment, String subCompartment) {
         if (controlSystem != null) {
-            controlSystem = removeDevelStrPrefixIfNeeded(controlSystem);
+            controlSystem = prefixDevelStrIfNeeded(controlSystem);
             Map<String, Set<String>> compartments = this.sciControlSystems.get(controlSystem);
             if (compartments != null) {
                 Set<String> subCompartments = compartments.get(compartment);
@@ -182,7 +188,7 @@ public class SCIBuilder {
     public List<SCIControlSystem> build() {
         List<SCIControlSystem> controlSystems = new ArrayList<>();
         for (Entry<String, Map<String, Set<String>>> csEntry : this.sciControlSystems.entrySet()) {
-            String sciCiName = prefixDevelStrIfNeeded(csEntry.getKey());
+            String sciCiName = csEntry.getKey();
             List<Compartment> compartments = new ArrayList<>();
             for (Entry<String, Set<String>> compartmentEntry : csEntry.getValue().entrySet()) {
                 Compartment compartment = new Compartment(compartmentEntry.getKey(), List.copyOf(compartmentEntry.getValue()));
@@ -213,15 +219,6 @@ public class SCIBuilder {
         if (!ClassificationConfig.productionMode()) {
             if (!sciCiName.startsWith(ClassificationConfig.developmentSciPrefix())) {
                 return ClassificationConfig.developmentSciPrefix() + sciCiName;
-            }
-        }
-        return sciCiName;
-    }
-    
-    private String removeDevelStrPrefixIfNeeded(String sciCiName) {
-        if (!ClassificationConfig.productionMode()) {
-            if (sciCiName.startsWith(ClassificationConfig.developmentSciPrefix())) {
-                return sciCiName.replaceFirst(ClassificationConfig.developmentSciPrefix(), "");
             }
         }
         return sciCiName;

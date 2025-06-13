@@ -7,6 +7,22 @@ import java.util.Set;
 import org.junit.jupiter.api.Test;
 
 class FGITest {
+    
+    @Test
+    void classificationsTest() {
+        ClassificationMarkerBuilder builder = new ClassificationMarkerBuilder();
+        builder.topSecret().fgi.concealed();
+        assertTrue(builder.isValid().isEmpty());
+        
+        builder.secret();
+        assertTrue(builder.isValid().isEmpty());
+        
+        builder.confidential();
+        assertTrue(builder.isValid().isEmpty());
+        
+        builder.unclassified();
+        assertFalse(builder.isValid().isEmpty()); // FGI is not valid for UNCLASSIFIED.
+    }
 
     @Test
     void isPopulatedTest() {
