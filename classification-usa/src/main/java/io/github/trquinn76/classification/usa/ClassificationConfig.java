@@ -52,8 +52,7 @@ public class ClassificationConfig {
     private static final Logger LOGGER = Logger.getLogger(ClassificationConfig.class.getCanonicalName());
 
     public static boolean productionMode() {
-        Config config = getInstance();
-        return config.trquinnClassificationProductionMode;
+        return getInstance().trquinnClassificationProductionMode;
     }
 
     public static String developmentUnclassifiedName() {
@@ -122,9 +121,9 @@ public class ClassificationConfig {
      */
     private static List<String> makeListOfConfigFiles() {
         List<String> files = new ArrayList<>();
-        String userDefinedConfigFile = System.getProperty(CMD_LINE_CONFIG_FILE_PROPERTY);
+        String userDefinedConfigFile = System.getProperty(ClassificationConfig.CMD_LINE_CONFIG_FILE_PROPERTY);
         if (userDefinedConfigFile == null) {
-            userDefinedConfigFile = System.getenv(ENV_VARIABLE_CONFIG_FILE);
+            userDefinedConfigFile = System.getenv(ClassificationConfig.ENV_VARIABLE_CONFIG_FILE);
         }
         if (userDefinedConfigFile != null) {
             files.add(userDefinedConfigFile);

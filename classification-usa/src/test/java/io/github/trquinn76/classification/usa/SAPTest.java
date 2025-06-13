@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 import io.github.trquinn76.classification.usa.model.Classification;
 import io.github.trquinn76.classification.usa.model.DisseminationControls;
 
-class SAPBuilderTest {
+class SAPTest {
 
     @Test
     void passingTest() {

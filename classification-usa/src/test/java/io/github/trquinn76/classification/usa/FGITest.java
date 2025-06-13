@@ -6,7 +6,7 @@ import java.util.Set;
 
 import org.junit.jupiter.api.Test;
 
-class FGIBuilderTest {
+class FGITest {
 
     @Test
     void isPopulatedTest() {

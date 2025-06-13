@@ -97,7 +97,7 @@ public class DisseminationControlsBuilder {
         return addDissemination(DisseminationControls.FOUO);
     }
     
-    public ClassificationMarkerBuilder countroledUnclassifiedInformation() {
+    public ClassificationMarkerBuilder controledUnclassifiedInformation() {
         return addDissemination(DisseminationControls.CONTROLLED_UNCLASSIFIED_INFORMATION);
     }
     
@@ -173,7 +173,7 @@ public class DisseminationControlsBuilder {
         
         if (hasDissemination(DisseminationControls.DISPLAY_ONLY)) {
             Set<String> countries = this.disseminationMap.get(DisseminationControls.DISPLAY_ONLY);
-            if (countries.size() < 2) {
+            if (countries.size() < 1) {
                 StringBuilder buf = new StringBuilder();
                 buf.append("The country list for '").append(DisseminationControls.DISPLAY_ONLY.toString())
                         .append("' Dissemination Control is required to have a minimum of 1 country. Current count: ")
@@ -223,5 +223,22 @@ public class DisseminationControlsBuilder {
             Set<String> countries = this.disseminationMap.get(dissemControl);            retList.add(new DisseminationControlMarker(dissemControl, List.copyOf(countries)));
         }
         return retList;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(disseminationMap);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        DisseminationControlsBuilder other = (DisseminationControlsBuilder) obj;
+        return Objects.equals(disseminationMap, other.disseminationMap);
     }
 }

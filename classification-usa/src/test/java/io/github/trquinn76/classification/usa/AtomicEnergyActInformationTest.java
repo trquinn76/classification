@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 
 import io.github.trquinn76.classification.usa.model.AtomicEnergyActMarkings;
 
-class AtomicEnergyActInformationBuilderTest {
+class AtomicEnergyActInformationTest {
 
     @Test
     void noSigmaMarksTest() {

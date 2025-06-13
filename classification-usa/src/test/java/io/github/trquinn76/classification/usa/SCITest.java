@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 
 import io.github.trquinn76.classification.usa.model.Classification;
 
-class SCIBuilderTest {
+class SCITest {
 
     @Test
     void passingTest() {

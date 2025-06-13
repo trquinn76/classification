@@ -2,13 +2,13 @@ package io.github.trquinn76.classification.usa;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.logging.Logger;
 
-import io.github.trquinn76.classification.usa.model.AtomicEnergyActMarkings;
 import io.github.trquinn76.classification.usa.model.Classification;
 import io.github.trquinn76.classification.usa.model.ClassificationMarker;
 import io.github.trquinn76.classification.usa.model.DisseminationControls;
@@ -103,12 +103,12 @@ public class ClassificationMarkerBuilder {
     }
 
     public boolean isClassified() {
-        return Set.of(Classification.confidential(), Classification.secret(), Classification.topSecret())
+        return new HashSet<>(Set.of(Classification.confidential(), Classification.secret(), Classification.topSecret()))
                 .contains(this.classification);
     }
 
     public boolean isHighlyClassified() {
-        return Set.of(Classification.secret(), Classification.topSecret()).contains(this.classification);
+        return new HashSet<>(Set.of(Classification.secret(), Classification.topSecret())).contains(this.classification);
     }
 
     public boolean isClassifiedOrControlUnclassified() {
@@ -518,10 +518,9 @@ public class ClassificationMarkerBuilder {
             }
             if (this.additionalMarkings.isEmpty()) {
                 // Additional Markings is empty, indicating that there are no Distribution
-                // Instructions provided for
-                // this used of NODIS. Of course when there ARE Additional Markings there is no
-                // guarantee that they
-                // are Distribution Instructions for a NODIS Dissemination mark.
+                // Instructions provided for this used of NODIS. Of course when there ARE 
+                // Additional Markings there is no guarantee that they are Distribution
+                // Instructions for a NODIS Dissemination mark.
                 StringBuilder buf = new StringBuilder();
                 buf.append("Have ").append(OtherDisseminationControls.NO_DISTRIBUTION).append(
                         " Other Dissemination. It is expected that this will have Distribution Instructions associated with it. ")

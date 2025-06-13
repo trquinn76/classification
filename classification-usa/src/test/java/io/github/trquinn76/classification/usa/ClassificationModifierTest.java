@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 import io.github.trquinn76.classification.usa.model.Classification;
 import io.github.trquinn76.classification.usa.model.NonUSAndJointType;
 
-class ClassificationModifierBuilderTest {
+class ClassificationModifierTest {
 
     @Test
     void cosmicMustBeTopSecret() {
