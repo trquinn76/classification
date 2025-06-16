@@ -5,7 +5,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
 
 import io.github.trquinn76.classification.usa.model.Classification;
-import io.github.trquinn76.classification.usa.model.DisseminationControls;
+import io.github.trquinn76.classification.usa.model.Disseminations;
 
 class SAPTest {
 
@@ -26,7 +26,7 @@ class SAPTest {
         if (ClassificationConfig.productionMode()) {
             prefix = "";
         }
-        String expectedStr = Classification.secret().toString() + "//" + prefix + "BA-BB/" + prefix
+        String expectedStr = Classification.secret().toString() + "//SAR-" + prefix + "BA-BB/" + prefix
                 + "CS-AA SubOne SubTwo/" + prefix + "DDD-DCD DBD";
         String actualStr = builder.build().toString();
 
@@ -41,7 +41,7 @@ class SAPTest {
         builder.sap.addSubCompartment("AA", "CC", "S2");
         builder.sap.waived();
         
-        assertTrue(builder.disseminations.hasDissemination(DisseminationControls.WAIVED));
+        assertTrue(builder.disseminations.hasDissemination(Disseminations.WAIVED));
     }
     
     @Test

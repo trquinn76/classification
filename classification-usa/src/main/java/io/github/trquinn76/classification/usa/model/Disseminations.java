@@ -1,6 +1,6 @@
 package io.github.trquinn76.classification.usa.model;
 
-public enum DisseminationControls {
+public enum Disseminations {
 
     // @formatter:off
     // SAP WAIVED mark
@@ -21,7 +21,7 @@ public enum DisseminationControls {
     
     private final String text;
     
-    private DisseminationControls(String text) {
+    private Disseminations(String text) {
         this.text = text;
     }
     

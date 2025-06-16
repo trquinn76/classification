@@ -10,29 +10,29 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 
 import io.github.trquinn76.classification.usa.ClassificationMarkerBuilder;
-import io.github.trquinn76.classification.usa.model.OtherDisseminationControlMarker;
-import io.github.trquinn76.classification.usa.model.OtherDisseminationControls;
+import io.github.trquinn76.classification.usa.model.OtherDisseminationMarker;
+import io.github.trquinn76.classification.usa.model.OtherDisseminations;
 
-public class OtherDisseminationControlsBuilder {
+public class OtherDisseminationsBuilder {
 
-    private Map<OtherDisseminationControls, Set<String>> otherDisseminationControlsMap = new TreeMap<>();
+    private Map<OtherDisseminations, Set<String>> otherDisseminationControlsMap = new TreeMap<>();
 
     private ClassificationMarkerBuilder parent;
 
-    public OtherDisseminationControlsBuilder(ClassificationMarkerBuilder parent) {
+    public OtherDisseminationsBuilder(ClassificationMarkerBuilder parent) {
         this.parent = parent;
     }
 
-    public ClassificationMarkerBuilder populate(List<OtherDisseminationControlMarker> otherDissemMarkers) {
+    public ClassificationMarkerBuilder populate(List<OtherDisseminationMarker> otherDissemMarkers) {
         clear();
-        for (OtherDisseminationControlMarker marker : otherDissemMarkers) {
+        for (OtherDisseminationMarker marker : otherDissemMarkers) {
             setDissemination(marker.type(),
                     marker.programNickNames().toArray(new String[marker.programNickNames().size()]));
         }
         return parent;
     }
 
-    public ClassificationMarkerBuilder setDissemination(OtherDisseminationControls dissemControl, String... nicknames) {
+    public ClassificationMarkerBuilder setDissemination(OtherDisseminations dissemControl, String... nicknames) {
         Objects.requireNonNull(dissemControl);
         Objects.requireNonNull(nicknames);
 
@@ -42,16 +42,16 @@ public class OtherDisseminationControlsBuilder {
         return parent;
     }
     
-    public Set<OtherDisseminationControls> getDisseminations() {
+    public Set<OtherDisseminations> getDisseminations() {
         return new TreeSet<>(this.otherDisseminationControlsMap.keySet());
     }
 
-    public ClassificationMarkerBuilder removeDissemination(OtherDisseminationControls dissemControl) {
+    public ClassificationMarkerBuilder removeDissemination(OtherDisseminations dissemControl) {
         this.otherDisseminationControlsMap.remove(dissemControl);
         return parent;
     }
     
-    public ClassificationMarkerBuilder addNickname(OtherDisseminationControls dissemControl, String nickname) {
+    public ClassificationMarkerBuilder addNickname(OtherDisseminations dissemControl, String nickname) {
         Objects.requireNonNull(dissemControl);
         Objects.requireNonNull(nickname);
         if (!hasOtherDissemination(dissemControl)) {
@@ -63,7 +63,7 @@ public class OtherDisseminationControlsBuilder {
         return parent;
     }
     
-    public Set<String> getNicknames(OtherDisseminationControls dissemControl) {
+    public Set<String> getNicknames(OtherDisseminations dissemControl) {
         Set<String> retSet = new TreeSet<>();
         if (hasOtherDissemination(dissemControl)) {
             retSet.addAll(this.otherDisseminationControlsMap.get(dissemControl));
@@ -71,7 +71,7 @@ public class OtherDisseminationControlsBuilder {
         return retSet;
     }
     
-    public ClassificationMarkerBuilder removeNickname(OtherDisseminationControls dissemControl, String nickname) {
+    public ClassificationMarkerBuilder removeNickname(OtherDisseminations dissemControl, String nickname) {
         Objects.requireNonNull(dissemControl);
         Objects.requireNonNull(nickname);
         if (hasOtherDissemination(dissemControl)) {
@@ -83,25 +83,25 @@ public class OtherDisseminationControlsBuilder {
     public ClassificationMarkerBuilder alternativeCompensatoryControlMeasures(String... nicknames) {
         Objects.requireNonNull(nicknames);
 
-        return setDissemination(OtherDisseminationControls.ACCM, nicknames);
+        return setDissemination(OtherDisseminations.ACCM, nicknames);
     }
 
     public ClassificationMarkerBuilder exclusiveDistribution() {
-        return setDissemination(OtherDisseminationControls.EXCLUSIVE_DISTRIBUTION);
+        return setDissemination(OtherDisseminations.EXCLUSIVE_DISTRIBUTION);
     }
 
     public ClassificationMarkerBuilder noDistribution(String... distributionInstructions) {
         Objects.requireNonNull(distributionInstructions);
         parent.addAdditionalMarkings(Arrays.asList(distributionInstructions));
-        return setDissemination(OtherDisseminationControls.NO_DISTRIBUTION);
+        return setDissemination(OtherDisseminations.NO_DISTRIBUTION);
     }
 
     public ClassificationMarkerBuilder sensitiveButUnclassified() {
-        return setDissemination(OtherDisseminationControls.SENSITIVE_BUT_UNCLASSIFIED);
+        return setDissemination(OtherDisseminations.SENSITIVE_BUT_UNCLASSIFIED);
     }
 
     public ClassificationMarkerBuilder sensitiveButUnclassifiedNoforn() {
-        return setDissemination(OtherDisseminationControls.SENSITIVE_BUT_UNCLASSIFIED_NOFORN);
+        return setDissemination(OtherDisseminations.SENSITIVE_BUT_UNCLASSIFIED_NOFORN);
     }
 
     public ClassificationMarkerBuilder clear() {
@@ -109,7 +109,7 @@ public class OtherDisseminationControlsBuilder {
         return parent;
     }
 
-    public boolean hasOtherDissemination(OtherDisseminationControls otherDissem) {
+    public boolean hasOtherDissemination(OtherDisseminations otherDissem) {
         Objects.requireNonNull(otherDissem);
         return this.otherDisseminationControlsMap.keySet().contains(otherDissem);
     }
@@ -117,29 +117,29 @@ public class OtherDisseminationControlsBuilder {
     public List<String> isValid() {
         List<String> report = new ArrayList<>();
 
-        if (hasOtherDissemination(OtherDisseminationControls.EXCLUSIVE_DISTRIBUTION)
-                && hasOtherDissemination(OtherDisseminationControls.NO_DISTRIBUTION)) {
+        if (hasOtherDissemination(OtherDisseminations.EXCLUSIVE_DISTRIBUTION)
+                && hasOtherDissemination(OtherDisseminations.NO_DISTRIBUTION)) {
             StringBuilder buf = new StringBuilder();
             buf.append("May not use Other Disseminations '")
-                    .append(OtherDisseminationControls.EXCLUSIVE_DISTRIBUTION.toString()).append("' and '")
-                    .append(OtherDisseminationControls.NO_DISTRIBUTION).append("' together.");
+                    .append(OtherDisseminations.EXCLUSIVE_DISTRIBUTION.toString()).append("' and '")
+                    .append(OtherDisseminations.NO_DISTRIBUTION).append("' together.");
             report.add(buf.toString());
         }
-        if (hasOtherDissemination(OtherDisseminationControls.SENSITIVE_BUT_UNCLASSIFIED)
-                && hasOtherDissemination(OtherDisseminationControls.SENSITIVE_BUT_UNCLASSIFIED_NOFORN)) {
+        if (hasOtherDissemination(OtherDisseminations.SENSITIVE_BUT_UNCLASSIFIED)
+                && hasOtherDissemination(OtherDisseminations.SENSITIVE_BUT_UNCLASSIFIED_NOFORN)) {
             StringBuilder buf = new StringBuilder();
             buf.append("May not use Other Disseminations '")
-                    .append(OtherDisseminationControls.SENSITIVE_BUT_UNCLASSIFIED.toString()).append("' and '")
-                    .append(OtherDisseminationControls.SENSITIVE_BUT_UNCLASSIFIED_NOFORN).append("' together.");
+                    .append(OtherDisseminations.SENSITIVE_BUT_UNCLASSIFIED.toString()).append("' and '")
+                    .append(OtherDisseminations.SENSITIVE_BUT_UNCLASSIFIED_NOFORN).append("' together.");
             report.add(buf.toString());
         }
 
-        for (OtherDisseminationControls otherDissem : this.otherDisseminationControlsMap.keySet()) {
+        for (OtherDisseminations otherDissem : this.otherDisseminationControlsMap.keySet()) {
             switch (otherDissem) {
             case ACCM:
                 if (this.otherDisseminationControlsMap.get(otherDissem).isEmpty()) {
                     report.add("Must have at least one Nick Name for Other Dissemination '"
-                            + OtherDisseminationControls.ACCM.name() + "'.");
+                            + OtherDisseminations.ACCM.name() + "'.");
                 }
                 break;
             case EXCLUSIVE_DISTRIBUTION:
@@ -148,7 +148,7 @@ public class OtherDisseminationControlsBuilder {
             case SENSITIVE_BUT_UNCLASSIFIED_NOFORN:
                 if (!this.otherDisseminationControlsMap.get(otherDissem).isEmpty()) {
                     StringBuilder buf = new StringBuilder();
-                    buf.append("May not have ").append(OtherDisseminationControls.ACCM.name())
+                    buf.append("May not have ").append(OtherDisseminations.ACCM.name())
                             .append(" nick names for Other Dissemination: '").append(otherDissem.toString())
                             .append("'.");
                     report.add(buf.toString());
@@ -160,7 +160,7 @@ public class OtherDisseminationControlsBuilder {
         return report;
     }
 
-    public List<OtherDisseminationControlMarker> build() {
+    public List<OtherDisseminationMarker> build() {
 
         List<String> report = isValid();
         if (!report.isEmpty()) {
@@ -170,9 +170,9 @@ public class OtherDisseminationControlsBuilder {
             throw new IllegalStateException("Invalid state. Cannot build instance of OtherDisseminationControlMarker.");
         }
 
-        List<OtherDisseminationControlMarker> retList = new ArrayList<>();
-        for (OtherDisseminationControls otherDissem : this.otherDisseminationControlsMap.keySet()) {
-            retList.add(new OtherDisseminationControlMarker(otherDissem,
+        List<OtherDisseminationMarker> retList = new ArrayList<>();
+        for (OtherDisseminations otherDissem : this.otherDisseminationControlsMap.keySet()) {
+            retList.add(new OtherDisseminationMarker(otherDissem,
                     List.copyOf(this.otherDisseminationControlsMap.get(otherDissem))));
         }
         return retList;
@@ -191,7 +191,7 @@ public class OtherDisseminationControlsBuilder {
             return false;
         if (getClass() != obj.getClass())
             return false;
-        OtherDisseminationControlsBuilder other = (OtherDisseminationControlsBuilder) obj;
+        OtherDisseminationsBuilder other = (OtherDisseminationsBuilder) obj;
         return Objects.equals(otherDisseminationControlsMap, other.otherDisseminationControlsMap);
     }
 }

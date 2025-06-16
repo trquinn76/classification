@@ -4,7 +4,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
 
-import io.github.trquinn76.classification.usa.model.DisseminationControls;
+import io.github.trquinn76.classification.usa.model.Disseminations;
 
 class DisseminationsTest {
 
@@ -35,7 +35,7 @@ class DisseminationsTest {
         builder.confidential().disseminations.releaseTo("USA");
         assertFalse(builder.isValid().isEmpty()); // fails due to single country...
         
-        builder.disseminations.addCountry(DisseminationControls.RELEASE_TO, "AAA");
+        builder.disseminations.addCountry(Disseminations.RELEASE_TO, "AAA");
         assertTrue(builder.isValid().isEmpty()); // succeeds due to 2 countries.
     }
     
@@ -45,7 +45,7 @@ class DisseminationsTest {
         builder.confidential().disseminations.releaseTo("AAA", "BBB");
         assertFalse(builder.isValid().isEmpty()); // fails due to lack of USA in country list.
         
-        builder.disseminations.addCountry(DisseminationControls.RELEASE_TO, Utils.USA);
+        builder.disseminations.addCountry(Disseminations.RELEASE_TO, Utils.USA);
         assertTrue(builder.isValid().isEmpty()); // succeeds due to USA being added to country list.
     }
     
@@ -65,10 +65,10 @@ class DisseminationsTest {
         builder.confidential().disseminations.displayOnly();
         assertFalse(builder.isValid().isEmpty()); // no countries, so not valid.
         
-        builder.disseminations.addCountry(DisseminationControls.DISPLAY_ONLY, "AAA");
+        builder.disseminations.addCountry(Disseminations.DISPLAY_ONLY, "AAA");
         assertTrue(builder.isValid().isEmpty()); // as there is now 1 country.
         
-        builder.disseminations.addCountry(DisseminationControls.DISPLAY_ONLY, "BBB");
+        builder.disseminations.addCountry(Disseminations.DISPLAY_ONLY, "BBB");
         assertTrue(builder.isValid().isEmpty()); // as there are now 2 countries.
     }
     

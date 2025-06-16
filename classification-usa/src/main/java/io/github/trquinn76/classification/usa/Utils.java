@@ -2,6 +2,9 @@ package io.github.trquinn76.classification.usa;
 
 import java.util.Comparator;
 
+/**
+ * Utility functions and constants for the Classification scheme.
+ */
 public class Utils {
     
     public static final String USA = "USA";
@@ -12,7 +15,6 @@ public class Utils {
     
     // Published SCI Control Systems
     public static final String HCS = "HCS"; // HUMINT Control System
-    public static final String RESERVE = "RESERVE";
     public static final String SPECIAL_INTELLIGENCE = "SI";
     public static final String TALENT_KEYHOLE = "TK";
     
@@ -34,6 +36,9 @@ public class Utils {
     // SAP additional Markers
     public static final String HVSACO = "HVSACO";
     
+    /**
+     * A {@link Comparator} which will put USA first, then shorter strings, and then sort alphabetical.
+     */
     public static Comparator<String> USA_FIRST = new Comparator<>() {
 
         @Override
@@ -52,6 +57,9 @@ public class Utils {
         
     };
     
+    /**
+     * A {@link Comparator} which will sort by length, and then in alphabetical order.
+     */
     public static Comparator<String> ALPHABETIC = new Comparator<>() {
 
         @Override
@@ -65,6 +73,9 @@ public class Utils {
         
     };
     
+    /**
+     * A {@link Comparator} which will sort alphanumerically.
+     */
     public static Comparator<String> ALPHANUMERIC = new Comparator<>() {
 
         // Hey look, AI code! :) It was actually helpful this time.

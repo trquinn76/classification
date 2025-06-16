@@ -4,7 +4,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
 
-import io.github.trquinn76.classification.usa.model.OtherDisseminationControls;
+import io.github.trquinn76.classification.usa.model.OtherDisseminations;
 
 class OtherDisseminationsTest {
 
@@ -103,7 +103,7 @@ class OtherDisseminationsTest {
         builder.confidential().otherDisseminations.alternativeCompensatoryControlMeasures("nick");
         assertTrue(builder.isValid().isEmpty());
         
-        builder.otherDisseminations.removeNickname(OtherDisseminationControls.ACCM, "nick");
+        builder.otherDisseminations.removeNickname(OtherDisseminations.ACCM, "nick");
         assertFalse(builder.isValid().isEmpty()); // as there are no nicknames now, when at least one is required.
     }
     

@@ -1,6 +1,6 @@
 package io.github.trquinn76.classification.usa.model;
 
-public enum OtherDisseminationControls {
+public enum OtherDisseminations {
 
     // @formatter:off
     //Alternative Compensatory Control Measures
@@ -14,7 +14,7 @@ public enum OtherDisseminationControls {
     
     private final String text;
     
-    private OtherDisseminationControls(String text) {
+    private OtherDisseminations(String text) {
         this.text = text;
     }
     

@@ -11,27 +11,27 @@ import java.util.TreeSet;
 
 import io.github.trquinn76.classification.usa.ClassificationMarkerBuilder;
 import io.github.trquinn76.classification.usa.Utils;
-import io.github.trquinn76.classification.usa.model.DisseminationControlMarker;
-import io.github.trquinn76.classification.usa.model.DisseminationControls;
+import io.github.trquinn76.classification.usa.model.DisseminationMarker;
+import io.github.trquinn76.classification.usa.model.Disseminations;
 
-public class DisseminationControlsBuilder {
+public class DisseminationsBuilder {
     
-    private Map<DisseminationControls, Set<String>> disseminationMap = new TreeMap<>();
+    private Map<Disseminations, Set<String>> disseminationMap = new TreeMap<>();
     
     private ClassificationMarkerBuilder parent;
     
-    public DisseminationControlsBuilder(ClassificationMarkerBuilder parent) {
+    public DisseminationsBuilder(ClassificationMarkerBuilder parent) {
         this.parent = parent;
     }
     
-    public ClassificationMarkerBuilder populate(List<DisseminationControlMarker> disseminationMarks) {
-        for (DisseminationControlMarker marker : disseminationMarks) {
+    public ClassificationMarkerBuilder populate(List<DisseminationMarker> disseminationMarks) {
+        for (DisseminationMarker marker : disseminationMarks) {
             setDissemination(marker.type(), marker.countries().toArray(new String[marker.countries().size()]));
         }
         return parent;
     }
     
-    public ClassificationMarkerBuilder setDissemination(DisseminationControls dissemControl, String... countryList) {
+    public ClassificationMarkerBuilder setDissemination(Disseminations dissemControl, String... countryList) {
         Objects.requireNonNull(dissemControl);
         Objects.requireNonNull(countryList);
         
@@ -42,7 +42,7 @@ public class DisseminationControlsBuilder {
         return parent;
     }
     
-    public ClassificationMarkerBuilder addDissemination(DisseminationControls dissemControl, String... countryList) {
+    public ClassificationMarkerBuilder addDissemination(Disseminations dissemControl, String... countryList) {
         Objects.requireNonNull(dissemControl);
         Objects.requireNonNull(countryList);
         
@@ -57,23 +57,23 @@ public class DisseminationControlsBuilder {
         return parent;
     }
     
-    public Set<DisseminationControls> getDisseminations() {
+    public Set<Disseminations> getDisseminations() {
         return new TreeSet<>(this.disseminationMap.keySet());
     }
     
-    public ClassificationMarkerBuilder removeDissemination(DisseminationControls dissemControl) {
+    public ClassificationMarkerBuilder removeDissemination(Disseminations dissemControl) {
         this.disseminationMap.remove(dissemControl);
         return parent;
     }
     
-    public ClassificationMarkerBuilder addCountry(DisseminationControls dissemControl, String country) {
+    public ClassificationMarkerBuilder addCountry(Disseminations dissemControl, String country) {
         Objects.requireNonNull(dissemControl);
         Objects.requireNonNull(country);
         
         return addDissemination(dissemControl, country);
     }
     
-    public Set<String> getCountries(DisseminationControls dissemControl) {
+    public Set<String> getCountries(Disseminations dissemControl) {
         Set<String> retSet = new TreeSet<>(Utils.USA_FIRST);
         if (hasDissemination(dissemControl)) {
             retSet.addAll(this.disseminationMap.get(dissemControl));
@@ -81,7 +81,7 @@ public class DisseminationControlsBuilder {
         return retSet;
     }
     
-    public ClassificationMarkerBuilder removeCountry(DisseminationControls dissemControl, String country) {
+    public ClassificationMarkerBuilder removeCountry(Disseminations dissemControl, String country) {
         Objects.requireNonNull(dissemControl);
         if (this.disseminationMap.keySet().contains(dissemControl)) {
             this.disseminationMap.get(dissemControl).remove(country);
@@ -90,52 +90,52 @@ public class DisseminationControlsBuilder {
     }
     
     public ClassificationMarkerBuilder waived() {
-        return addDissemination(DisseminationControls.WAIVED);
+        return addDissemination(Disseminations.WAIVED);
     }
     
     public ClassificationMarkerBuilder fouo() {
-        return addDissemination(DisseminationControls.FOUO);
+        return addDissemination(Disseminations.FOUO);
     }
     
     public ClassificationMarkerBuilder controledUnclassifiedInformation() {
-        return addDissemination(DisseminationControls.CONTROLLED_UNCLASSIFIED_INFORMATION);
+        return addDissemination(Disseminations.CONTROLLED_UNCLASSIFIED_INFORMATION);
     }
     
     public ClassificationMarkerBuilder orcon() {
-        return addDissemination(DisseminationControls.ORIGINATOR_CONTROLLED);
+        return addDissemination(Disseminations.ORIGINATOR_CONTROLLED);
     }
     
     public ClassificationMarkerBuilder releaseTo(String... countries) {
         Objects.requireNonNull(countries);
-        return addDissemination(DisseminationControls.RELEASE_TO, countries);
+        return addDissemination(Disseminations.RELEASE_TO, countries);
     }
     
     public ClassificationMarkerBuilder displayOnly(String... countries) {
         Objects.requireNonNull(countries);
-        return addDissemination(DisseminationControls.DISPLAY_ONLY, countries);
+        return addDissemination(Disseminations.DISPLAY_ONLY, countries);
     }
     
     public ClassificationMarkerBuilder controledImagery() {
-        return addDissemination(DisseminationControls.CONTROLLED_IMAGERY);
+        return addDissemination(Disseminations.CONTROLLED_IMAGERY);
     }
     
     public ClassificationMarkerBuilder noforn() {
-        return addDissemination(DisseminationControls.NOFORN);
+        return addDissemination(Disseminations.NOFORN);
     }
     
     public ClassificationMarkerBuilder propin() {
-        return addDissemination(DisseminationControls.PROPRIETARY_INFORMATION);
+        return addDissemination(Disseminations.PROPRIETARY_INFORMATION);
     }
     
     public ClassificationMarkerBuilder relido() {
-        return addDissemination(DisseminationControls.RELIDO);
+        return addDissemination(Disseminations.RELIDO);
     }
     
     public ClassificationMarkerBuilder fisa() {
-        return addDissemination(DisseminationControls.FISA);
+        return addDissemination(Disseminations.FISA);
     }
     
-    public boolean hasDissemination(DisseminationControls dissemControl) {
+    public boolean hasDissemination(Disseminations dissemControl) {
         return this.disseminationMap.keySet().contains(dissemControl);
     }
     
@@ -147,59 +147,59 @@ public class DisseminationControlsBuilder {
     public List<String> isValid() {
         List<String> report = new ArrayList<>();
         
-        if (hasDissemination(DisseminationControls.RELEASE_TO)) {
-            Set<String> countries = this.disseminationMap.get(DisseminationControls.RELEASE_TO);
+        if (hasDissemination(Disseminations.RELEASE_TO)) {
+            Set<String> countries = this.disseminationMap.get(Disseminations.RELEASE_TO);
             if (!countries.contains(Utils.USA)) {
                 StringBuilder buf = new StringBuilder();
-                buf.append("The country list for '").append(DisseminationControls.RELEASE_TO.toString())
+                buf.append("The country list for '").append(Disseminations.RELEASE_TO.toString())
                         .append("' Dissemination Control is required to include ").append(Utils.USA);
                 report.add(buf.toString());
             }
             if (countries.size() < 2) {
                 StringBuilder buf = new StringBuilder();
-                buf.append("The country list for '").append(DisseminationControls.RELEASE_TO.toString())
+                buf.append("The country list for '").append(Disseminations.RELEASE_TO.toString())
                         .append("' Dissemination Control is required to have a minimum of 2 countries. Current count: ")
                         .append(countries.size());
                 report.add(buf.toString());
             }
-            if (hasDissemination(DisseminationControls.NOFORN)) {
+            if (hasDissemination(Disseminations.NOFORN)) {
                 StringBuilder buf = new StringBuilder();
-                buf.append("May not have '").append(DisseminationControls.RELEASE_TO.toString()).append("' and '")
-                        .append(DisseminationControls.NOFORN.toString())
+                buf.append("May not have '").append(Disseminations.RELEASE_TO.toString()).append("' and '")
+                        .append(Disseminations.NOFORN.toString())
                         .append("' Dissemination Controls at the same time.");
                 report.add(buf.toString());
             }
         }
         
-        if (hasDissemination(DisseminationControls.DISPLAY_ONLY)) {
-            Set<String> countries = this.disseminationMap.get(DisseminationControls.DISPLAY_ONLY);
+        if (hasDissemination(Disseminations.DISPLAY_ONLY)) {
+            Set<String> countries = this.disseminationMap.get(Disseminations.DISPLAY_ONLY);
             if (countries.size() < 1) {
                 StringBuilder buf = new StringBuilder();
-                buf.append("The country list for '").append(DisseminationControls.DISPLAY_ONLY.toString())
+                buf.append("The country list for '").append(Disseminations.DISPLAY_ONLY.toString())
                         .append("' Dissemination Control is required to have a minimum of 1 country. Current count: ")
                         .append(countries.size());
                 report.add(buf.toString());
             }
-            if (hasDissemination(DisseminationControls.RELIDO)) {
+            if (hasDissemination(Disseminations.RELIDO)) {
                 StringBuilder buf = new StringBuilder();
-                buf.append("May not have '").append(DisseminationControls.DISPLAY_ONLY.toString()).append("' and '")
-                        .append(DisseminationControls.RELIDO.toString())
+                buf.append("May not have '").append(Disseminations.DISPLAY_ONLY.toString()).append("' and '")
+                        .append(Disseminations.RELIDO.toString())
                         .append("' Dissemination Controls at the same time.");
                 report.add(buf.toString());
             }
-            if (hasDissemination(DisseminationControls.NOFORN)) {
+            if (hasDissemination(Disseminations.NOFORN)) {
                 StringBuilder buf = new StringBuilder();
-                buf.append("May not have '").append(DisseminationControls.DISPLAY_ONLY.toString()).append("' and '")
-                        .append(DisseminationControls.NOFORN.toString())
+                buf.append("May not have '").append(Disseminations.DISPLAY_ONLY.toString()).append("' and '")
+                        .append(Disseminations.NOFORN.toString())
                         .append("' Dissemination Controls at the same time.");
                 report.add(buf.toString());
             }
         }
         
-        if (hasDissemination(DisseminationControls.NOFORN) && hasDissemination(DisseminationControls.RELIDO)) {
+        if (hasDissemination(Disseminations.NOFORN) && hasDissemination(Disseminations.RELIDO)) {
             StringBuilder buf = new StringBuilder();
-            buf.append("May not have '").append(DisseminationControls.NOFORN.toString()).append("' and '")
-                    .append(DisseminationControls.RELIDO.toString())
+            buf.append("May not have '").append(Disseminations.NOFORN.toString()).append("' and '")
+                    .append(Disseminations.RELIDO.toString())
                     .append("' Dissemination Controls at the same time.");
             report.add(buf.toString());
         }
@@ -207,7 +207,7 @@ public class DisseminationControlsBuilder {
         return report;
     }
 
-    public List<DisseminationControlMarker> build() {
+    public List<DisseminationMarker> build() {
         
         List<String> report = isValid();
         if (!report.isEmpty()) {
@@ -218,9 +218,9 @@ public class DisseminationControlsBuilder {
                     "Invalid state. Cannot build instance of DisseminationControlMarker.");
         }
         
-        List<DisseminationControlMarker> retList = new ArrayList<>();
-        for (DisseminationControls dissemControl : this.disseminationMap.keySet()) {
-            Set<String> countries = this.disseminationMap.get(dissemControl);            retList.add(new DisseminationControlMarker(dissemControl, List.copyOf(countries)));
+        List<DisseminationMarker> retList = new ArrayList<>();
+        for (Disseminations dissemControl : this.disseminationMap.keySet()) {
+            Set<String> countries = this.disseminationMap.get(dissemControl);            retList.add(new DisseminationMarker(dissemControl, List.copyOf(countries)));
         }
         return retList;
     }
@@ -238,7 +238,7 @@ public class DisseminationControlsBuilder {
             return false;
         if (getClass() != obj.getClass())
             return false;
-        DisseminationControlsBuilder other = (DisseminationControlsBuilder) obj;
+        DisseminationsBuilder other = (DisseminationsBuilder) obj;
         return Objects.equals(disseminationMap, other.disseminationMap);
     }
 }
