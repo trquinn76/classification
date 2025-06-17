@@ -1,5 +1,8 @@
 package io.github.trquinn76.classification.usa.model;
 
+/**
+ * Defines the different types of Atomic Energy Act Markings.
+ */
 public enum AtomicEnergyActMarkings {
     // @formatter:off
     RESTRICTED_DATA("RD"),

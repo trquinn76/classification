@@ -1,5 +1,8 @@
 package io.github.trquinn76.classification.usa.model;
 
+/**
+ * Lists the Dissemination Marks handled by this library.
+ */
 public enum Disseminations {
 
     // @formatter:off

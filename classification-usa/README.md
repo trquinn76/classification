@@ -5,8 +5,8 @@ This project contains a data model for USA Classification Markings, as defined i
 
 This model is derived solely from publicly available documents. The set of documents referenced when designing this
 model may be found in [Documents](./documents/README.md). These documents are:
-- [DoD Information Security Program: Marking of Information](./MarkingOfInformation/README.md)
-- [Intelligence Community Markings System Register and Manual](./ICMarkingsSystem/README.md)
+- [DoD Information Security Program: Marking of Information](./documents/MarkingOfInformation/README.md)
+- [Intelligence Community Markings System Register and Manual](./documents/ICMarkingsSystem/README.md)
 
 > #### Maven Coordinates:
 > 
@@ -65,7 +65,7 @@ The `ClassificationMarker` `record` consists of the following fields:
 ### Classification
 
 The `Classification` for this `ClassificationMarker`. The list of Classifications is derived from the
-[DoD Information Security Program: Marking of Information](./MarkingOfInformation/README.md) 
+[DoD Information Security Program: Marking of Information](./documents/MarkingOfInformation/README.md) 
 **Enclosure 4 Section 4.a.2 page 67**, with **Enclosure 4 Section 3.a page 66** clearly defining the exclusively USA
 classifications.
 
@@ -120,12 +120,12 @@ Consider using the Additional Markings list for those foreign markings which do 
 
 ### Sensitive Compartmented Information
 
-From [DoD Information Security Program: Marking of Information](./MarkingOfInformation/README.md):
+From [DoD Information Security Program: Marking of Information](./documents/MarkingOfInformation/README.md):
 > SCI is classified national intelligence information concerning, or derived from, intelligence sources, methods or analytical processes that require handling within formal access control systems established by the Director of National Intelligence (DNI).
 
 In this library SCI is modeled with a `Control System - Compartments - Sub Compartments` structure.
 
-Quoting from [DoD Information Security Program: Marking of Information](./MarkingOfInformation/README.md):
+Quoting from [DoD Information Security Program: Marking of Information](./documents/MarkingOfInformation/README.md):
 > SCI, regardless of classification level, must be processed only on an information system accredited for SCI processing (e.g., JWICS) and may not be processed, transferred to, or stored on SIPRNET, even if the information’s classification is at the SECRET level (e.g., SECRET//SI), as SIPRNET is not accredited for SCI.
 
 To assist with handling this, as with Classification, when the library is NOT in production mode, any SCI Control
@@ -160,16 +160,16 @@ The NOFORN dissemination MUST be used with `HCS` or `TK-GEOCAP`, and the `Classi
 
 ### Special Access Program
 
-From [DoD Information Security Program: Marking of Information](./MarkingOfInformation/README.md):
+From [DoD Information Security Program: Marking of Information](./documents/MarkingOfInformation/README.md):
 > SAP control markings used in the banner line and at portions denote classified information that requires extraordinary protection
 
 In this library SAP is modeled with a `Special Access Program - Compartments - Sub Compartments` structure. It is not
-clear from [DoD Information Security Program: Marking of Information](./MarkingOfInformation/README.md) that this
+clear from [DoD Information Security Program: Marking of Information](./documents/MarkingOfInformation/README.md) that this
 structure is necessary, but it is found in 
-[Intelligence Community Markings System Register and Manual](./ICMarkingsSystem/README.md). If the Compartments and
+[Intelligence Community Markings System Register and Manual](./documents/ICMarkingsSystem/README.md). If the Compartments and
 Sub Compartments are unnecessary, they may be omitted.
 
-Quoting [DoD Information Security Program: Marking of Information](./MarkingOfInformation/README.md):
+Quoting [DoD Information Security Program: Marking of Information](./documents/MarkingOfInformation/README.md):
 > SAP information, regardless of classification, shall be processed only on an information system accredited for SAP processing, and operating at a classification level that meets or exceeds the classification level of the SAP data.
 
 To assist with handling this, as with Classification, when the library is NOT in production mode, any Special Access
@@ -194,7 +194,7 @@ Indicates data which is related to nuclear materials. The library supports:
 
 ### Foreign Government Information
 
-From [DoD Information Security Program: Marking of Information](./MarkingOfInformation/README.md):
+From [DoD Information Security Program: Marking of Information](./documents/MarkingOfInformation/README.md):
 > FGI markings are used in U.S. products to denote the presence of foreign-controlled information.
 
 If the FGI mark has been explicitly set as concealed, then the country list must be empty.
@@ -354,10 +354,10 @@ appearing in the order: shorter strings before longer strings, and then alphabet
 
 ### Atomic Energy Agency Information requiring NOFORN
 
-According to [Intelligence Community Markings System Register and Manual](./ICMarkingsSystem/README.md) all
+According to [Intelligence Community Markings System Register and Manual](./documents/ICMarkingsSystem/README.md) all
 Restricted Data (including CNWDI and SIGMA) and Formally Restricted Data (including SIGMA) require the
 NOFORN Dissemination mark, unless there is a sharing agreement. Meanwhile the
-[DoD Information Security Program: Marking of Information](./MarkingOfInformation/README.md) document does not
+[DoD Information Security Program: Marking of Information](./documents/MarkingOfInformation/README.md) document does not
 mention this requirement.
 
 In this library, the lack of NOFORN will be detected for these AEA Markings, and a WARNING will be logged rather

@@ -108,6 +108,19 @@ public record ClassificationMarker(NonUSAndJointClassificationModifier classific
         additionalMarkings = List.copyOf(additionalMarkings);
     }
 
+    /**
+     * Produces a String which mostly conforms to the requirements for document banners.
+     * 
+     * CLASSIFICATION//SCI//SAP//AEA//FGI//DISSEM//OTHER DISSEM
+     * <p>
+     * There is two ways in which this String does not conform to the defined format for a document banner.
+     * <ol>
+     * <li>If there are 3 or more SAP values, they are all included in the String. The defined format expects them to
+     * be replaced with <STRONG>SAR-MULTIPLE PROGRAMS</STRONG> with a list of SAR Programs displayed elsewhere.
+     * Obviously that is not possible in this library.</li>
+     * <li>Additional Markings are added at the end, which is not part of the defined format at all.</li>
+     * </ol>
+     */
     @Override
     public String toString() {
         StringBuilder buf = new StringBuilder();
