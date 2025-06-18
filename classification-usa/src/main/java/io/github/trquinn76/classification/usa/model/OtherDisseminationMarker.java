@@ -10,7 +10,7 @@ import java.util.Objects;
  * @param type             {@link OtherDisseminations} which is the type of
  *                         Other Dissemination. May not be null.
  * @param programNickNames a set of Program Nick Names, which are only valid for
- *                         {@link OtherDissemination.ACCM}. May not be null. May
+ *                         {@link OtherDisseminations}.ACCM. May not be null. May
  *                         be empty.
  */
 public record OtherDisseminationMarker(OtherDisseminations type, List<String> programNickNames) {
@@ -21,7 +21,7 @@ public record OtherDisseminationMarker(OtherDisseminations type, List<String> pr
      * @param type             {@link OtherDisseminations} which is the type of
      *                         Other Dissemination. May not be null.
      * @param programNickNames a set of Program Nick Names, which are only valid for
-     *                         {@link OtherDissemination.ACCM}. May not be null. May
+     *                         {@link OtherDisseminations}.ACCM. May not be null. May
      *                         be empty.
      */
     public OtherDisseminationMarker {

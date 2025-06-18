@@ -1,4 +1,5 @@
 /**
- * This package contains the set of Sub Builders used within {@link ClassificationMarkerBuilder}.
+ * This package contains the set of Sub Builders used within
+ * {@link io.github.trquinn76.classification.usa.ClassificationMarkerBuilder}.
  */
 package io.github.trquinn76.classification.usa.subbuilders;

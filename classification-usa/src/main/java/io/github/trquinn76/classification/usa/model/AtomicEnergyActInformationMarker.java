@@ -6,9 +6,9 @@ import java.util.Objects;
 /**
  * A Marker for Atomic Energy Act Information.
  * 
- * @param aeaMark      the {@link AtomicEnergyActMakings}. May not be null.
+ * @param aeaMark      the {@link AtomicEnergyActMarkings}. May not be null.
  * @param sigmaNumbers a list of sigma numbers associated with the
- *                     {@link AtomicEnergyActMakings}. May not be null. May be
+ *                     {@link AtomicEnergyActMarkings}. May not be null. May be
  *                     empty.
  */
 public record AtomicEnergyActInformationMarker(AtomicEnergyActMarkings aeaMark, List<Integer> sigmaNumbers) {
@@ -17,9 +17,9 @@ public record AtomicEnergyActInformationMarker(AtomicEnergyActMarkings aeaMark, 
      * Constructor. Lists are defensively copied to ensure immutability of the
      * record.
      * 
-     * @param aeaMark      the {@link AtomicEnergyActMakings}. May not be null.
+     * @param aeaMark      the {@link AtomicEnergyActMarkings}. May not be null.
      * @param sigmaNumbers a list of sigma numbers associated with the
-     *                     {@link AtomicEnergyActMakings}. May not be null. May be
+     *                     {@link AtomicEnergyActMarkings}. May not be null. May be
      *                     empty.
      */
     public AtomicEnergyActInformationMarker {

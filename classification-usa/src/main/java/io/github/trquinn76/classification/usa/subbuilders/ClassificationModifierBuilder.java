@@ -199,7 +199,7 @@ public class ClassificationModifierBuilder {
     }
 
     /**
-     * Sets the {@link NONUSAndJointType} to FOREIGN, and sets the foreign country.
+     * Sets the {@link NonUSAndJointType} to FOREIGN, and sets the foreign country.
      * 
      * @param country the foreign country this classification is being modified for.
      * @return parent {@link ClassificationMarkerBuilder} for function chaining.

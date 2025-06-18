@@ -43,8 +43,8 @@ public class SCIBuilder {
      * Populates this builder with the values in the given list of
      * {@link SCIControlSystem}.
      * 
-     * @param sarPrograms the list of {@link SCIControlSystem} from which to
-     *                    populate the builder.
+     * @param sciControlSystems the list of {@link SCIControlSystem} from which to
+     *                          populate the builder.
      * @return parent {@link ClassificationMarkerBuilder} for function chaining.
      */
     public ClassificationMarkerBuilder populate(Collection<SCIControlSystem> sciControlSystems) {

@@ -5,6 +5,8 @@ import java.util.Objects;
 
 /**
  * Defines the Foreign Government Information Marker.
+ * 
+ * @param countries a list of foreign countries. May not be null. May be empty.
  */
 public record ForeignGovernmentInformationMarker(List<String> countries) {
 

@@ -263,7 +263,7 @@ public class DisseminationsBuilder {
     }
 
     /**
-     * Sets the PROPRIETARY_INFORMATION {@link Disseminatons}.
+     * Sets the PROPRIETARY_INFORMATION {@link Disseminations}.
      * 
      * @return parent {@link ClassificationMarkerBuilder} for function chaining.
      */

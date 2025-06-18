@@ -38,8 +38,8 @@ public class FGIBuilder {
      * Populates this builder with the values in the given
      * {@link ForeignGovernmentInformationMarker}.
      * 
-     * @param disseminationMarks the {@link ForeignGovernmentInformationMarker} from
-     *                           which to populate the builder.
+     * @param marker the {@link ForeignGovernmentInformationMarker} from which to
+     *               populate the builder.
      * @return parent {@link ClassificationMarkerBuilder} for function chaining.
      */
     public ClassificationMarkerBuilder populate(ForeignGovernmentInformationMarker marker) {

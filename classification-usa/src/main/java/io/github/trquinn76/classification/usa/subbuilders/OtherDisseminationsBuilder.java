@@ -39,7 +39,7 @@ public class OtherDisseminationsBuilder {
      * Populates this builder with the values in the given list of
      * {@link OtherDisseminationMarker}.
      * 
-     * @param disseminationMarks the list of {@link OtherDisseminationMarker} from
+     * @param otherDissemMarkers the list of {@link OtherDisseminationMarker} from
      *                           which to populate the builder.
      * @return parent {@link ClassificationMarkerBuilder} for function chaining.
      */

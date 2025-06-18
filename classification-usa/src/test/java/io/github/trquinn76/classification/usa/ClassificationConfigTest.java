@@ -3,9 +3,15 @@ package io.github.trquinn76.classification.usa;
 import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 class ClassificationConfigTest {
+    
+    @BeforeAll
+    static void beforeAll() {
+        ClassificationConfig.reset();
+    }
 
     @AfterEach
     void afterEach() {

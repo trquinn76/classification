@@ -5,14 +5,19 @@ import java.util.Objects;
 
 /**
  * Represents a Compartment in either a SCI or SAP structure.
+ * 
+ * @param name            the name of the Compartment. May not be null.
+ * @param subCompartments the names of any sub compartments. May not be null.
+ *                        May be empty.
  */
 public record Compartment(String name, List<String> subCompartments) {
 
     /**
      * Constructor. Defensively copies Lists, to ensure immutability.
      * 
-     * @param name the name of the Compartment. May not be null.
-     * @param subCompartments the names of any sub compartments. May not be null. May be empty.
+     * @param name            the name of the Compartment. May not be null.
+     * @param subCompartments the names of any sub compartments. May not be null.
+     *                        May be empty.
      */
     public Compartment {
         Objects.requireNonNull(name);
@@ -22,7 +27,7 @@ public record Compartment(String name, List<String> subCompartments) {
         }
         subCompartments = List.copyOf(subCompartments);
     }
-    
+
     @Override
     public String toString() {
         StringBuilder buf = new StringBuilder();

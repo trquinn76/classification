@@ -17,7 +17,7 @@ import java.util.Objects;
  * depending on configuration. May not be null.</li>
  * <li>Sensitive Compartment Information - a list of {@link SCIControlSystem}'s.
  * May not be null. May be empty.</li>
- * <li>Special Access Programs - a list of {@link SAPProgram}'s. May not be
+ * <li>Special Access Programs - a list of {@link SARProgram}'s. May not be
  * null. May be empty.</li>
  * <li>Atomic Energy Act Information - marks Atomic Energy Act Information. May
  * be null.</li>
