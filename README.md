@@ -44,3 +44,15 @@ the sub project folder for each Classification scheme.
 >         <artifactId>classification-uk</artifactId>
 >         <version>1.0.0</version>
 >     </dependency>
+
+## USA Security Classification Markers
+
+[README.md](./classification-usa/README.md).
+
+> #### Maven Coordinates:
+> 
+>     <dependency>
+>         <groupId>io.github.trquinn76</groupId>
+>         <artifactId>classification-usa</artifactId>
+>         <version>1.0.0</version>
+>     </dependency>
