@@ -13,16 +13,36 @@ import io.github.trquinn76.classification.usa.ClassificationMarkerBuilder;
 import io.github.trquinn76.classification.usa.model.OtherDisseminationMarker;
 import io.github.trquinn76.classification.usa.model.OtherDisseminations;
 
+/**
+ * Builder for {@link OtherDisseminationMarker}'s.
+ * 
+ * This is a sub builder for {@link ClassificationMarkerBuilder}, and should not
+ * be created outside the context of an instance of
+ * {@link ClassificationMarkerBuilder}.
+ */
 public class OtherDisseminationsBuilder {
 
     private Map<OtherDisseminations, Set<String>> otherDisseminationControlsMap = new TreeMap<>();
 
     private ClassificationMarkerBuilder parent;
 
+    /**
+     * Constructs the builder.
+     * 
+     * @param parent the parent {@link ClassificationMarkerBuilder}.
+     */
     public OtherDisseminationsBuilder(ClassificationMarkerBuilder parent) {
         this.parent = parent;
     }
 
+    /**
+     * Populates this builder with the values in the given list of
+     * {@link OtherDisseminationMarker}.
+     * 
+     * @param disseminationMarks the list of {@link OtherDisseminationMarker} from
+     *                           which to populate the builder.
+     * @return parent {@link ClassificationMarkerBuilder} for function chaining.
+     */
     public ClassificationMarkerBuilder populate(List<OtherDisseminationMarker> otherDissemMarkers) {
         clear();
         for (OtherDisseminationMarker marker : otherDissemMarkers) {
@@ -32,6 +52,17 @@ public class OtherDisseminationsBuilder {
         return parent;
     }
 
+    /**
+     * Sets the {@link OtherDisseminations} to be added to the builder.
+     * 
+     * Any existing nickname list for the {@link OtherDisseminations} will be
+     * replaced.
+     * 
+     * @param dissemControl the {@link OtherDisseminations} to set. May not be null.
+     * @param nicknames     a list of nicknames for the {@link OtherDisseminations}.
+     *                      May not be null. May be empty.
+     * @return parent {@link ClassificationMarkerBuilder} for function chaining.
+     */
     public ClassificationMarkerBuilder setDissemination(OtherDisseminations dissemControl, String... nicknames) {
         Objects.requireNonNull(dissemControl);
         Objects.requireNonNull(nicknames);
@@ -41,28 +72,57 @@ public class OtherDisseminationsBuilder {
         this.otherDisseminationControlsMap.put(dissemControl, nicks);
         return parent;
     }
-    
+
+    /**
+     * Get a copy of the current set of {@link OtherDisseminations} in the builder.
+     * 
+     * @return a copy of the current set of {@link OtherDisseminations} in the
+     *         builder.
+     */
     public Set<OtherDisseminations> getDisseminations() {
         return new TreeSet<>(this.otherDisseminationControlsMap.keySet());
     }
 
+    /**
+     * Removes the given {@link OtherDisseminations} from the builder.
+     * 
+     * @param dissemControl the {@link OtherDisseminations} to remove. May not be
+     *                      null.
+     * @return parent {@link ClassificationMarkerBuilder} for function chaining.
+     */
     public ClassificationMarkerBuilder removeDissemination(OtherDisseminations dissemControl) {
         this.otherDisseminationControlsMap.remove(dissemControl);
         return parent;
     }
-    
+
+    /**
+     * Adds a nickname for the given {@link OtherDisseminations}.
+     * 
+     * @param dissemControl the {@link OtherDisseminations} to add the nickname for.
+     *                      May not be null.
+     * @param nickname      the nickname to add for the {@link OtherDisseminations}.
+     *                      May not be null.
+     * @return parent {@link ClassificationMarkerBuilder} for function chaining.
+     */
     public ClassificationMarkerBuilder addNickname(OtherDisseminations dissemControl, String nickname) {
         Objects.requireNonNull(dissemControl);
         Objects.requireNonNull(nickname);
         if (!hasOtherDissemination(dissemControl)) {
             this.otherDisseminationControlsMap.put(dissemControl, new TreeSet<>(Set.of(nickname)));
-        }
-        else {
+        } else {
             this.otherDisseminationControlsMap.get(dissemControl).add(nickname);
         }
         return parent;
     }
-    
+
+    /**
+     * Gets a copy of the nicknames for the given {@link OtherDisseminations}.
+     * 
+     * @param dissemControl the {@link OtherDisseminations} for which to get the
+     *                      nicknames.
+     * @return a Set containing the nicknames for the given
+     *         {@link OtherDisseminations}. May be empty.
+     */
     public Set<String> getNicknames(OtherDisseminations dissemControl) {
         Set<String> retSet = new TreeSet<>();
         if (hasOtherDissemination(dissemControl)) {
@@ -70,7 +130,15 @@ public class OtherDisseminationsBuilder {
         }
         return retSet;
     }
-    
+
+    /**
+     * Removes the given nickname from the given {@link OtherDisseminations}.
+     * 
+     * @param dissemControl the {@link OtherDisseminations} for which to remove the
+     *                      nickname. May not be null.
+     * @param nickname      the nickname to remove. May not be null.
+     * @return parent {@link ClassificationMarkerBuilder} for function chaining.
+     */
     public ClassificationMarkerBuilder removeNickname(OtherDisseminations dissemControl, String nickname) {
         Objects.requireNonNull(dissemControl);
         Objects.requireNonNull(nickname);
@@ -80,40 +148,98 @@ public class OtherDisseminationsBuilder {
         return parent;
     }
 
+    /**
+     * Sets the ACCM {@link OtherDisseminations}.
+     * 
+     * Allows setting nicknames.
+     * 
+     * @param nicknames the array of nicknames to associated with ACCM. May not be
+     *                  null. May be empty.
+     * @return parent {@link ClassificationMarkerBuilder} for function chaining.
+     */
     public ClassificationMarkerBuilder alternativeCompensatoryControlMeasures(String... nicknames) {
         Objects.requireNonNull(nicknames);
 
         return setDissemination(OtherDisseminations.ACCM, nicknames);
     }
 
+    /**
+     * Sets the EXCLUSIVE_DISTRIBUTION {@link OtherDisseminations}.
+     * 
+     * @return parent {@link ClassificationMarkerBuilder} for function chaining.
+     */
     public ClassificationMarkerBuilder exclusiveDistribution() {
         return setDissemination(OtherDisseminations.EXCLUSIVE_DISTRIBUTION);
     }
 
+    /**
+     * Sets the NO_DISTRIBUTION {@link OtherDisseminations}.
+     * 
+     * Allows setting distribution instructions, which are added to the Addition
+     * Markings.
+     * 
+     * @param distributionInstructions an array of instructions which are added to
+     *                                 the Additional Markings. May not be null. May
+     *                                 be empty.
+     * @return parent {@link ClassificationMarkerBuilder} for function chaining.
+     */
     public ClassificationMarkerBuilder noDistribution(String... distributionInstructions) {
         Objects.requireNonNull(distributionInstructions);
         parent.addAdditionalMarkings(Arrays.asList(distributionInstructions));
         return setDissemination(OtherDisseminations.NO_DISTRIBUTION);
     }
 
+    /**
+     * Sets the SENSITIVE_BUT_UNCLASSIFIED {@link OtherDisseminations}.
+     * 
+     * @return parent {@link ClassificationMarkerBuilder} for function chaining.
+     */
     public ClassificationMarkerBuilder sensitiveButUnclassified() {
         return setDissemination(OtherDisseminations.SENSITIVE_BUT_UNCLASSIFIED);
     }
 
+    /**
+     * Sets the SENSITIVE_BUT_UNCLASSIFIED_NOFORN {@link OtherDisseminations}.
+     * 
+     * @return parent {@link ClassificationMarkerBuilder} for function chaining.
+     */
     public ClassificationMarkerBuilder sensitiveButUnclassifiedNoforn() {
         return setDissemination(OtherDisseminations.SENSITIVE_BUT_UNCLASSIFIED_NOFORN);
     }
 
+    /**
+     * Clears all {@link OtherDisseminations} from the builder.
+     * 
+     * Does NOT remove/clear any distribution instructions added to Additional
+     * Markings for NO_DISTRIBUTION.
+     * 
+     * @return parent {@link ClassificationMarkerBuilder} for function chaining.
+     */
     public ClassificationMarkerBuilder clear() {
         this.otherDisseminationControlsMap.clear();
         return parent;
     }
 
+    /**
+     * Returns true if the given {@link OtherDisseminations} is set in the builder.
+     * 
+     * @param otherDissem the {@link OtherDisseminations} to test for. May not be
+     *                    null.
+     * @return true if the {@link OtherDisseminations} is in the builder.
+     */
     public boolean hasOtherDissemination(OtherDisseminations otherDissem) {
         Objects.requireNonNull(otherDissem);
         return this.otherDisseminationControlsMap.keySet().contains(otherDissem);
     }
 
+    /**
+     * Used to determine if the {@link OtherDisseminationsBuilder} is in a valid
+     * state, and able to build a list of {@link OtherDisseminationMarker}.
+     * 
+     * @return a list of String, which reports on invalid parts of the builder which
+     *         would need to be fixed in order to perform a build. If there are no
+     *         problems, and the builder is in a valid state, this list is empty.
+     */
     public List<String> isValid() {
         List<String> report = new ArrayList<>();
 
@@ -160,6 +286,14 @@ public class OtherDisseminationsBuilder {
         return report;
     }
 
+    /**
+     * Builds a new list of {@link OtherDisseminationMarker} based on the fields in
+     * the builder.
+     * 
+     * @return a new list of {@link OtherDisseminationMarker}.
+     * @throws IllegalStateException if the builder is not in a valid state, then
+     *                               this exception is thrown.
+     */
     public List<OtherDisseminationMarker> build() {
 
         List<String> report = isValid();

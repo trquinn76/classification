@@ -13,7 +13,7 @@ class SAPTest {
     void passingTest() {
         ClassificationMarkerBuilder builder = new ClassificationMarkerBuilder();
         builder.secret();
-        builder.sap.addControlSystem("CS");
+        builder.sap.addSARProgram("CS");
         builder.sap.addCompartment("CS", "AA");
         builder.sap.addCompartment("BA", "BB");
         builder.sap.addSubCompartment("CS", "AA", "SubOne");
