@@ -1,6 +1,6 @@
 # New Zealand Classification/Protective Marking Model
 
-This project contains a data model for Australian Protective Markings, as defined in the
+This project contains a data model for New Zealand Protective Markings, as defined in the
 [Overview](./documents/Overview/README.md).
 
 This model is derived solely from publicly available documents. The set of documents referenced when designing this
